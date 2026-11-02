@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import EnquiryModal from '../components/EnquiryModal';
+import ServiceModal from '../components/ServiceModal';
 import { 
   Home, 
   Building2, 
@@ -17,7 +17,7 @@ import {
 
 export default function ServicesPage() {
   const [selectedService, setSelectedService] = useState(null);
-  const [enquiryOpen, setEnquiryOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const services = [
     {
@@ -26,7 +26,12 @@ export default function ServicesPage() {
       title: 'Residential Property Advisory',
       tagline: 'Plots, Apartments, Villas & Independent Houses',
       description: 'Comprehensive guidance on identifying and securing ideal residential plots, luxury apartments, standalone independent villas, and gated community housing opportunities tailored to family lifestyles and future value appreciation.',
-      deliverables: ['HMDA & DTCP layout verification', 'Micro-market price benchmarking', 'Architectural & Vastu compliance check', 'Customized site visits with personal advisor']
+      deliverables: [
+        'HMDA & DTCP layout verification',
+        'Micro-market price benchmarking',
+        'Architectural & Vastu compliance check',
+        'Customized site visits with personal advisor'
+      ]
     },
     {
       id: 'srv-2',
@@ -34,7 +39,12 @@ export default function ServicesPage() {
       title: 'Commercial Property Solutions',
       tagline: 'High-Street Retail, Corporate Offices & Godowns',
       description: 'Assistance in identifying and acquiring prime commercial plots, Grade-A IT office spaces, high-footfall retail showrooms, warehousing godowns, and business premises across Hyderabad’s most vibrant economic corridors.',
-      deliverables: ['High rental yield forecasting', 'Lease tenure & tenant feasibility', 'Location footfall & highway transit analysis', 'Commercial zoning & fire clearance checks']
+      deliverables: [
+        'High rental yield forecasting',
+        'Lease tenure & tenant feasibility',
+        'Location footfall & highway transit analysis',
+        'Commercial zoning & fire clearance checks'
+      ]
     },
     {
       id: 'srv-3',
@@ -42,7 +52,12 @@ export default function ServicesPage() {
       title: 'Property Investment Advisory',
       tagline: 'High-ROI Land, Commercial & Residential Wealth Creation',
       description: 'Helping investors, HNIs and NRIs evaluate high-potential land, residential, and commercial property opportunities aligned with their risk profiles, capital preservation goals, and aggressive multi-year appreciation objectives.',
-      deliverables: ['Macro & micro-market growth analytics', 'Exit strategy planning & liquidity review', 'Portfolio diversification roadmaps', 'Quarterly capital appreciation reports']
+      deliverables: [
+        'Macro & micro-market growth analytics',
+        'Exit strategy planning & liquidity review',
+        'Portfolio diversification roadmaps',
+        'Quarterly capital appreciation reports'
+      ]
     },
     {
       id: 'srv-4',
@@ -50,7 +65,12 @@ export default function ServicesPage() {
       title: 'Land & Development Opportunities',
       tagline: 'Joint Ventures, Plotted Layouts & Farm Parcels',
       description: 'Connecting interested buyers, builders, and institutional investors with strategic land parcels, joint-development opportunities, agricultural holdings, and property owners with clear, unencumbered titles.',
-      deliverables: ['Direct landowner negotiations', 'Joint development ratio structuring', 'Title search & boundary survey reports', 'Master plan & master road connectivity']
+      deliverables: [
+        'Direct landowner negotiations',
+        'Joint development ratio structuring',
+        'Title search & boundary survey reports',
+        'Master plan & master road connectivity'
+      ]
     },
     {
       id: 'srv-5',
@@ -58,7 +78,12 @@ export default function ServicesPage() {
       title: 'Property Buying & Selling Assistance',
       tagline: 'End-to-End Discovery, Site Visits & Closing Support',
       description: 'Professional assistance in property discovery, shortlisting, private site visits, price negotiations, buyer-seller alignment, and smooth, secure transaction coordination from agreement to registration.',
-      deliverables: ['Curated shortlists matching exact budget', 'Scheduled chauffeured site inspections', 'Fair market valuation & negotiation', 'Escrow & documentation assistance']
+      deliverables: [
+        'Curated shortlists matching exact budget',
+        'Scheduled chauffeured site inspections',
+        'Fair market valuation & negotiation',
+        'Escrow & documentation assistance'
+      ]
     },
     {
       id: 'srv-6',
@@ -66,7 +91,12 @@ export default function ServicesPage() {
       title: 'Legal & Documentation Assistance',
       tagline: 'Title Scrutiny, Link Documents & RERA Verification',
       description: 'Helping customers navigate property-related legal documentation, 30-year link document verification, encumbrance certificates (EC), municipal sanctions, and revenue records with clarity and confidence.',
-      deliverables: ['30-year Encumbrance Certificate scrutiny', 'Revenue land record & Dharani verification', 'HMDA / DTCP / GHMC approval confirmation', 'Safe deed drafting with experienced legal counsel']
+      deliverables: [
+        '30-year Encumbrance Certificate scrutiny',
+        'Revenue land record & Dharani verification',
+        'HMDA / DTCP / GHMC approval confirmation',
+        'Safe deed drafting with experienced legal counsel'
+      ]
     },
     {
       id: 'srv-7',
@@ -74,18 +104,18 @@ export default function ServicesPage() {
       title: 'Bank Loan & Financial Assistance',
       tagline: 'Competitive Home Loans & Fast Sanctions',
       description: 'Connecting eligible customers with suitable property financing options through leading nationalized and private banking institutions (SBI, HDFC, ICICI, etc.) with doorstep document pickup and preferential interest rates.',
-      deliverables: ['Pre-approved loan eligibility assessment', 'Tie-ups with leading national banks', 'Doorstep document collection & fast clearance', 'Transparent processing with no hidden charges']
+      deliverables: [
+        'Pre-approved loan eligibility assessment',
+        'Tie-ups with leading national banks',
+        'Doorstep document collection & fast clearance',
+        'Transparent processing with no hidden charges'
+      ]
     }
   ];
 
-  const handleOpenEnquiry = (srv) => {
-    setSelectedService({
-      title: srv.title,
-      location: 'Hyderabad, Telangana',
-      price: 'Professional Advisory',
-      categoryName: srv.title
-    });
-    setEnquiryOpen(true);
+  const handleOpenModal = (srv) => {
+    setSelectedService(srv);
+    setModalOpen(true);
   };
 
   return (
@@ -102,21 +132,23 @@ export default function ServicesPage() {
             Our Professional <span className="gold-gradient-text">Advisory Services</span>
           </h1>
           <p className="mt-3 text-sm sm:text-base text-neutral-600">
-            From initial discovery and legal scrutiny to financing and closing, we stand with you at every step of your property journey.
+            Click any service card to view complete strategic scope, deliverables, and schedule an exclusive advisory session.
           </p>
         </div>
 
-        {/* 7 Services Grid */}
+        {/* 7 Services Grid - Matching Reference Image 9 with Grand Popup trigger */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((srv, idx) => {
             const Icon = srv.icon;
             return (
               <div
                 key={srv.id}
-                className="bg-white rounded-3xl p-7 border border-neutral-200/90 hover:border-gold-500/60 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
+                onClick={() => handleOpenModal(srv)}
+                className="bg-white rounded-3xl p-6 sm:p-7 border border-neutral-200/90 hover:border-gold-500/80 shadow-sm hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group cursor-pointer transform hover:-translate-y-1.5 animate-fade-in"
               >
                 <div>
-                  <div className="w-14 h-14 rounded-2xl bg-neutral-50 group-hover:bg-gold-500/15 border border-neutral-200 group-hover:border-gold-400 flex items-center justify-center text-neutral-800 group-hover:text-gold-600 transition-all mb-5 shadow-inner">
+                  {/* Top Icon */}
+                  <div className="w-14 h-14 rounded-2xl bg-neutral-50 group-hover:bg-gold-500/15 border border-neutral-200 group-hover:border-gold-400 flex items-center justify-center text-neutral-800 group-hover:text-gold-600 transition-all mb-4 shadow-inner">
                     <Icon className="w-7 h-7" />
                   </div>
 
@@ -132,10 +164,11 @@ export default function ServicesPage() {
                     {srv.tagline}
                   </p>
 
-                  <p className="text-sm text-neutral-600 mt-3.5 leading-relaxed">
+                  <p className="text-sm text-neutral-600 mt-3.5 leading-relaxed line-clamp-3">
                     {srv.description}
                   </p>
 
+                  {/* What We Deliver List */}
                   <div className="mt-5 pt-4 border-t border-neutral-100 space-y-2">
                     <span className="block text-[11px] font-bold text-neutral-400 uppercase tracking-wider">What We Deliver</span>
                     {srv.deliverables.map((d, i) => (
@@ -147,16 +180,22 @@ export default function ServicesPage() {
                   </div>
                 </div>
 
+                {/* Card Action Buttons */}
                 <div className="mt-6 pt-4 border-t border-neutral-100 flex items-center space-x-3">
                   <button
-                    onClick={() => handleOpenEnquiry(srv)}
-                    className="flex-1 py-2.5 px-4 rounded-xl gold-gradient-btn text-black font-bold text-xs tracking-wide text-center"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenModal(srv);
+                    }}
+                    className="flex-1 py-2.5 px-4 rounded-xl gold-gradient-btn text-black font-extrabold text-xs tracking-wide text-center flex items-center justify-center space-x-1.5 shadow-md group-hover:shadow-lg"
                   >
-                    Consult on This Service
+                    <span>View Full Details & Popup</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </button>
 
                   <a
                     href={`https://wa.me/917075539189?text=${encodeURIComponent(`Hello Super Best Properties, I need assistance with ${srv.title}.`)}`}
+                    onClick={(e) => e.stopPropagation()}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white border border-emerald-200 transition-colors"
@@ -182,7 +221,7 @@ export default function ServicesPage() {
           <div className="pt-2 flex justify-center gap-4 flex-wrap">
             <a
               href="tel:7075539189"
-              className="px-6 py-3 rounded-full gold-gradient-btn text-black font-extrabold text-sm flex items-center space-x-2"
+              className="px-6 py-3 rounded-full gold-gradient-btn text-black font-extrabold text-sm flex items-center space-x-2 shadow-lg"
             >
               <Phone className="w-4 h-4" />
               <span>Call: +91 7075539189</span>
@@ -192,12 +231,13 @@ export default function ServicesPage() {
 
       </div>
 
-      <EnquiryModal
-        isOpen={enquiryOpen}
-        onClose={() => setEnquiryOpen(false)}
-        property={selectedService}
+      {/* Grand Service Popup Modal */}
+      <ServiceModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        service={selectedService}
       />
+
     </div>
   );
 }
-
