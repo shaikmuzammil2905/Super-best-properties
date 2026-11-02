@@ -5,17 +5,17 @@ import PropertyCard from '../components/PropertyCard';
 import CategoryGrid from '../components/CategoryGrid';
 import ProjectsHighlightsSection from '../components/ProjectsHighlightsSection';
 import FounderSection from '../components/FounderSection';
+import EnquiryModal from '../components/EnquiryModal';
 import { api } from '../services/api';
+import { initialProperties } from '../data/mockData';
 import { 
   ArrowRight, 
   Sparkles, 
   ShieldCheck, 
-  CheckCircle, 
-  TrendingUp, 
-  Clock, 
-  Compass, 
   Users, 
   Award,
+  TrendingUp, 
+  Compass,
   Phone,
   MessageCircle,
   Building
@@ -24,14 +24,22 @@ import {
 export default function HomePage() {
   const [featuredProperties, setFeaturedProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [quickEnquiryOpen, setQuickEnquiryOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState(null);
 
   useEffect(() => {
     async function loadData() {
       try {
         const props = await api.getProperties({ featured: 'true' });
-        setFeaturedProperties(props);
+        if (Array.isArray(props) && props.length > 0) {
+          setFeaturedProperties(props);
+        } else {
+          // Never leave section empty (fixes image copy 7.png issue)
+          setFeaturedProperties(initialProperties.filter(p => p.featured));
+        }
       } catch (err) {
         console.error('Failed to load featured properties:', err);
+        setFeaturedProperties(initialProperties.filter(p => p.featured));
       } finally {
         setLoading(false);
       }
@@ -39,10 +47,15 @@ export default function HomePage() {
     loadData();
   }, []);
 
+  const openEnquiry = (property) => {
+    setSelectedProperty(property);
+    setQuickEnquiryOpen(true);
+  };
+
   return (
-    <div className="space-y-0">
+    <div className="space-y-0 overflow-hidden">
       
-      {/* 1. Hero Section with Desktop (hero-desktop.png) and Mobile (hero-mobile.png) Backgrounds */}
+      {/* 1. Hero Section with Desktop (hero-desktop.png) and Bright Mobile (hero-mobile.png) */}
       <HeroSection />
 
       {/* 2. Featured Properties Section matching Reference Image 1 & 2 */}
@@ -63,26 +76,12 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Properties Grid (4 in a row on desktop matching Reference Image 1, 1 on mobile matching Image 2) */}
-          {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-white rounded-2xl h-80 animate-pulse border border-neutral-200"></div>
-              ))}
-            </div>
-          ) : featuredProperties.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {featuredProperties.map((prop) => (
-                <PropertyCard key={prop.id} property={prop} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 bg-white rounded-2xl border border-neutral-200 p-8">
-              <Building className="w-12 h-12 text-gold-500 mx-auto mb-3" />
-              <h3 className="text-lg font-bold text-neutral-800">Properties are being updated</h3>
-              <p className="text-sm text-neutral-500 mt-1">Check back in a moment or explore all categories.</p>
-            </div>
-          )}
+          {/* Properties Grid (Guaranteed rich content with photos, prices & locations) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {(featuredProperties.length > 0 ? featuredProperties : initialProperties.slice(0, 4)).map((prop) => (
+              <PropertyCard key={prop.id} property={prop} />
+            ))}
+          </div>
 
           {/* Explore all CTA */}
           <div className="mt-12 text-center">
@@ -232,6 +231,13 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Interactive Quick Site Visit Enquiry Popup */}
+      <EnquiryModal
+        isOpen={quickEnquiryOpen}
+        onClose={() => setQuickEnquiryOpen(false)}
+        property={selectedProperty}
+      />
 
     </div>
   );

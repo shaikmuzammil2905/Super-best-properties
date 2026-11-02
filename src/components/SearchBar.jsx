@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, MapPin, IndianRupee, Bed, Search, RotateCcw } from 'lucide-react';
+import { Home, MapPin, IndianRupee, Search, RotateCcw } from 'lucide-react';
 
 export default function SearchBar({ onSearch, initialValues = {}, className = "" }) {
   const navigate = useNavigate();
   const [type, setType] = useState(initialValues.type || '');
   const [location, setLocation] = useState(initialValues.location || '');
   const [budget, setBudget] = useState(initialValues.budget || '');
-  const [bedrooms, setBedrooms] = useState(initialValues.bedrooms || '');
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -15,10 +14,9 @@ export default function SearchBar({ onSearch, initialValues = {}, className = ""
     if (type && type !== 'all') query.append('type', type);
     if (location && location !== 'all') query.append('location', location);
     if (budget && budget !== 'all') query.append('budget', budget);
-    if (bedrooms && bedrooms !== 'all') query.append('bedrooms', bedrooms);
 
     if (onSearch) {
-      onSearch({ type, location, budget, bedrooms });
+      onSearch({ type, location, budget });
     } else {
       navigate(`/properties?${query.toString()}`);
     }
@@ -28,23 +26,22 @@ export default function SearchBar({ onSearch, initialValues = {}, className = ""
     setType('');
     setLocation('');
     setBudget('');
-    setBedrooms('');
     if (onSearch) {
-      onSearch({ type: '', location: '', budget: '', bedrooms: '' });
+      onSearch({ type: '', location: '', budget: '' });
     }
   };
 
   return (
-    <div className={`w-full max-w-6xl mx-auto ${className}`}>
+    <div className={`w-full max-w-5xl mx-auto ${className}`}>
       <form 
         onSubmit={handleSearch}
-        className="bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-full p-3 sm:p-3.5 shadow-2xl border-2 border-gold-400/40 hover:border-gold-500 transition-all duration-300"
+        className="bg-white/98 backdrop-blur-xl rounded-2xl sm:rounded-full p-3 sm:p-3.5 shadow-2xl border-2 border-gold-400/40 hover:border-gold-500 transition-all duration-300 transform hover:-translate-y-0.5"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-center">
           
           {/* 1. Property Type */}
           <div className="flex items-center space-x-3 px-3 py-2 border-b sm:border-b-0 sm:border-r border-neutral-200">
-            <div className="w-8 h-8 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-600 shrink-0">
+            <div className="w-8 h-8 rounded-full bg-gold-500/15 flex items-center justify-center text-gold-600 shrink-0 shadow-sm">
               <Home className="w-4 h-4" />
             </div>
             <div className="flex-1 text-left">
@@ -78,7 +75,7 @@ export default function SearchBar({ onSearch, initialValues = {}, className = ""
 
           {/* 2. Location */}
           <div className="flex items-center space-x-3 px-3 py-2 border-b sm:border-b-0 sm:border-r border-neutral-200">
-            <div className="w-8 h-8 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-600 shrink-0">
+            <div className="w-8 h-8 rounded-full bg-gold-500/15 flex items-center justify-center text-gold-600 shrink-0 shadow-sm">
               <MapPin className="w-4 h-4" />
             </div>
             <div className="flex-1 text-left">
@@ -105,8 +102,8 @@ export default function SearchBar({ onSearch, initialValues = {}, className = ""
           </div>
 
           {/* 3. Budget Range */}
-          <div className="flex items-center space-x-3 px-3 py-2 border-b sm:border-b-0 sm:border-r border-neutral-200">
-            <div className="w-8 h-8 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-600 shrink-0">
+          <div className="flex items-center space-x-3 px-3 py-2 border-b sm:border-b-0 sm:border-r-0 lg:border-r border-neutral-200">
+            <div className="w-8 h-8 rounded-full bg-gold-500/15 flex items-center justify-center text-gold-600 shrink-0 shadow-sm">
               <IndianRupee className="w-4 h-4" />
             </div>
             <div className="flex-1 text-left">
@@ -127,32 +124,8 @@ export default function SearchBar({ onSearch, initialValues = {}, className = ""
             </div>
           </div>
 
-          {/* 4. Bedrooms */}
-          <div className="flex items-center space-x-3 px-3 py-2 border-b sm:border-b-0 lg:border-r-0 border-neutral-200">
-            <div className="w-8 h-8 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-600 shrink-0">
-              <Bed className="w-4 h-4" />
-            </div>
-            <div className="flex-1 text-left">
-              <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-400">
-                Bedrooms
-              </label>
-              <select
-                value={bedrooms}
-                onChange={(e) => setBedrooms(e.target.value)}
-                className="w-full bg-transparent text-xs sm:text-sm font-semibold text-neutral-800 focus:outline-none cursor-pointer"
-              >
-                <option value="">Any</option>
-                <option value="1 BHK">1 BHK</option>
-                <option value="2 BHK">2 BHK</option>
-                <option value="3 BHK">3 BHK</option>
-                <option value="4 BHK">4+ BHK</option>
-                <option value="Commercial">Commercial / Plot</option>
-              </select>
-            </div>
-          </div>
-
-          {/* 5. Search Button */}
-          <div className="flex items-center space-x-2 w-full">
+          {/* 4. Search & Reset Button */}
+          <div className="flex items-center space-x-2 w-full px-1">
             <button
               type="submit"
               className="flex-1 flex items-center justify-center space-x-2 py-3 px-6 rounded-full gold-gradient-btn text-black font-extrabold text-sm sm:text-base tracking-wide hover:shadow-xl transition-all"
@@ -161,12 +134,12 @@ export default function SearchBar({ onSearch, initialValues = {}, className = ""
               <span>Search</span>
             </button>
 
-            {(type || location || budget || bedrooms) && (
+            {(type || location || budget) && (
               <button
                 type="button"
                 onClick={handleReset}
                 title="Reset filters"
-                className="p-3 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-600 hover:text-black transition-colors"
+                className="p-3 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-600 hover:text-black transition-colors shrink-0"
               >
                 <RotateCcw className="w-4 h-4" />
               </button>

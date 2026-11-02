@@ -30,3 +30,4 @@ dist-ssr
 # Uploaded images
 uploads/*
 !uploads/.gitkeep
+

@@ -81,3 +81,4 @@ export default function CategoryGrid({ title = "What are you looking for?", subt
     </section>
   );
 }
+

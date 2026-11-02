@@ -65,36 +65,55 @@
   background: #F2C14E;
 }
 
-/* Glassmorphism */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+/* Keyframe animations for scrolling and popups */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.dark-glass-panel {
-  background: rgba(13, 13, 13, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(212, 160, 23, 0.25);
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
-/* Keyframe animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(212, 160, 23, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(212, 160, 23, 0.45);
+  }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes pulseSlow {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+.animate-pop-in {
+  animation: popIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-pulse-slow {
-  animation: pulseSlow 3s infinite ease-in-out;
+.animate-pulse-glow {
+  animation: pulseGlow 3s infinite ease-in-out;
+}
+
+/* Hover Zoom Card Animation */
+.card-hover-zoom {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+.card-hover-zoom:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.12), 0 0 20px rgba(212, 160, 23, 0.15);
 }

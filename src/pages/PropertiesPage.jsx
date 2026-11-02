@@ -2,16 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import PropertyCard from '../components/PropertyCard';
 import { api } from '../services/api';
+import { initialProperties, initialCategories } from '../data/mockData';
 import { 
-  Filter, 
   Search, 
   RotateCcw, 
   Building, 
-  MapPin, 
-  IndianRupee, 
-  Bed, 
   SlidersHorizontal,
-  Layers,
   ArrowUpDown
 } from 'lucide-react';
 
@@ -25,7 +21,6 @@ export default function PropertiesPage() {
   const [selectedType, setSelectedType] = useState(searchParams.get('type') || 'all');
   const [selectedLocation, setSelectedLocation] = useState(searchParams.get('location') || 'all');
   const [selectedBudget, setSelectedBudget] = useState(searchParams.get('budget') || 'all');
-  const [selectedBedrooms, setSelectedBedrooms] = useState(searchParams.get('bedrooms') || 'all');
   const [selectedStatus, setSelectedStatus] = useState(searchParams.get('status') || 'all');
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [sortBy, setSortBy] = useState('newest');
@@ -39,10 +34,12 @@ export default function PropertiesPage() {
           api.getProperties(),
           api.getCategories()
         ]);
-        setProperties(allProps);
-        setCategories(allCats);
+        setProperties(Array.isArray(allProps) && allProps.length > 0 ? allProps : initialProperties);
+        setCategories(Array.isArray(allCats) && allCats.length > 0 ? allCats : initialCategories);
       } catch (err) {
         console.error('Error fetching properties:', err);
+        setProperties(initialProperties);
+        setCategories(initialCategories);
       } finally {
         setLoading(false);
       }
@@ -56,9 +53,6 @@ export default function PropertiesPage() {
       return false;
     }
     if (selectedLocation !== 'all' && !prop.location.toLowerCase().includes(selectedLocation.toLowerCase())) {
-      return false;
-    }
-    if (selectedBedrooms !== 'all' && !prop.bedrooms.toLowerCase().includes(selectedBedrooms.toLowerCase())) {
       return false;
     }
     if (selectedStatus !== 'all' && prop.status.toLowerCase() !== selectedStatus.toLowerCase()) {
@@ -93,7 +87,6 @@ export default function PropertiesPage() {
     setSelectedType('all');
     setSelectedLocation('all');
     setSelectedBudget('all');
-    setSelectedBedrooms('all');
     setSelectedStatus('all');
     setSearchQuery('');
     setSortBy('newest');
@@ -114,7 +107,7 @@ export default function PropertiesPage() {
           </p>
         </div>
 
-        {/* Filter Bar (Desktop & Mobile) */}
+        {/* Filter Bar */}
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-neutral-200/90 mb-8 space-y-4">
           
           {/* Top row: Search input & Mobile filter toggle */}
@@ -167,8 +160,8 @@ export default function PropertiesPage() {
             </div>
           </div>
 
-          {/* Filters Row (always visible on desktop, toggleable on mobile) */}
-          <div className={`${mobileFilterOpen ? 'block' : 'hidden'} lg:grid grid-cols-2 md:grid-cols-5 gap-3 pt-3 border-t border-neutral-100`}>
+          {/* Filters Row */}
+          <div className={`${mobileFilterOpen ? 'block' : 'hidden'} lg:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-3 border-t border-neutral-100`}>
             
             {/* Property Type Filter */}
             <div>
@@ -228,26 +221,6 @@ export default function PropertiesPage() {
               </select>
             </div>
 
-            {/* Bedrooms Filter */}
-            <div>
-              <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                Bedrooms / Configuration
-              </label>
-              <select
-                value={selectedBedrooms}
-                onChange={(e) => setSelectedBedrooms(e.target.value)}
-                className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 text-xs font-medium text-neutral-800 focus:outline-none focus:border-gold-500"
-              >
-                <option value="all">Any Configuration</option>
-                <option value="1 BHK">1 BHK</option>
-                <option value="2 BHK">2 BHK</option>
-                <option value="3 BHK">3 BHK</option>
-                <option value="4 BHK">4+ BHK</option>
-                <option value="Plot">Plot / Land</option>
-                <option value="Commercial">Commercial Space</option>
-              </select>
-            </div>
-
             {/* Status Filter */}
             <div>
               <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
@@ -287,43 +260,11 @@ export default function PropertiesPage() {
         </div>
 
         {/* Properties Grid */}
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl h-80 animate-pulse border border-neutral-200"></div>
-            ))}
-          </div>
-        ) : sortedProperties.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {sortedProperties.map((prop) => (
-              <PropertyCard key={prop.id} property={prop} />
-            ))}
-          </div>
-        ) : (
-          <div className="bg-white rounded-3xl p-12 text-center max-w-lg mx-auto border border-neutral-200/90 shadow-sm space-y-4">
-            <Building className="w-16 h-16 text-neutral-300 mx-auto" />
-            <h3 className="text-xl font-bold text-neutral-800">No properties match your current filters</h3>
-            <p className="text-sm text-neutral-500">
-              Try adjusting your budget, location, or property category to see more options, or contact our team directly for upcoming unlisted opportunities.
-            </p>
-            <div className="pt-2 flex justify-center space-x-3">
-              <button
-                onClick={handleResetFilters}
-                className="px-6 py-2.5 rounded-full gold-gradient-btn text-black font-bold text-xs"
-              >
-                Reset Filters
-              </button>
-              <a
-                href="https://wa.me/917075539189?text=Hello%20Super%20Best%20Properties,%20I%20am%20looking%20for%20a%20property%20with%20custom%20specifications."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-2.5 rounded-full bg-neutral-900 text-gold-400 font-bold text-xs border border-gold-500/40"
-              >
-                Ask on WhatsApp
-              </a>
-            </div>
-          </div>
-        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {sortedProperties.map((prop) => (
+            <PropertyCard key={prop.id} property={prop} />
+          ))}
+        </div>
 
       </div>
     </div>

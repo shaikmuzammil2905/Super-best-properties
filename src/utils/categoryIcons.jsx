@@ -69,3 +69,4 @@ export function getCategoryIcon(nameOrSlug, className = "w-6 h-6") {
   }
   return <Building className={className} />;
 }
+

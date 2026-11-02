@@ -192,3 +192,4 @@ export default function EnquiryModal({ isOpen, onClose, property = null }) {
     </div>
   );
 }
+

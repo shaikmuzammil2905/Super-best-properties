@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronLeft, ChevronRight, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import SearchBar from './SearchBar';
 
 export default function HeroSection({ onSearch }) {
@@ -44,41 +44,41 @@ export default function HeroSection({ onSearch }) {
   const current = slides[currentSlide];
 
   return (
-    <section className="relative w-full overflow-hidden">
+    <section className="relative w-full overflow-hidden bg-white">
       
-      {/* Hero Background Container: Desktop uses hero-desktop.png (image copy 4.png), Mobile uses hero-mobile.png (image copy 5.png) */}
-      <div className="relative min-h-[580px] sm:min-h-[640px] md:min-h-[720px] lg:min-h-[760px] w-full flex items-center">
+      {/* Hero Banner Container */}
+      <div className="relative min-h-[500px] sm:min-h-[580px] md:min-h-[640px] lg:min-h-[720px] w-full flex items-center">
         
         {/* Desktop Background Image (image copy 4.png) */}
         <div 
           className="hidden md:block absolute inset-0 bg-cover bg-right bg-no-repeat transition-all duration-700"
           style={{ backgroundImage: `url('/assets/hero-desktop.png')` }}
         >
-          {/* Subtle overlay to ensure high contrast in the white patch work */}
+          {/* Subtle soft gradient on left for text patch */}
           <div className="absolute inset-y-0 left-0 w-full lg:w-1/2 bg-gradient-to-r from-white/95 via-white/80 to-transparent"></div>
         </div>
 
-        {/* Mobile Background Image (image copy 5.png) */}
+        {/* Mobile Background Image (image copy 5.png) - Bright, Vibrant, Clear */}
         <div 
-          className="md:hidden absolute inset-0 bg-cover bg-top bg-no-repeat transition-all duration-700"
+          className="md:hidden absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700 filter brightness-105 contrast-105"
           style={{ backgroundImage: `url('/assets/hero-mobile.png')` }}
         >
-          {/* Soft white gradient at top for text readability matching Reference Image 2 */}
-          <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white/20"></div>
+          {/* Minimal top gradient only behind text for crystal-clear readability without dulling the villa */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/40 to-transparent"></div>
         </div>
 
-        {/* Hero Content positioned seamlessly inside the light/white patch work */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 md:py-24">
-          <div className="max-w-xl lg:max-w-2xl space-y-4 sm:space-y-6 animate-fade-in">
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-10 sm:py-16 md:py-20">
+          <div className="max-w-xl lg:max-w-2xl space-y-4 sm:space-y-6 animate-fade-in bg-white/70 sm:bg-transparent backdrop-blur-[2px] sm:backdrop-blur-0 p-4 sm:p-0 rounded-3xl">
             
             {/* Tagline / Subtitle banner */}
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-gold-500/15 border border-gold-500/40 text-neutral-900 text-xs font-bold uppercase tracking-wider shadow-sm">
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-gold-500/20 border border-gold-500/50 text-neutral-900 text-xs font-bold uppercase tracking-wider shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-gold-600" />
               <span>Real Estate Advisory & Property Solutions</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-black tracking-tight leading-[1.08] text-neutral-900">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-black tracking-tight leading-[1.1] text-neutral-900">
               {current.titlePart1} <br />
               <span className="gold-gradient-text drop-shadow-sm">
                 {current.titlePart2}
@@ -86,39 +86,39 @@ export default function HeroSection({ onSearch }) {
             </h1>
 
             {/* Plots | Flats | Houses | Villas Divider line */}
-            <div className="flex items-center space-x-3 text-neutral-800 font-semibold text-sm sm:text-base md:text-lg">
-              <div className="h-[2px] w-10 sm:w-16 bg-gold-500"></div>
+            <div className="flex items-center space-x-3 text-neutral-800 font-bold text-xs sm:text-base md:text-lg">
+              <div className="h-[2px] w-8 sm:w-16 bg-gold-500"></div>
               <span>{current.tagline}</span>
-              <div className="h-[2px] w-10 sm:w-16 bg-gold-500"></div>
+              <div className="h-[2px] w-8 sm:w-16 bg-gold-500"></div>
             </div>
 
             {/* Description */}
-            <p className="text-neutral-700 text-sm sm:text-base md:text-lg font-medium leading-relaxed max-w-lg">
+            <p className="text-neutral-700 text-xs sm:text-base md:text-lg font-medium leading-relaxed max-w-lg">
               {current.description}
             </p>
 
-            {/* Action CTA & Phone */}
-            <div className="pt-2 flex flex-wrap gap-4 items-center">
+            {/* Action Buttons */}
+            <div className="pt-2 flex flex-wrap gap-3 items-center">
               <Link
                 to={current.ctaLink}
-                className="inline-flex items-center space-x-2 py-3 px-7 rounded-full gold-gradient-btn text-black font-extrabold text-sm sm:text-base tracking-wide shadow-xl hover:shadow-gold-500/50 hover:scale-105 transition-all"
+                className="inline-flex items-center space-x-2 py-3 px-6 sm:px-8 rounded-full gold-gradient-btn text-black font-extrabold text-xs sm:text-sm tracking-wide shadow-xl hover:shadow-gold-500/50 hover:scale-105 transition-all"
               >
                 <span>{current.ctaText}</span>
-                <ArrowRight className="w-5 h-5 text-black" />
+                <ArrowRight className="w-4 h-4 text-black" />
               </Link>
 
               <a
                 href="https://wa.me/917075539189?text=Hello%20Super%20Best%20Properties,%20I%20would%20like%20to%20know%20more%20about%20your%20available%20properties."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-2 py-3 px-6 rounded-full bg-black/85 hover:bg-black text-white border border-gold-400 text-xs sm:text-sm font-semibold transition-all shadow-md"
+                className="inline-flex items-center space-x-2 py-3 px-5 sm:px-6 rounded-full bg-black/90 hover:bg-black text-white border border-gold-400 text-xs sm:text-sm font-semibold transition-all shadow-md"
               >
                 <span>WhatsApp Advisor</span>
               </a>
             </div>
 
             {/* Slide Navigation Controls */}
-            <div className="pt-4 flex items-center space-x-4">
+            <div className="pt-2 sm:pt-4 flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <button
                   onClick={prevSlide}
@@ -143,7 +143,7 @@ export default function HeroSection({ onSearch }) {
                     key={index}
                     onClick={() => setCurrentSlide(index)}
                     className={`h-2.5 rounded-full transition-all duration-300 ${
-                      currentSlide === index ? 'w-8 bg-gold-500' : 'w-2.5 bg-neutral-300 hover:bg-neutral-400'
+                      currentSlide === index ? 'w-7 bg-gold-500' : 'w-2.5 bg-neutral-300 hover:bg-neutral-400'
                     }`}
                     aria-label={`Go to slide ${index + 1}`}
                   />
@@ -156,8 +156,8 @@ export default function HeroSection({ onSearch }) {
 
       </div>
 
-      {/* Floating Advanced Search Bar overlapping directly below Hero */}
-      <div className="relative -mt-12 sm:-mt-14 z-30 px-4 sm:px-6 lg:px-8">
+      {/* Advanced Search Bar positioned cleanly */}
+      <div className="relative mt-2 sm:-mt-12 z-30 px-4 sm:px-6 lg:px-8 mb-6 sm:mb-0">
         <SearchBar onSearch={onSearch} />
       </div>
 

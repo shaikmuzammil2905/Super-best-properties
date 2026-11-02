@@ -731,3 +731,4 @@ export function getDatabase() {
 export function saveDatabase(data) {
   fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf-8');
 }
+
