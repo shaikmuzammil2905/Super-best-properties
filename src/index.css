@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+  
+  body {
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  }
+}
+
+/* Custom Gold Gradients & Textures */
+.gold-gradient-bg {
+  background: linear-gradient(135deg, #ECCB76 0%, #D4A017 50%, #B8860B 100%);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #F2C14E 0%, #D4A017 50%, #916706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-gradient-btn {
+  background: linear-gradient(180deg, #F5D377 0%, #D4A017 60%, #B8860B 100%);
+  box-shadow: 0 4px 14px rgba(212, 160, 23, 0.35);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gold-gradient-btn:hover {
+  background: linear-gradient(180deg, #F9DE8E 0%, #E5B025 60%, #C49112 100%);
+  box-shadow: 0 6px 20px rgba(212, 160, 23, 0.5);
+  transform: translateY(-1px);
+}
+
+.gold-border-glow {
+  border: 1px solid rgba(212, 160, 23, 0.35);
+  box-shadow: 0 0 15px rgba(212, 160, 23, 0.12);
+}
+
+.gold-border-glow:hover {
+  border-color: rgba(212, 160, 23, 0.8);
+  box-shadow: 0 0 25px rgba(212, 160, 23, 0.25);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0d0d;
+}
+::-webkit-scrollbar-thumb {
+  background: #D4A017;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #F2C14E;
+}
+
+/* Glassmorphism */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.dark-glass-panel {
+  background: rgba(13, 13, 13, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 160, 23, 0.25);
+}
+
+/* Keyframe animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes pulseSlow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 3s infinite ease-in-out;
+}
