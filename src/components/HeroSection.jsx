@@ -81,13 +81,13 @@ export default function HeroSection({ onSearch }) {
 
   return (
     <section 
-      className="relative w-full overflow-hidden bg-neutral-900"
+      className="relative w-full overflow-hidden bg-[#FAFAFA]"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
       
       {/* Hero Banner Container */}
-      <div className="relative min-h-[540px] sm:min-h-[600px] md:min-h-[660px] lg:min-h-[720px] w-full flex items-center">
+      <div className="relative min-h-[540px] sm:min-h-[600px] md:min-h-[660px] lg:min-h-[720px] w-full flex items-center bg-neutral-900">
         
         {/* Desktop Background Images with Butter-Smooth Cross-Fade */}
         <div className="hidden md:block absolute inset-0 overflow-hidden">
@@ -99,8 +99,8 @@ export default function HeroSection({ onSearch }) {
               } transition-transform duration-[6000ms]`}
               style={{ backgroundImage: `url('${slide.desktopImage}')` }}
             >
-              {/* Elegant soft gradient on left for desktop typography legibility */}
-              <div className="absolute inset-y-0 left-0 w-full lg:w-3/5 bg-gradient-to-r from-black/85 via-black/60 to-transparent"></div>
+              {/* Soft, bright gradient on left for desktop typography legibility without dark black patch */}
+              <div className="absolute inset-y-0 left-0 w-full lg:w-3/5 bg-gradient-to-r from-black/60 via-black/30 to-transparent"></div>
             </div>
           ))}
         </div>
