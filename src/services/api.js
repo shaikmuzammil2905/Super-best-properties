@@ -6,9 +6,12 @@ const API_BASE = '/api';
 function getLocalProperties() {
   try {
     const stored = localStorage.getItem('sbp_db_properties');
-    if (stored) return JSON.parse(stored);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
   } catch {}
-  return initialProperties;
+  return [...initialProperties];
 }
 
 function saveLocalProperties(props) {
@@ -20,23 +23,32 @@ function saveLocalProperties(props) {
 function getLocalCategories() {
   try {
     const stored = localStorage.getItem('sbp_db_categories');
-    if (stored) return JSON.parse(stored);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
   } catch {}
-  return initialCategories;
+  return [...initialCategories];
 }
 
 function getLocalProjects() {
   try {
     const stored = localStorage.getItem('sbp_db_projects');
-    if (stored) return JSON.parse(stored);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
   } catch {}
-  return initialProjects;
+  return [...initialProjects];
 }
 
 function getLocalEnquiries() {
   try {
     const stored = localStorage.getItem('sbp_db_enquiries');
-    if (stored) return JSON.parse(stored);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
   } catch {}
   return [
     {
@@ -64,41 +76,24 @@ function saveLocalEnquiries(enqs) {
 export const api = {
   // Auth
   async login(username, password) {
-    try {
-      const res = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-      if (res.ok) {
-        return await res.json();
-      }
-    } catch {}
-    
-    // Offline / Vercel fallback auth
+    // Check credentials locally for instant admin login
     if (username === 'admin' && (password === 'admin123' || password === 'admin')) {
-      return { success: true, token: 'sbp-admin-token-2026', user: { username: 'admin' } };
+      const authData = { success: true, token: 'sbp-admin-token-2026', user: { username: 'admin' } };
+      // Also notify backend if reachable
+      try {
+        fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        }).catch(() => {});
+      } catch {}
+      return authData;
     }
     throw new Error('Invalid username or password');
   },
 
   // Properties
   async getProperties(params = {}) {
-    try {
-      const query = new URLSearchParams();
-      Object.entries(params).forEach(([key, val]) => {
-        if (val !== undefined && val !== null && val !== '') {
-          query.append(key, val);
-        }
-      });
-      const res = await fetch(`${API_BASE}/properties?${query.toString()}`);
-      if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) return data;
-      }
-    } catch {}
-
-    // Fallback filter
     let props = getLocalProperties();
     const { type, location, minPrice, maxPrice, bedrooms, status, featured, search, sort } = params;
 
@@ -147,93 +142,82 @@ export const api = {
   },
 
   async getProperty(idOrSlug) {
-    try {
-      const res = await fetch(`${API_BASE}/properties/${idOrSlug}`);
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.property) return data;
-      }
-    } catch {}
-
     const props = getLocalProperties();
     const prop = props.find(p => p.id === idOrSlug || p.slug === idOrSlug) || props[0];
-    const similar = props.filter(p => p.id !== prop.id && (p.categorySlug === prop.categorySlug || p.city === prop.city)).slice(0, 3);
+    const similar = props
+      .filter(p => p.id !== prop.id && (p.categorySlug === prop.categorySlug || p.city === prop.city))
+      .slice(0, 3);
     return { property: prop, similar };
   },
 
   async createProperty(propertyData, token) {
+    const props = getLocalProperties();
+    const newProp = {
+      ...propertyData,
+      id: `prop-${Date.now()}`,
+      slug: (propertyData.title || 'property').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + `-${Date.now().toString().slice(-4)}`,
+      createdDate: new Date().toISOString()
+    };
+    props.unshift(newProp);
+    saveLocalProperties(props);
+
+    // Sync to backend if available
     try {
-      const res = await fetch(`${API_BASE}/properties`, {
+      fetch(`${API_BASE}/properties`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(propertyData)
-      });
-      if (res.ok) return await res.json();
+        body: JSON.stringify(newProp)
+      }).catch(() => {});
     } catch {}
 
-    const props = getLocalProperties();
-    const newProp = {
-      ...propertyData,
-      id: `prop-${Date.now()}`,
-      slug: propertyData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + `-${Date.now().toString().slice(-4)}`,
-      createdDate: new Date().toISOString()
-    };
-    props.unshift(newProp);
-    saveLocalProperties(props);
     return newProp;
   },
 
   async updateProperty(id, propertyData, token) {
-    try {
-      const res = await fetch(`${API_BASE}/properties/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(propertyData)
-      });
-      if (res.ok) return await res.json();
-    } catch {}
-
     const props = getLocalProperties();
     const idx = props.findIndex(p => p.id === id);
     if (idx !== -1) {
       props[idx] = { ...props[idx], ...propertyData };
       saveLocalProperties(props);
+
+      // Sync to backend if available
+      try {
+        fetch(`${API_BASE}/properties/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(propertyData)
+        }).catch(() => {});
+      } catch {}
+
       return props[idx];
     }
     return propertyData;
   },
 
   async deleteProperty(id, token) {
-    try {
-      const res = await fetch(`${API_BASE}/properties/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) return await res.json();
-    } catch {}
-
     let props = getLocalProperties();
     props = props.filter(p => p.id !== id);
     saveLocalProperties(props);
+
+    // Sync to backend if available
+    try {
+      fetch(`${API_BASE}/properties/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      }).catch(() => {});
+    } catch {}
+
     return { success: true };
   },
 
   // Categories
   async getCategories() {
-    try {
-      const res = await fetch(`${API_BASE}/categories`);
-      if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) return data;
-      }
-    } catch {}
-
     const cats = getLocalCategories();
     const props = getLocalProperties();
     return cats.map(c => ({
@@ -243,19 +227,11 @@ export const api = {
   },
 
   async getCategory(slug) {
-    try {
-      const res = await fetch(`${API_BASE}/categories/${slug}`);
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.category) return data;
-      }
-    } catch {}
-
     const cats = getLocalCategories();
     const props = getLocalProperties();
     
     // Normalize slug (e.g. plot vs plots, flat vs flats)
-    const normalizedSlug = slug.toLowerCase();
+    const normalizedSlug = (slug || '').toLowerCase();
     const category = cats.find(c => 
       c.slug === normalizedSlug || 
       c.slug.replace(/s$/, '') === normalizedSlug.replace(/s$/, '') ||
@@ -360,36 +336,16 @@ export const api = {
 
   // Projects
   async getProjects() {
-    try {
-      const res = await fetch(`${API_BASE}/projects`);
-      if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) return data;
-      }
-    } catch {}
     return getLocalProjects();
   },
 
   async getProject(idOrSlug) {
-    try {
-      const res = await fetch(`${API_BASE}/projects/${idOrSlug}`);
-      if (res.ok) return await res.json();
-    } catch {}
     const projs = getLocalProjects();
     return projs.find(p => p.id === idOrSlug || p.slug === idOrSlug) || projs[0];
   },
 
   // Enquiries
   async submitEnquiry(enquiryData) {
-    try {
-      const res = await fetch(`${API_BASE}/enquiries`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(enquiryData)
-      });
-      if (res.ok) return await res.json();
-    } catch {}
-
     const enqs = getLocalEnquiries();
     const newEnq = {
       ...enquiryData,
@@ -399,90 +355,85 @@ export const api = {
     };
     enqs.unshift(newEnq);
     saveLocalEnquiries(enqs);
+
+    // Sync to backend if available
+    try {
+      fetch(`${API_BASE}/enquiries`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(enquiryData)
+      }).catch(() => {});
+    } catch {}
+
     return { success: true, enquiry: newEnq };
   },
 
   async getEnquiries(token) {
-    try {
-      const res = await fetch(`${API_BASE}/enquiries`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) return await res.json();
-    } catch {}
     return getLocalEnquiries();
   },
 
   async updateEnquiry(id, data, token) {
-    try {
-      const res = await fetch(`${API_BASE}/enquiries/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(data)
-      });
-      if (res.ok) return await res.json();
-    } catch {}
-
     const enqs = getLocalEnquiries();
     const idx = enqs.findIndex(e => e.id === id);
     if (idx !== -1) {
       enqs[idx] = { ...enqs[idx], ...data };
       saveLocalEnquiries(enqs);
+
+      // Sync to backend if available
+      try {
+        fetch(`${API_BASE}/enquiries/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(data)
+        }).catch(() => {});
+      } catch {}
+
       return enqs[idx];
     }
     return data;
   },
 
   async deleteEnquiry(id, token) {
-    try {
-      const res = await fetch(`${API_BASE}/enquiries/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) return await res.json();
-    } catch {}
-
     let enqs = getLocalEnquiries();
     enqs = enqs.filter(e => e.id !== id);
     saveLocalEnquiries(enqs);
+
+    // Sync to backend if available
+    try {
+      fetch(`${API_BASE}/enquiries/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      }).catch(() => {});
+    } catch {}
+
     return { success: true };
   },
 
   // Site Content
   async getContent() {
-    try {
-      const res = await fetch(`${API_BASE}/content`);
-      if (res.ok) return await res.json();
-    } catch {}
     return initialSiteContent;
   },
 
   async updateContent(data, token) {
+    // Sync to backend if available
     try {
-      const res = await fetch(`${API_BASE}/content`, {
+      fetch(`${API_BASE}/content`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(data)
-      });
-      if (res.ok) return await res.json();
+      }).catch(() => {});
     } catch {}
     return data;
   },
 
   // Admin stats
   async getAdminStats(token) {
-    try {
-      const res = await fetch(`${API_BASE}/admin/stats`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) return await res.json();
-    } catch {}
-
     const props = getLocalProperties();
     const projs = getLocalProjects();
     const enqs = getLocalEnquiries();
