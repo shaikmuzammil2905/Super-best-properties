@@ -55,7 +55,8 @@ export default function FounderSection() {
                     className="w-full h-full object-cover object-top filter brightness-[1.02] contrast-[1.03]"
                   />
 
-                  {/* Clean bottom area so original portrait typography is fully visible and not blocked */}
+                  {/* Clean bottom vignette to ensure pristine frame with zero text artifacts */}
+                  <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
                 </div>
 
               </div>

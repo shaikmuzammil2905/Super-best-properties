@@ -33,27 +33,31 @@ export default function SearchBar({ onSearch, initialValues = {}, className = ""
 
   return (
     <div className={`w-full max-w-5xl mx-auto ${className}`}>
+      {/* 
+        Solid Crisp White Background - 100% Opaque, High-Contrast 
+        Fixes blending with background (Ash colour) and increases font sizes as requested in image copy 14.png
+      */}
       <form 
         onSubmit={handleSearch}
-        className="bg-white/98 backdrop-blur-xl rounded-2xl sm:rounded-full p-3 sm:p-3.5 shadow-2xl border-2 border-gold-400/40 hover:border-gold-500 transition-all duration-300 transform hover:-translate-y-0.5"
+        className="bg-white rounded-2xl sm:rounded-full p-3.5 sm:p-4 shadow-[0_20px_50px_rgba(0,0,0,0.22)] border-2 border-gold-500 hover:border-gold-600 transition-all duration-300 transform hover:-translate-y-0.5"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 items-center">
           
           {/* 1. Property Type */}
-          <div className="flex items-center space-x-3 px-3 py-2 border-b sm:border-b-0 sm:border-r border-neutral-200">
-            <div className="w-8 h-8 rounded-full bg-gold-500/15 flex items-center justify-center text-gold-600 shrink-0 shadow-sm">
-              <Home className="w-4 h-4" />
+          <div className="flex items-center space-x-3.5 px-3.5 py-2.5 bg-neutral-50 sm:bg-transparent rounded-xl sm:rounded-none border-b sm:border-b-0 sm:border-r border-neutral-200">
+            <div className="w-11 h-11 rounded-full bg-gold-100/80 border border-gold-400 flex items-center justify-center text-gold-700 shrink-0 shadow-sm">
+              <Home className="w-5 h-5" />
             </div>
             <div className="flex-1 text-left">
-              <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-400">
-                Property Type
+              <label className="block text-xs uppercase font-extrabold tracking-wider text-gold-700 mb-0.5">
+                PROPERTY TYPE
               </label>
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="w-full bg-transparent text-xs sm:text-sm font-semibold text-neutral-800 focus:outline-none cursor-pointer"
+                className="w-full bg-transparent text-sm sm:text-base font-bold text-neutral-900 focus:outline-none cursor-pointer"
               >
-                <option value="">Select Type</option>
+                <option value="" className="text-neutral-700">Select Type</option>
                 <option value="independent-house">Independent House</option>
                 <option value="plots">Plot</option>
                 <option value="flats">Flat</option>
@@ -74,20 +78,20 @@ export default function SearchBar({ onSearch, initialValues = {}, className = ""
           </div>
 
           {/* 2. Location */}
-          <div className="flex items-center space-x-3 px-3 py-2 border-b sm:border-b-0 sm:border-r border-neutral-200">
-            <div className="w-8 h-8 rounded-full bg-gold-500/15 flex items-center justify-center text-gold-600 shrink-0 shadow-sm">
-              <MapPin className="w-4 h-4" />
+          <div className="flex items-center space-x-3.5 px-3.5 py-2.5 bg-neutral-50 sm:bg-transparent rounded-xl sm:rounded-none border-b sm:border-b-0 sm:border-r border-neutral-200">
+            <div className="w-11 h-11 rounded-full bg-gold-100/80 border border-gold-400 flex items-center justify-center text-gold-700 shrink-0 shadow-sm">
+              <MapPin className="w-5 h-5" />
             </div>
             <div className="flex-1 text-left">
-              <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-400">
-                Location
+              <label className="block text-xs uppercase font-extrabold tracking-wider text-gold-700 mb-0.5">
+                LOCATION
               </label>
               <select
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="w-full bg-transparent text-xs sm:text-sm font-semibold text-neutral-800 focus:outline-none cursor-pointer"
+                className="w-full bg-transparent text-sm sm:text-base font-bold text-neutral-900 focus:outline-none cursor-pointer"
               >
-                <option value="">Select Location</option>
+                <option value="" className="text-neutral-700">Select Location</option>
                 <option value="Vanasthalipuram">Vanasthalipuram</option>
                 <option value="Tellapur">Tellapur</option>
                 <option value="Gachibowli">Gachibowli</option>
@@ -102,20 +106,20 @@ export default function SearchBar({ onSearch, initialValues = {}, className = ""
           </div>
 
           {/* 3. Budget Range */}
-          <div className="flex items-center space-x-3 px-3 py-2 border-b sm:border-b-0 sm:border-r-0 lg:border-r border-neutral-200">
-            <div className="w-8 h-8 rounded-full bg-gold-500/15 flex items-center justify-center text-gold-600 shrink-0 shadow-sm">
-              <IndianRupee className="w-4 h-4" />
+          <div className="flex items-center space-x-3.5 px-3.5 py-2.5 bg-neutral-50 sm:bg-transparent rounded-xl sm:rounded-none border-b sm:border-b-0 sm:border-r-0 lg:border-r border-neutral-200">
+            <div className="w-11 h-11 rounded-full bg-gold-100/80 border border-gold-400 flex items-center justify-center text-gold-700 shrink-0 shadow-sm">
+              <IndianRupee className="w-5 h-5" />
             </div>
             <div className="flex-1 text-left">
-              <label className="block text-[10px] uppercase font-bold tracking-wider text-neutral-400">
-                Budget Range
+              <label className="block text-xs uppercase font-extrabold tracking-wider text-gold-700 mb-0.5">
+                BUDGET RANGE
               </label>
               <select
                 value={budget}
                 onChange={(e) => setBudget(e.target.value)}
-                className="w-full bg-transparent text-xs sm:text-sm font-semibold text-neutral-800 focus:outline-none cursor-pointer"
+                className="w-full bg-transparent text-sm sm:text-base font-bold text-neutral-900 focus:outline-none cursor-pointer"
               >
-                <option value="">Select Budget</option>
+                <option value="" className="text-neutral-700">Select Budget</option>
                 <option value="0-5000000">Under ₹ 50 Lakhs</option>
                 <option value="5000000-10000000">₹ 50 Lakhs – ₹ 1 Cr</option>
                 <option value="10000000-20000000">₹ 1 Cr – ₹ 2 Cr</option>
@@ -128,9 +132,9 @@ export default function SearchBar({ onSearch, initialValues = {}, className = ""
           <div className="flex items-center space-x-2 w-full px-1">
             <button
               type="submit"
-              className="flex-1 flex items-center justify-center space-x-2 py-3 px-6 rounded-full gold-gradient-btn text-black font-extrabold text-sm sm:text-base tracking-wide hover:shadow-xl transition-all"
+              className="flex-1 flex items-center justify-center space-x-2.5 py-3.5 px-7 rounded-full gold-gradient-btn text-black font-extrabold text-sm sm:text-base tracking-wide hover:shadow-xl hover:scale-105 active:scale-95 transition-all shadow-md"
             >
-              <Search className="w-4 h-4 text-black" />
+              <Search className="w-5 h-5 text-black" />
               <span>Search</span>
             </button>
 
@@ -139,7 +143,7 @@ export default function SearchBar({ onSearch, initialValues = {}, className = ""
                 type="button"
                 onClick={handleReset}
                 title="Reset filters"
-                className="p-3 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-600 hover:text-black transition-colors shrink-0"
+                className="p-3.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 hover:text-black transition-colors shrink-0 shadow-sm"
               >
                 <RotateCcw className="w-4 h-4" />
               </button>
