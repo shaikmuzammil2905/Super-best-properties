@@ -115,8 +115,8 @@ export default function HeroSection({ onSearch }) {
               }`}
               style={{ backgroundImage: `url('${slide.mobileImage}')` }}
             >
-              {/* Subtle top-to-bottom dark gradient on mobile for maximum text clarity without white patches */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/80"></div>
+              {/* Bright, crystal-clear mobile view with light gradient for crisp legibility */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/15 to-black/65"></div>
             </div>
           ))}
         </div>
