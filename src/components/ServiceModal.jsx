@@ -206,3 +206,4 @@ export default function ServiceModal({ isOpen, onClose, service }) {
     </div>
   );
 }
+

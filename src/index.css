@@ -10,10 +10,11 @@
   
   body {
     overflow-x: hidden;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
-  h1, h2, h3, .font-serif {
-    font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  h1, h2, h3, h4, h5, h6, .font-serif {
+    font-family: 'Outfit', sans-serif;
   }
 }
 

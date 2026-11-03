@@ -52,16 +52,16 @@ export default function Header() {
   const isHome = location.pathname === '/';
 
   return (
-    <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/95 backdrop-blur-md shadow-2xl border-b border-gold-500/20 py-2.5' : 'bg-black border-b border-gold-500/15 py-3.5'}`}>
+    <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/95 backdrop-blur-md shadow-2xl border-b border-gold-500/20 py-2 sm:py-2.5' : 'bg-black border-b border-gold-500/15 py-2.5 sm:py-3.5'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Logo Section */}
-          <Link to="/" className="flex items-center space-x-3 group">
+          {/* Logo Section - Increased size, clearly visible, zero black patch work */}
+          <Link to="/" className="flex items-center space-x-3 group py-0.5">
             <img 
               src="/assets/logo.png" 
               alt="Super Best Properties Logo" 
-              className="h-12 sm:h-14 md:h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
+              className="h-14 sm:h-16 md:h-20 lg:h-20 w-auto object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-[0_2px_10px_rgba(212,160,23,0.3)]" 
             />
           </Link>
 
@@ -166,7 +166,7 @@ export default function Header() {
               )}
             </div>
 
-            {/* What are you looking for / Categories Link */}
+            {/* Categories Link */}
             <Link 
               to="/categories" 
               className={`px-3.5 py-2 rounded-full text-sm font-medium transition-colors ${
@@ -196,14 +196,14 @@ export default function Header() {
               About Us
             </Link>
 
-            {/* Contact Link */}
+            {/* Contact Us Link */}
             <Link 
               to="/contact" 
               className={`px-3.5 py-2 rounded-full text-sm font-medium transition-colors ${
                 location.pathname === '/contact' ? 'text-gold-400 font-semibold' : 'text-gray-300 hover:text-gold-400'
               }`}
             >
-              Contact
+              Contact Us
             </Link>
           </nav>
 
@@ -227,7 +227,7 @@ export default function Header() {
           <div className="lg:hidden flex items-center space-x-3">
             <a
               href="tel:7075539189"
-              className="p-2 rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/30"
+              className="p-2.5 rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/30"
               aria-label="Call Super Best Properties"
             >
               <Phone className="w-4 h-4" />
@@ -291,11 +291,12 @@ export default function Header() {
             About Us & Founder
           </Link>
 
+          {/* Contact Us - Exactly as requested in image copy 12.png */}
           <Link
             to="/contact"
             className="block px-4 py-2.5 rounded-xl text-gray-200 hover:text-gold-400 hover:bg-neutral-900 font-medium"
           >
-            Contact & Office Location
+            Contact Us
           </Link>
 
           <div className="pt-4 border-t border-neutral-800 space-y-2">
@@ -322,4 +323,3 @@ export default function Header() {
     </header>
   );
 }
-

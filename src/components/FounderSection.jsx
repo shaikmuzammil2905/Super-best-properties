@@ -30,29 +30,32 @@ export default function FounderSection() {
         <div className="bg-[#0f0f0f] border-2 border-gold-500/30 rounded-3xl overflow-hidden shadow-2xl shadow-black/80">
           <div className="grid grid-cols-1 lg:grid-cols-12 items-center">
             
-            {/* Left: Founder Executive Portrait (Matching Reference Image 4) */}
+            {/* Left: Founder Executive Portrait (Matching Reference Image 4 & Image copy 11) */}
             <div className="lg:col-span-5 p-6 sm:p-8 flex justify-center items-center bg-gradient-to-b from-neutral-900/50 to-black/80">
               <div className="relative group max-w-sm w-full">
                 
                 {/* Gold outer frame glow */}
                 <div className="absolute -inset-1.5 bg-gradient-to-r from-gold-600 via-gold-400 to-gold-700 rounded-3xl blur-sm opacity-50 group-hover:opacity-80 transition duration-500"></div>
                 
-                {/* Photo container */}
+                {/* Photo container with upward shifted badge as requested in image copy 11.png */}
                 <div className="relative rounded-2xl overflow-hidden border-2 border-gold-400/80 shadow-2xl bg-neutral-950 aspect-[9/14] sm:aspect-[9/13]">
+                  
+                  {/* Upward shifted grand badge in the top space */}
+                  <div className="absolute top-4 inset-x-3 text-center z-20">
+                    <span className="inline-flex items-center space-x-2 bg-black/90 backdrop-blur-md px-4 py-2 rounded-full border border-gold-400 text-gold-300 text-xs sm:text-sm font-bold tracking-widest uppercase shadow-2xl shadow-black/90">
+                      <Sparkles className="w-3.5 h-3.5 text-gold-400" />
+                      <span>SUPER BEST PROPERTIES FOUNDER</span>
+                      <Sparkles className="w-3.5 h-3.5 text-gold-400" />
+                    </span>
+                  </div>
+
                   <img
                     src="/assets/founder.png"
                     alt="D. Suresh Baabu - Founder Super Best Properties"
                     className="w-full h-full object-cover object-top filter brightness-[1.02] contrast-[1.03]"
                   />
-                  {/* Subtle vignette gradient overlay at bottom */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                  
-                  {/* Bottom badge on photo */}
-                  <div className="absolute bottom-4 inset-x-4 text-center">
-                    <span className="inline-block bg-black/85 backdrop-blur-md px-4 py-1.5 rounded-full border border-gold-500/50 text-gold-300 text-xs font-semibold tracking-wider">
-                      SUPER BEST PROPERTIES FOUNDER
-                    </span>
-                  </div>
+
+                  {/* Clean bottom area so original portrait typography is fully visible and not blocked */}
                 </div>
 
               </div>
@@ -150,4 +153,3 @@ export default function FounderSection() {
     </section>
   );
 }
-

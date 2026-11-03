@@ -28,7 +28,8 @@ export default {
         }
       },
       fontFamily: {
-        serif: ['Cinzel', 'Playfair Display', 'Georgia', 'serif'],
+        serif: ['Outfit', 'sans-serif'],
+        heading: ['Outfit', 'sans-serif'],
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       boxShadow: {
@@ -40,4 +41,3 @@ export default {
   },
   plugins: [],
 }
-
