@@ -98,16 +98,67 @@ export const initialServices = [
   }
 ];
 
+// Helper to normalize property records so images and amenities are ALWAYS arrays
+export function normalizeProperty(p) {
+  if (!p) return null;
+
+  // Clean images to always be a valid array of URL strings
+  let images = [];
+  if (Array.isArray(p.images)) {
+    images = p.images.filter(Boolean);
+  } else if (typeof p.images === 'string' && p.images.trim()) {
+    try {
+      const parsed = JSON.parse(p.images);
+      images = Array.isArray(parsed) ? parsed.filter(Boolean) : [p.images.trim()];
+    } catch {
+      images = [p.images.trim()];
+    }
+  } else if (p.image && typeof p.image === 'string' && p.image.trim()) {
+    images = [p.image.trim()];
+  }
+  
+  if (images.length === 0) {
+    images = ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1000&q=80'];
+  }
+
+  // Clean amenities to always be an array of strings
+  let amenities = [];
+  if (Array.isArray(p.amenities)) {
+    amenities = p.amenities.map(a => typeof a === 'string' ? a.trim() : String(a)).filter(Boolean);
+  } else if (typeof p.amenities === 'string' && p.amenities.trim()) {
+    try {
+      const parsed = JSON.parse(p.amenities);
+      amenities = Array.isArray(parsed) 
+        ? parsed.map(a => typeof a === 'string' ? a.trim() : String(a)).filter(Boolean)
+        : p.amenities.split(',').map(s => s.trim()).filter(Boolean);
+    } catch {
+      amenities = p.amenities.split(',').map(s => s.trim()).filter(Boolean);
+    }
+  }
+
+  return {
+    ...p,
+    categorySlug: p.category_slug || p.categorySlug || 'apartments',
+    categoryName: p.category_name || p.categoryName || 'Apartment',
+    priceNumber: p.price_number || p.priceNumber || 0,
+    areaSqFt: p.area_sq_ft || p.areaSqFt || 0,
+    mapCoordinates: p.map_coordinates || p.mapCoordinates || '17.3850, 78.4867',
+    createdDate: p.created_at || p.createdDate || new Date().toISOString(),
+    images,
+    amenities
+  };
+}
+
 // Helper to get local stored properties or fallback to mockData
 function getLocalProperties() {
   try {
     const stored = localStorage.getItem('sbp_db_properties');
     if (stored) {
       const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed.map(normalizeProperty);
     }
   } catch {}
-  return [...initialProperties];
+  return initialProperties.map(normalizeProperty);
 }
 
 function saveLocalProperties(props) {
@@ -371,15 +422,7 @@ export const api = {
     try {
       const { data, error } = await supabase.from('properties').select('*');
       if (!error && Array.isArray(data) && data.length > 0) {
-        const formatted = data.map(p => ({
-          ...p,
-          categorySlug: p.category_slug || p.categorySlug,
-          categoryName: p.category_name || p.categoryName,
-          priceNumber: p.price_number || p.priceNumber,
-          areaSqFt: p.area_sq_ft || p.areaSqFt,
-          mapCoordinates: p.map_coordinates || p.mapCoordinates,
-          createdDate: p.created_at || p.createdDate
-        }));
+        const formatted = data.map(normalizeProperty);
         saveLocalProperties(formatted);
         return filterAndSortProps(formatted, params);
       }
@@ -391,11 +434,40 @@ export const api = {
 
   async getProperty(idOrSlug) {
     const props = await this.getProperties();
-    const prop = props.find(p => p.id === idOrSlug || p.slug === idOrSlug) || props[0];
+    const cleanSearch = (idOrSlug || '').toLowerCase().trim();
+    
+    // 1. Exact match by id or slug
+    let prop = props.find(p => 
+      (p.id && p.id.toLowerCase() === cleanSearch) || 
+      (p.slug && p.slug.toLowerCase() === cleanSearch)
+    );
+
+    // 2. Fuzzy match by partial slug or title slug
+    if (!prop) {
+      prop = props.find(p => {
+        const pSlug = (p.slug || '').toLowerCase();
+        const pTitleSlug = (p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        return pSlug.includes(cleanSearch) || cleanSearch.includes(pSlug) ||
+               pTitleSlug.includes(cleanSearch) || cleanSearch.includes(pTitleSlug);
+      });
+    }
+
+    // 3. Fallback to first property if available
+    if (!prop && props.length > 0) {
+      prop = props[0];
+    }
+
+    if (!prop) {
+      return { property: null, similar: [] };
+    }
+
+    const safeProp = normalizeProperty(prop);
     const similar = props
-      .filter(p => p.id !== prop.id && (p.categorySlug === prop.categorySlug || p.city === prop.city))
-      .slice(0, 3);
-    return { property: prop, similar };
+      .filter(p => p.id !== safeProp.id && (p.categorySlug === safeProp.categorySlug || p.city === safeProp.city))
+      .slice(0, 3)
+      .map(normalizeProperty);
+
+    return { property: safeProp, similar };
   },
 
   async createProperty(propertyData, token) {
@@ -403,12 +475,12 @@ export const api = {
     const newId = `prop-${Date.now()}`;
     const newSlug = (propertyData.title || 'property').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + `-${Date.now().toString().slice(-4)}`;
     
-    const newProp = {
+    const newProp = normalizeProperty({
       ...propertyData,
       id: newId,
       slug: newSlug,
       createdDate: new Date().toISOString()
-    };
+    });
 
     props.unshift(newProp);
     saveLocalProperties(props);
@@ -447,28 +519,33 @@ export const api = {
     const props = getLocalProperties();
     const idx = props.findIndex(p => p.id === id);
     if (idx !== -1) {
-      props[idx] = { ...props[idx], ...propertyData, updatedDate: new Date().toISOString() };
+      const normalized = normalizeProperty({
+        ...props[idx],
+        ...propertyData,
+        updatedDate: new Date().toISOString()
+      });
+      props[idx] = normalized;
       saveLocalProperties(props);
 
       try {
         await supabase.from('properties').update({
-          title: propertyData.title,
-          category_slug: propertyData.categorySlug,
-          category_name: propertyData.categoryName,
-          price: propertyData.price,
-          price_number: propertyData.priceNumber || 0,
-          location: propertyData.location,
-          city: propertyData.city || 'Hyderabad',
-          area: propertyData.area,
-          area_sq_ft: propertyData.areaSqFt || 0,
-          bedrooms: propertyData.bedrooms,
-          bathrooms: propertyData.bathrooms,
-          status: propertyData.status,
-          featured: Boolean(propertyData.featured),
-          images: propertyData.images,
-          description: propertyData.description,
-          amenities: typeof propertyData.amenities === 'string' ? propertyData.amenities : JSON.stringify(propertyData.amenities),
-          map_coordinates: propertyData.mapCoordinates,
+          title: normalized.title,
+          category_slug: normalized.categorySlug,
+          category_name: normalized.categoryName,
+          price: normalized.price,
+          price_number: normalized.priceNumber || 0,
+          location: normalized.location,
+          city: normalized.city || 'Hyderabad',
+          area: normalized.area,
+          area_sq_ft: normalized.areaSqFt || 0,
+          bedrooms: normalized.bedrooms,
+          bathrooms: normalized.bathrooms,
+          status: normalized.status,
+          featured: Boolean(normalized.featured),
+          images: normalized.images,
+          description: normalized.description,
+          amenities: typeof propertyData.amenities === 'string' ? propertyData.amenities : JSON.stringify(normalized.amenities),
+          map_coordinates: normalized.mapCoordinates,
           updated_at: new Date().toISOString()
         }).eq('id', id);
       } catch (err) {

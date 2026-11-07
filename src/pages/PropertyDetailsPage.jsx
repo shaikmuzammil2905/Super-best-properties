@@ -109,9 +109,18 @@ export default function PropertyDetailsPage() {
     );
   }
 
-  const images = property.images && property.images.length > 0
-    ? property.images
-    : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80'];
+  const rawImages = property.images || property.image;
+  const images = Array.isArray(rawImages) && rawImages.length > 0
+    ? rawImages.filter(Boolean)
+    : (typeof rawImages === 'string' && rawImages.trim() 
+        ? [rawImages.trim()] 
+        : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80']);
+
+  const amenities = Array.isArray(property.amenities)
+    ? property.amenities.map(a => typeof a === 'string' ? a.trim() : String(a)).filter(Boolean)
+    : (typeof property.amenities === 'string' && property.amenities.trim()
+        ? property.amenities.split(',').map(s => s.trim()).filter(Boolean)
+        : []);
 
   const whatsappMessage = encodeURIComponent(
     `Hello Super Best Properties!\n` +
@@ -206,7 +215,7 @@ export default function PropertyDetailsPage() {
             {/* Main Featured Image */}
             <div className="relative aspect-[16/10] sm:aspect-[16/9] rounded-3xl overflow-hidden bg-neutral-900 shadow-xl border border-neutral-200">
               <img
-                src={images[activeImageIndex]}
+                src={images[activeImageIndex] || images[0]}
                 alt={`${property.title} view ${activeImageIndex + 1}`}
                 className="w-full h-full object-cover transition-all duration-500"
               />
@@ -216,7 +225,7 @@ export default function PropertyDetailsPage() {
             </div>
 
             {/* Thumbnail Row */}
-            {images.length > 1 && (
+            {Array.isArray(images) && images.length > 1 && (
               <div className="flex items-center space-x-3 overflow-x-auto pb-2">
                 {images.map((img, idx) => (
                   <button
@@ -290,11 +299,11 @@ export default function PropertyDetailsPage() {
             </div>
 
             {/* Amenities Section */}
-            {property.amenities && property.amenities.length > 0 && (
+            {amenities.length > 0 && (
               <div className="bg-white p-6 sm:p-8 rounded-3xl border border-neutral-200/90 shadow-sm space-y-4">
                 <h3 className="text-xl font-bold text-neutral-900 font-serif">Key Amenities & Features</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                  {property.amenities.map((amenity, idx) => (
+                  {amenities.map((amenity, idx) => (
                     <div key={idx} className="flex items-center space-x-2.5 p-3 rounded-xl bg-neutral-50 border border-neutral-200 text-sm font-medium text-neutral-800">
                       <CheckCircle2 className="w-4 h-4 text-gold-600 shrink-0" />
                       <span>{amenity}</span>

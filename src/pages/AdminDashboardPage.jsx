@@ -231,10 +231,16 @@ export default function AdminDashboardPage() {
 
   const handleEditProperty = (prop) => {
     setEditingPropertyId(prop.id);
+    const resolvedImages = Array.isArray(prop.images) && prop.images.length > 0
+      ? prop.images.filter(Boolean)
+      : (typeof prop.images === 'string' && prop.images.trim()
+          ? [prop.images.trim()]
+          : (prop.image ? [prop.image] : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1000&q=80']));
+
     setPropForm({
       title: prop.title || '',
-      categorySlug: prop.categorySlug || 'plots',
-      categoryName: prop.categoryName || 'Plots',
+      categorySlug: prop.categorySlug || 'apartments',
+      categoryName: prop.categoryName || 'Apartment',
       price: prop.price || '₹ 50 Lakhs',
       priceNumber: prop.priceNumber || 5000000,
       location: prop.location || 'Hyderabad',
@@ -245,7 +251,7 @@ export default function AdminDashboardPage() {
       bathrooms: prop.bathrooms || '2 Baths',
       status: prop.status || 'Available',
       featured: Boolean(prop.featured),
-      images: Array.isArray(prop.images) ? prop.images : [prop.images].filter(Boolean),
+      images: resolvedImages,
       description: prop.description || '',
       amenities: Array.isArray(prop.amenities) ? prop.amenities.join(', ') : (prop.amenities || ''),
       mapCoordinates: prop.mapCoordinates || '17.3850, 78.4867'
@@ -1661,19 +1667,82 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase text-neutral-300 mb-1">Image URL or Upload</label>
-                <div className="flex gap-2">
+              {/* IMAGE SECTION WITH LIVE VISIBLE PREVIEW */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold uppercase text-neutral-300">
+                    Property Picture (Live Website Display)
+                  </label>
+                  {uploadingImage && (
+                    <span className="text-xs text-gold-400 font-bold flex items-center space-x-1 animate-pulse">
+                      <RefreshCw className="w-3 h-3 animate-spin" />
+                      <span>Uploading new picture...</span>
+                    </span>
+                  )}
+                </div>
+
+                {/* CURRENT / UPLOADED PICTURE PREVIEW BOX */}
+                <div className="relative rounded-2xl overflow-hidden border-2 border-gold-500/50 bg-neutral-950 aspect-[16/9] w-full max-h-56 flex items-center justify-center group shadow-xl">
+                  {propForm.images && propForm.images[0] ? (
+                    <img
+                      src={propForm.images[0]}
+                      alt="Property Preview"
+                      className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                      onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1000&q=80';
+                      }}
+                    />
+                  ) : (
+                    <div className="text-center p-6 text-neutral-500 space-y-1">
+                      <Image className="w-8 h-8 mx-auto text-neutral-600" />
+                      <p className="text-xs font-bold">No picture selected</p>
+                    </div>
+                  )}
+
+                  {/* Badge */}
+                  <div className="absolute top-2.5 left-2.5 bg-black/85 backdrop-blur-md px-3 py-1 rounded-lg border border-gold-400 text-gold-300 text-[11px] font-bold flex items-center space-x-1.5 shadow">
+                    <Sparkles className="w-3.5 h-3.5 text-gold-400" />
+                    <span>Current Picture (Visible on Website)</span>
+                  </div>
+
+                  {/* Direct One-Click Upload / Replace Picture Button */}
+                  <div className="absolute bottom-2.5 right-2.5">
+                    <label className="px-4 py-2 rounded-xl bg-gold-500 hover:bg-gold-400 text-black text-xs font-black cursor-pointer shadow-xl flex items-center space-x-1.5 transition-all hover:scale-105 active:scale-95">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>{uploadingImage ? 'Uploading...' : 'Upload New Picture'}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        disabled={uploadingImage}
+                        onChange={(e) => {
+                          if (e.target.files?.[0]) {
+                            handleFileUpload(e.target.files[0], (url) => {
+                              setPropForm(prev => ({
+                                ...prev,
+                                images: [url, ...(prev.images || []).filter(i => i !== url)]
+                              }));
+                              showToast('New picture uploaded and preview updated! Click Save Changes to publish.');
+                            });
+                          }
+                        }}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                {/* Direct Image URL input or Cloudinary Link */}
+                <div className="flex gap-2 pt-1">
                   <input
                     type="text"
                     value={propForm.images[0] || ''}
                     onChange={(e) => setPropForm({ ...propForm, images: [e.target.value] })}
-                    placeholder="Paste image URL"
+                    placeholder="Or paste direct image URL (https://... or data:image/...)"
                     className="flex-1 bg-neutral-950 border border-neutral-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-gold-500"
                   />
                   <label className="px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-xs font-bold text-white cursor-pointer flex items-center space-x-1 border border-neutral-700">
                     <Upload className="w-3.5 h-3.5 text-gold-400" />
-                    <span>{uploadingImage ? '...' : 'Upload'}</span>
+                    <span>Browse</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -1681,7 +1750,11 @@ export default function AdminDashboardPage() {
                       onChange={(e) => {
                         if (e.target.files?.[0]) {
                           handleFileUpload(e.target.files[0], (url) => {
-                            setPropForm(prev => ({ ...prev, images: [url, ...prev.images] }));
+                            setPropForm(prev => ({
+                              ...prev,
+                              images: [url, ...(prev.images || []).filter(i => i !== url)]
+                            }));
+                            showToast('New picture uploaded and preview updated! Click Save Changes to publish.');
                           });
                         }
                       }}
@@ -1818,26 +1891,86 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase text-neutral-300 mb-1">Project Photo (URL or Upload)</label>
-                <div className="flex gap-2">
+              {/* PROJECT PHOTO WITH LIVE PREVIEW */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold uppercase text-neutral-300">
+                    Project Photo (Live Website Banner)
+                  </label>
+                  {uploadingImage && (
+                    <span className="text-xs text-gold-400 font-bold flex items-center space-x-1 animate-pulse">
+                      <RefreshCw className="w-3 h-3 animate-spin" />
+                      <span>Uploading project photo...</span>
+                    </span>
+                  )}
+                </div>
+
+                {/* PROJECT PHOTO PREVIEW CARD */}
+                <div className="relative rounded-2xl overflow-hidden border-2 border-gold-500/50 bg-neutral-950 aspect-[16/9] w-full max-h-56 flex items-center justify-center group shadow-xl">
+                  {projForm.image ? (
+                    <img
+                      src={projForm.image}
+                      alt="Project Preview"
+                      className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                      onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1000&q=80';
+                      }}
+                    />
+                  ) : (
+                    <div className="text-center p-6 text-neutral-500 space-y-1">
+                      <Image className="w-8 h-8 mx-auto text-neutral-600" />
+                      <p className="text-xs font-bold">No photo selected</p>
+                    </div>
+                  )}
+
+                  <div className="absolute top-2.5 left-2.5 bg-black/85 backdrop-blur-md px-3 py-1 rounded-lg border border-gold-400 text-gold-300 text-[11px] font-bold flex items-center space-x-1.5 shadow">
+                    <Sparkles className="w-3.5 h-3.5 text-gold-400" />
+                    <span>Live Website Project Banner</span>
+                  </div>
+
+                  <div className="absolute bottom-2.5 right-2.5">
+                    <label className="px-4 py-2 rounded-xl bg-gold-500 hover:bg-gold-400 text-black text-xs font-black cursor-pointer shadow-xl flex items-center space-x-1.5 transition-all hover:scale-105 active:scale-95">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>{uploadingImage ? 'Uploading...' : 'Upload New Photo'}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        disabled={uploadingImage}
+                        onChange={(e) => {
+                          if (e.target.files?.[0]) {
+                            handleFileUpload(e.target.files[0], (url) => {
+                              setProjForm(prev => ({ ...prev, image: url }));
+                              showToast('New project photo uploaded and preview updated!');
+                            });
+                          }
+                        }}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-1">
                   <input
                     type="text"
-                    value={projForm.image}
+                    value={projForm.image || ''}
                     onChange={(e) => setProjForm({ ...projForm, image: e.target.value })}
-                    placeholder="Paste image URL"
+                    placeholder="Paste direct photo URL"
                     className="flex-1 bg-neutral-950 border border-neutral-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-gold-500"
                   />
                   <label className="px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-xs font-bold text-white cursor-pointer flex items-center space-x-1 border border-neutral-700">
                     <Upload className="w-3.5 h-3.5 text-gold-400" />
-                    <span>Upload</span>
+                    <span>Browse</span>
                     <input
                       type="file"
                       accept="image/*"
                       disabled={uploadingImage}
                       onChange={(e) => {
                         if (e.target.files?.[0]) {
-                          handleFileUpload(e.target.files[0], (url) => setProjForm(prev => ({ ...prev, image: url })));
+                          handleFileUpload(e.target.files[0], (url) => {
+                            setProjForm(prev => ({ ...prev, image: url }));
+                            showToast('New project photo uploaded and preview updated!');
+                          });
                         }
                       }}
                       className="hidden"

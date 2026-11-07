@@ -35,9 +35,13 @@ export default function PropertyCard({ property }) {
     }
   };
 
-  const imageSrc = (property.images && property.images.length > 0)
+  const rawImg = Array.isArray(property.images) && property.images.length > 0
     ? property.images[0]
-    : 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1000&q=80';
+    : (typeof property.images === 'string' && property.images.trim()
+        ? property.images.trim()
+        : (property.image || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1000&q=80'));
+
+  const imageSrc = rawImg;
 
   const isSold = property.status && property.status.toLowerCase() === 'sold';
 
