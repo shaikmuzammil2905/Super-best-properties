@@ -181,7 +181,7 @@ export default function ServicesPage() {
                   </div>
                 </div>
 
-                {/* Direct WhatsApp Action Button (Replaces View Full Details & Popup) */}
+                {/* Direct Enquire Now Action Button as requested */}
                 <div className="mt-6 pt-4 border-t border-neutral-100">
                   <a
                     href={waUrl}
@@ -190,8 +190,7 @@ export default function ServicesPage() {
                     onClick={(e) => e.stopPropagation()}
                     className="w-full py-3 px-4 rounded-xl gold-gradient-btn text-black font-extrabold text-xs sm:text-sm tracking-wide text-center flex items-center justify-center space-x-2 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all"
                   >
-                    <MessageCircle className="w-4 h-4 text-black shrink-0" />
-                    <span>Inquire on WhatsApp</span>
+                    <span>Enquire Now</span>
                     <ArrowRight className="w-3.5 h-3.5 text-black shrink-0" />
                   </a>
                 </div>
