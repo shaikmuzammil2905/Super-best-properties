@@ -1,6 +1,7 @@
 -- ==============================================================================
 -- SUPER BEST PROPERTIES — COMPLETE PRODUCTION SUPABASE DATABASE SCHEMA
 -- Run this in your Supabase SQL Editor: https://supabase.com/dashboard/project/gidrbkijntosrjaapiua/sql
+-- Safe to run multiple times (idempotent with IF NOT EXISTS & DROP POLICY IF EXISTS)
 -- ==============================================================================
 
 -- 1. EXTENSIONS
@@ -36,7 +37,7 @@ CREATE TABLE IF NOT EXISTS public.website_settings (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 4. PROPERTY CATEGORIES (15 Categories)
+-- 4. PROPERTY CATEGORIES (15 Real Estate Categories)
 CREATE TABLE IF NOT EXISTS public.property_categories (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     slug TEXT UNIQUE NOT NULL,
@@ -102,7 +103,7 @@ CREATE TABLE IF NOT EXISTS public.enquiries (
     budget TEXT,
     message TEXT,
     source TEXT DEFAULT 'Website Form',
-    status TEXT DEFAULT 'New', -- New, Contacted, Interested, Follow-up Required, Converted, Closed
+    status TEXT DEFAULT 'New',
     internal_notes TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
@@ -147,7 +148,6 @@ CREATE TABLE IF NOT EXISTS public.media_library (
 -- ROW LEVEL SECURITY (RLS) POLICIES
 -- ==============================================================================
 
--- Enable RLS on all tables
 ALTER TABLE public.admin_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.website_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.property_categories ENABLE ROW LEVEL SECURITY;
@@ -158,7 +158,26 @@ ALTER TABLE public.services ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.testimonials ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.media_library ENABLE ROW LEVEL SECURITY;
 
--- PUBLIC READ POLICIES (Website Visitors can view published content)
+-- Clean existing policies so script can be safely re-run
+DROP POLICY IF EXISTS "Public Read Website Settings" ON public.website_settings;
+DROP POLICY IF EXISTS "Public Read Categories" ON public.property_categories;
+DROP POLICY IF EXISTS "Public Read Properties" ON public.properties;
+DROP POLICY IF EXISTS "Public Read Projects" ON public.projects;
+DROP POLICY IF EXISTS "Public Read Services" ON public.services;
+DROP POLICY IF EXISTS "Public Read Testimonials" ON public.testimonials;
+DROP POLICY IF EXISTS "Public Read Media" ON public.media_library;
+DROP POLICY IF EXISTS "Public Insert Enquiries" ON public.enquiries;
+
+DROP POLICY IF EXISTS "Anon Full Access Properties" ON public.properties;
+DROP POLICY IF EXISTS "Anon Full Access Categories" ON public.property_categories;
+DROP POLICY IF EXISTS "Anon Full Access Projects" ON public.projects;
+DROP POLICY IF EXISTS "Anon Full Access Enquiries" ON public.enquiries;
+DROP POLICY IF EXISTS "Anon Full Access Settings" ON public.website_settings;
+DROP POLICY IF EXISTS "Anon Full Access Services" ON public.services;
+DROP POLICY IF EXISTS "Anon Full Access Testimonials" ON public.testimonials;
+DROP POLICY IF EXISTS "Anon Full Access Media" ON public.media_library;
+
+-- PUBLIC READ POLICIES
 CREATE POLICY "Public Read Website Settings" ON public.website_settings FOR SELECT USING (true);
 CREATE POLICY "Public Read Categories" ON public.property_categories FOR SELECT USING (true);
 CREATE POLICY "Public Read Properties" ON public.properties FOR SELECT USING (published = true);
@@ -167,10 +186,10 @@ CREATE POLICY "Public Read Services" ON public.services FOR SELECT USING (true);
 CREATE POLICY "Public Read Testimonials" ON public.testimonials FOR SELECT USING (true);
 CREATE POLICY "Public Read Media" ON public.media_library FOR SELECT USING (true);
 
--- PUBLIC INSERT POLICIES (Visitors can submit inquiries)
+-- PUBLIC INSERT POLICIES (Enquiry submissions)
 CREATE POLICY "Public Insert Enquiries" ON public.enquiries FOR INSERT WITH CHECK (true);
 
--- FULL ACCESS POLICIES (For Authenticated Users & Anon Key while in development)
+-- FULL ACCESS POLICIES (Authenticated Admin + Anon API Key)
 CREATE POLICY "Anon Full Access Properties" ON public.properties FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Anon Full Access Categories" ON public.property_categories FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Anon Full Access Projects" ON public.projects FOR ALL USING (true) WITH CHECK (true);
@@ -184,6 +203,7 @@ CREATE POLICY "Anon Full Access Media" ON public.media_library FOR ALL USING (tr
 -- INITIAL SEED DATA
 -- ==============================================================================
 
+-- 1. Website Settings
 INSERT INTO public.website_settings (id, site_name, tagline, phone, whatsapp_number, email, address)
 VALUES (
     'primary_settings',
@@ -193,9 +213,13 @@ VALUES (
     '917075539189',
     'contact@superbestproperties.com',
     'H.No 5-5-35/193, Prashanth Nagar, Vanasthalipuram, Hyderabad, Telangana 500070'
-) ON CONFLICT (id) DO NOTHING;
+) ON CONFLICT (id) DO UPDATE SET
+    site_name = EXCLUDED.site_name,
+    tagline = EXCLUDED.tagline,
+    phone = EXCLUDED.phone,
+    whatsapp_number = EXCLUDED.whatsapp_number;
 
--- Seed Categories
+-- 2. Seed 15 Categories
 INSERT INTO public.property_categories (slug, name, description, display_order) VALUES
 ('independent-house', 'Independent House', 'Standalone luxury houses with private compound and clear title deeds', 1),
 ('plots', 'Plots', 'Residential and open plots in prime approved layouts with clear demarcation', 2),
@@ -212,4 +236,29 @@ INSERT INTO public.property_categories (slug, name, description, display_order) 
 ('pg-hostels', 'PG Hostel', 'Running paying guest facilities and student accommodation hostels', 13),
 ('pg-buildings', 'PG Building', 'Standalone commercial buildings primed for PG hostel operations', 14),
 ('guest-houses', 'Guest House', 'Hospitality suites, corporate transit homes and boutique guest properties', 15)
-ON CONFLICT (slug) DO NOTHING;
+ON CONFLICT (slug) DO UPDATE SET
+    name = EXCLUDED.name,
+    description = EXCLUDED.description,
+    display_order = EXCLUDED.display_order;
+
+-- 3. Seed Initial Properties
+INSERT INTO public.properties (id, title, slug, category_slug, category_name, price, price_number, location, city, area, area_sq_ft, bedrooms, bathrooms, status, featured, published, images, description, amenities, map_coordinates) VALUES
+('prop-1', 'The Grand Royal Villa', 'the-grand-royal-villa', 'gated-community-villas', 'Gated Community Villas', '₹ 1.85 Cr', 18500000, 'Tellapur Growth Corridor, Hyderabad', 'Hyderabad', '3,450 Sq.Ft', 3450, '4 BHK', '4 Baths', 'Available', true, true, '["https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1000&q=80", "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1000&q=80"]'::jsonb, 'Ultra-luxury triplex gated community villa in Tellapur. 100% Vastu compliant, clubhouse, private garden, 24/7 security, HMDA approved layout with clear link documents.', 'Clubhouse, Swimming Pool, 100% Vastu, 24/7 Security, 40ft Roads, Solar Fencing', '17.4789, 78.2911'),
+('prop-2', 'HMDA Approved Villa Plots', 'hmda-approved-villa-plots-tellapur', 'plots', 'Plots', '₹ 45 Lakhs', 4500000, 'Tellapur, Outer Ring Road, Hyderabad', 'Hyderabad', '200 Sq.Yards', 1800, 'Plot', '-', 'Available', true, true, '["https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80"]'::jsonb, 'Premium residential plots with underground drainage, electricity, avenue plantation, and immediate registration. Strategic proximity to Financial District.', 'Underground Electricity, Water Pipeline, 40-60ft BT Roads, Clear Title, HMDA Layout', '17.4720, 78.2890'),
+('prop-3', 'Skyline Luxury Residences', 'skyline-luxury-residences-gachibowli', 'apartments', 'Apartment', '₹ 1.25 Cr', 12500000, 'Financial District, Gachibowli, Hyderabad', 'Hyderabad', '2,100 Sq.Ft', 2100, '3 BHK', '3 Baths', 'Available', true, true, '["https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1000&q=80"]'::jsonb, 'High-rise residential apartment with panoramic city views, modern Italian marble flooring, biometric security, and dedicated EV parking.', 'Gymnasium, Banquet Hall, EV Charging, High Speed Lifts, Infinity Pool', '17.4401, 78.3489'),
+('prop-4', 'Airport Corridor Open Plots', 'airport-corridor-open-plots-shamshabad', 'plots', 'Plots', '₹ 38 Lakhs', 3800000, 'Shamshabad Airport Zone, Hyderabad', 'Hyderabad', '180 Sq.Yards', 1620, 'Open Plot', '-', 'Available', true, true, '["https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1000&q=80"]'::jsonb, 'High capital growth open plots near Rajiv Gandhi International Airport. Ready for construction with DTCP approval and clear titles.', 'DTCP Approved, Spot Registration, Bank Loan Available, Compound Wall', '17.2501, 78.4312')
+ON CONFLICT (id) DO NOTHING;
+
+-- 4. Seed Initial Inquiry
+INSERT INTO public.enquiries (id, name, phone, email, property_type, property_title, budget, message, status)
+VALUES (
+    'enq-seed-1',
+    'Rajesh Kumar Verma',
+    '9848012345',
+    'rajesh.verma@example.com',
+    'Gated Community Villas',
+    'The Grand Royal Villa',
+    '₹ 1.5 Cr - 2 Cr',
+    'Interested in site visit for The Grand Royal Villa in Tellapur this weekend.',
+    'New'
+) ON CONFLICT (id) DO NOTHING;
