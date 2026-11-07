@@ -15,7 +15,9 @@ import {
   Sparkles,
   CheckCircle2,
   Filter,
-  ArrowRight
+  ArrowRight,
+  ChevronDown,
+  Check
 } from 'lucide-react';
 
 export default function BuyAPropertyPage() {
@@ -32,6 +34,27 @@ export default function BuyAPropertyPage() {
   const [priceRange, setPriceRange] = useState(searchParams.get('price') || searchParams.get('budget') || 'all');
   const [propertyType, setPropertyType] = useState(searchParams.get('type') || 'all');
   const [sortBy, setSortBy] = useState('newest');
+
+  // Custom Dropdown Open States (Ensures they ALWAYS drop DOWN, never drop up)
+  const [typeDropdownOpen, setTypeDropdownOpen] = useState(false);
+  const [priceDropdownOpen, setPriceDropdownOpen] = useState(false);
+
+  const typeDropdownRef = useRef(null);
+  const priceDropdownRef = useRef(null);
+
+  // Close dropdowns on outside click
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (typeDropdownRef.current && !typeDropdownRef.current.contains(event.target)) {
+        setTypeDropdownOpen(false);
+      }
+      if (priceDropdownRef.current && !priceDropdownRef.current.contains(event.target)) {
+        setPriceDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Load Data from api (compatible with Admin Panel changes)
   useEffect(() => {
@@ -71,25 +94,43 @@ export default function BuyAPropertyPage() {
   // Handle Search Submission
   const handleSearchSubmit = (e) => {
     if (e) e.preventDefault();
+    setTypeDropdownOpen(false);
+    setPriceDropdownOpen(false);
+
     const params = {};
     if (searchQuery.trim()) params.search = searchQuery.trim();
     if (priceRange !== 'all') params.price = priceRange;
     if (propertyType !== 'all') params.type = propertyType;
     setSearchParams(params);
 
-    // Smooth scroll to results
     if (resultsRef.current) {
       resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
-  // Quick Pill Filter selection
-  const handlePillSelect = (typeVal) => {
-    setPropertyType(typeVal);
+  // Select Property Type from custom dropdown
+  const handleSelectType = (val) => {
+    setPropertyType(val);
+    setTypeDropdownOpen(false);
     const params = {};
     if (searchQuery.trim()) params.search = searchQuery.trim();
     if (priceRange !== 'all') params.price = priceRange;
-    if (typeVal !== 'all') params.type = typeVal;
+    if (val !== 'all') params.type = val;
+    setSearchParams(params);
+
+    if (resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  // Select Price Range from custom dropdown
+  const handleSelectPrice = (val) => {
+    setPriceRange(val);
+    setPriceDropdownOpen(false);
+    const params = {};
+    if (searchQuery.trim()) params.search = searchQuery.trim();
+    if (val !== 'all') params.price = val;
+    if (propertyType !== 'all') params.type = propertyType;
     setSearchParams(params);
 
     if (resultsRef.current) {
@@ -103,7 +144,35 @@ export default function BuyAPropertyPage() {
     setPriceRange('all');
     setPropertyType('all');
     setSortBy('newest');
+    setTypeDropdownOpen(false);
+    setPriceDropdownOpen(false);
     setSearchParams({});
+  };
+
+  // Display label for selected Property Type
+  const getSelectedTypeLabel = () => {
+    if (propertyType === 'all') return 'All Properties';
+    if (propertyType === 'plots') return 'Plots';
+    if (propertyType === 'houses') return 'Houses';
+    if (propertyType === 'flats') return 'Flats';
+    if (propertyType === 'apartments') return 'Apartments';
+    if (propertyType === 'villas') return 'Villas';
+    if (propertyType === 'open plots') return 'Open Plots';
+    if (propertyType === 'commercial') return 'Commercial';
+    if (propertyType === 'residential') return 'Residential';
+    if (propertyType === 'projects') return 'Landmark Projects';
+    const foundCat = categories.find(c => c.slug === propertyType);
+    return foundCat ? foundCat.name : propertyType;
+  };
+
+  // Display label for selected Price Range
+  const getSelectedPriceLabel = () => {
+    if (priceRange === 'below-50l' || priceRange === '0-5000000') return 'Below ₹50 Lakhs';
+    if (priceRange === '50l-1cr' || priceRange === '5000000-10000000') return '₹50 Lakhs – ₹1 Crore';
+    if (priceRange === 'above-1cr' || priceRange === '10000000-plus') return 'Above ₹1 Crore';
+    if (priceRange === '1cr-2cr' || priceRange === '10000000-20000000') return '₹1 Crore – ₹2 Crore';
+    if (priceRange === 'above-2cr' || priceRange === '20000000-plus') return 'Above ₹2 Crore';
+    return 'Price: Any Price';
   };
 
   // Filtering Logic
@@ -137,7 +206,6 @@ export default function BuyAPropertyPage() {
         const isRes = ['independent-house', 'flats', 'apartments', 'gated-community-villas'].includes(prop.categorySlug);
         if (!isRes) return false;
       } else if (typeLower === 'projects') {
-        // Handled in combined display below
         return false;
       } else {
         const matchSlug = prop.categorySlug === propertyType || prop.categorySlug.replace(/s$/, '') === typeLower.replace(/s$/, '');
@@ -162,7 +230,7 @@ export default function BuyAPropertyPage() {
       }
     }
 
-    // 3. Search query matching: title, location, category, description, and keywords
+    // 3. Search query matching
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       const match = prop.title.toLowerCase().includes(q) ||
@@ -233,81 +301,167 @@ export default function BuyAPropertyPage() {
         </div>
 
         {/* ======================================================== */}
-        {/* 2. UNIFIED SEARCH & FILTER BAR (Master Prompt Spec 4, 5, 6) */}
-        {/* Desktop: [ Search properties... ] [ Price Range ▼ ] [ Property Type ▼ ] [ Search ] */}
-        {/* Mobile: Responsive stacked controls with zero clipping */}
+        {/* 2. UNIFIED SEARCH & FILTER BAR WITH DOWNWARD DROPDOWNS */}
+        {/* Strictly drops DOWN (not drop up) and fully shows "All Properties" */}
         {/* ======================================================== */}
-        <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.08)] border-2 border-gold-400 mb-8 sm:mb-10 transition-all">
+        <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.08)] border-2 border-gold-400 mb-8 sm:mb-10 relative z-30">
           <form onSubmit={handleSearchSubmit} className="space-y-3 sm:space-y-0">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
               
-              {/* Search Box (Col 5) */}
-              <div className="md:col-span-5 relative">
+              {/* Search Box (Col 4) */}
+              <div className="md:col-span-4 relative">
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gold-600 pointer-events-none">
                   <Search className="w-5 h-5" />
                 </div>
                 <input
                   type="text"
-                  placeholder="Search properties, locations, projects (e.g. Tellapur, 2 BHK, Villa, Plot)..."
+                  placeholder="Search properties, locations, projects..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full bg-neutral-50 hover:bg-neutral-100/70 focus:bg-white border border-neutral-200 focus:border-gold-500 rounded-2xl pl-12 pr-4 py-3.5 text-sm sm:text-base font-semibold text-neutral-900 placeholder-neutral-400 focus:outline-none transition-all shadow-inner"
                 />
               </div>
 
-              {/* Price Range Dropdown (Col 3) - Master Prompt Spec 4 */}
-              <div className="md:col-span-3 relative">
-                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gold-600 pointer-events-none">
-                  <IndianRupee className="w-4 h-4" />
-                </div>
-                <select
-                  value={priceRange}
-                  onChange={(e) => {
-                    setPriceRange(e.target.value);
+              {/* Price Range Dropdown (Col 3) - Strictly Opens DOWN */}
+              <div className="md:col-span-3 relative" ref={priceDropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPriceDropdownOpen(!priceDropdownOpen);
+                    setTypeDropdownOpen(false);
                   }}
-                  className="w-full bg-neutral-50 hover:bg-neutral-100/70 focus:bg-white border border-neutral-200 focus:border-gold-500 rounded-2xl pl-10 pr-8 py-3.5 text-sm sm:text-base font-semibold text-neutral-900 focus:outline-none cursor-pointer transition-all"
-                  aria-label="Price Range"
+                  className="w-full bg-neutral-50 hover:bg-neutral-100/70 focus:bg-white border border-neutral-200 focus:border-gold-500 rounded-2xl px-4 py-3.5 text-left text-sm sm:text-base font-semibold text-neutral-900 flex items-center justify-between transition-all"
+                  aria-expanded={priceDropdownOpen}
                 >
-                  <option value="all">Price Range: Any Price</option>
-                  <option value="below-50l">Below ₹50 Lakhs</option>
-                  <option value="50l-1cr">₹50 Lakhs – ₹1 Crore</option>
-                  <option value="above-1cr">Above ₹1 Crore</option>
-                  <option value="1cr-2cr">₹1 Crore – ₹2 Crore</option>
-                  <option value="above-2cr">Above ₹2 Crore</option>
-                </select>
+                  <div className="flex items-center space-x-2.5 truncate pr-2">
+                    <IndianRupee className="w-4 h-4 text-gold-600 shrink-0" />
+                    <span className="truncate">{getSelectedPriceLabel()}</span>
+                  </div>
+                  <ChevronDown className={`w-4 h-4 text-neutral-600 transition-transform duration-200 shrink-0 ${priceDropdownOpen ? 'rotate-180 text-gold-600' : ''}`} />
+                </button>
+
+                {/* Downward Dropdown Menu */}
+                {priceDropdownOpen && (
+                  <div className="absolute top-full left-0 w-full mt-2 bg-white border-2 border-gold-400 rounded-2xl shadow-2xl p-2 z-50 animate-fade-in max-h-72 overflow-y-auto">
+                    {[
+                      { val: 'all', label: 'Price Range: Any Price' },
+                      { val: 'below-50l', label: 'Below ₹50 Lakhs' },
+                      { val: '50l-1cr', label: '₹50 Lakhs – ₹1 Crore' },
+                      { val: 'above-1cr', label: 'Above ₹1 Crore' },
+                      { val: '1cr-2cr', label: '₹1 Crore – ₹2 Crore' },
+                      { val: 'above-2cr', label: 'Above ₹2 Crore' }
+                    ].map((opt) => (
+                      <button
+                        key={opt.val}
+                        type="button"
+                        onClick={() => handleSelectPrice(opt.val)}
+                        className={`w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-between transition-colors ${
+                          priceRange === opt.val
+                            ? 'bg-gold-500 text-black font-bold'
+                            : 'text-neutral-700 hover:bg-neutral-100 hover:text-black'
+                        }`}
+                      >
+                        <span>{opt.label}</span>
+                        {priceRange === opt.val && <Check className="w-4 h-4 text-black shrink-0" />}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {/* Property Type Dropdown (Col 3) - Master Prompt Spec 5 */}
-              <div className="md:col-span-2 relative">
-                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gold-600 pointer-events-none">
-                  <Building className="w-4 h-4" />
-                </div>
-                <select
-                  value={propertyType}
-                  onChange={(e) => {
-                    setPropertyType(e.target.value);
+              {/* Property Type Dropdown (Col 3) - Ample Width & Strictly Opens DOWNWARD (fixes image copy 26 & media_1794044523979) */}
+              <div className="md:col-span-3 relative" ref={typeDropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTypeDropdownOpen(!typeDropdownOpen);
+                    setPriceDropdownOpen(false);
                   }}
-                  className="w-full bg-neutral-50 hover:bg-neutral-100/70 focus:bg-white border border-neutral-200 focus:border-gold-500 rounded-2xl pl-10 pr-8 py-3.5 text-sm sm:text-base font-semibold text-neutral-900 focus:outline-none cursor-pointer transition-all"
-                  aria-label="Property Type"
+                  className="w-full bg-neutral-50 hover:bg-neutral-100/70 focus:bg-white border border-neutral-200 focus:border-gold-500 rounded-2xl px-4 py-3.5 text-left text-sm sm:text-base font-semibold text-neutral-900 flex items-center justify-between transition-all"
+                  aria-expanded={typeDropdownOpen}
                 >
-                  <option value="all">All Properties</option>
-                  <option value="plots">Plots</option>
-                  <option value="houses">Houses</option>
-                  <option value="flats">Flats</option>
-                  <option value="apartments">Apartments</option>
-                  <option value="villas">Villas</option>
-                  <option value="open plots">Open Plots</option>
-                  <option value="commercial">Commercial</option>
-                  <option value="residential">Residential</option>
-                  <option value="projects">Landmark Projects</option>
-                  
-                  {/* Dynamically populated from actual Categories */}
-                  <optgroup label="All 15 Specific Categories">
-                    {categories.map((c) => (
-                      <option key={c.slug} value={c.slug}>{c.name}</option>
+                  <div className="flex items-center space-x-2.5 truncate pr-2">
+                    <Building className="w-4 h-4 text-gold-600 shrink-0" />
+                    <span className="truncate">{getSelectedTypeLabel()}</span>
+                  </div>
+                  <ChevronDown className={`w-4 h-4 text-neutral-600 transition-transform duration-200 shrink-0 ${typeDropdownOpen ? 'rotate-180 text-gold-600' : ''}`} />
+                </button>
+
+                {/* Downward Dropdown Menu - Always drops DOWN */}
+                {typeDropdownOpen && (
+                  <div className="absolute top-full left-0 w-full sm:min-w-[320px] mt-2 bg-white border-2 border-gold-400 rounded-2xl shadow-2xl p-2 z-50 animate-fade-in max-h-80 overflow-y-auto">
+                    
+                    {/* All Properties */}
+                    <button
+                      type="button"
+                      onClick={() => handleSelectType('all')}
+                      className={`w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-bold flex items-center justify-between transition-colors mb-1 ${
+                        propertyType === 'all'
+                          ? 'bg-gold-500 text-black font-extrabold'
+                          : 'text-neutral-900 hover:bg-neutral-100'
+                      }`}
+                    >
+                      <span className="flex items-center space-x-2">
+                        <Building className="w-4 h-4 text-gold-600" />
+                        <span>All Properties</span>
+                      </span>
+                      {propertyType === 'all' && <Check className="w-4 h-4 text-black shrink-0" />}
+                    </button>
+
+                    {/* Popular Categories Group */}
+                    <div className="px-3 pt-2 pb-1 text-[11px] font-extrabold uppercase tracking-wider text-gold-700 border-t border-neutral-100 mt-1">
+                      Popular Types
+                    </div>
+
+                    {[
+                      { val: 'plots', label: 'Plots' },
+                      { val: 'houses', label: 'Houses' },
+                      { val: 'flats', label: 'Flats' },
+                      { val: 'apartments', label: 'Apartments' },
+                      { val: 'villas', label: 'Villas' },
+                      { val: 'open plots', label: 'Open Plots' },
+                      { val: 'commercial', label: 'Commercial' },
+                      { val: 'residential', label: 'Residential' },
+                      { val: 'projects', label: 'Landmark Projects' }
+                    ].map((opt) => (
+                      <button
+                        key={opt.val}
+                        type="button"
+                        onClick={() => handleSelectType(opt.val)}
+                        className={`w-full text-left px-3.5 py-2 rounded-xl text-sm font-semibold flex items-center justify-between transition-colors ${
+                          propertyType.toLowerCase() === opt.val.toLowerCase()
+                            ? 'bg-gold-500 text-black font-bold'
+                            : 'text-neutral-700 hover:bg-neutral-100 hover:text-black'
+                        }`}
+                      >
+                        <span>{opt.label}</span>
+                        {propertyType.toLowerCase() === opt.val.toLowerCase() && <Check className="w-4 h-4 text-black shrink-0" />}
+                      </button>
                     ))}
-                  </optgroup>
-                </select>
+
+                    {/* All 15 Specific Categories */}
+                    <div className="px-3 pt-3 pb-1 text-[11px] font-extrabold uppercase tracking-wider text-gold-700 border-t border-neutral-100 mt-2">
+                      All 15 Specific Categories
+                    </div>
+
+                    {categories.map((c) => (
+                      <button
+                        key={c.slug}
+                        type="button"
+                        onClick={() => handleSelectType(c.slug)}
+                        className={`w-full text-left px-3.5 py-2 rounded-xl text-sm font-semibold flex items-center justify-between transition-colors ${
+                          propertyType === c.slug
+                            ? 'bg-gold-500 text-black font-bold'
+                            : 'text-neutral-700 hover:bg-neutral-100 hover:text-black'
+                        }`}
+                      >
+                        <span className="truncate">{c.name}</span>
+                        {propertyType === c.slug && <Check className="w-4 h-4 text-black shrink-0" />}
+                      </button>
+                    ))}
+
+                  </div>
+                )}
               </div>
 
               {/* Action Buttons: Search & Reset (Col 2) */}
@@ -335,7 +489,7 @@ export default function BuyAPropertyPage() {
             </div>
           </form>
 
-          {/* Quick Category & Project Filter Pills (Unifying Categories & Projects) */}
+          {/* Quick Category & Project Filter Pills */}
           <div className="mt-4 pt-4 border-t border-neutral-100 flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none text-xs sm:text-sm">
             <span className="text-neutral-400 font-bold uppercase tracking-wider shrink-0 text-[11px] mr-1 flex items-center">
               <Filter className="w-3.5 h-3.5 mr-1 text-gold-600" />
@@ -358,7 +512,7 @@ export default function BuyAPropertyPage() {
               <button
                 key={pill.val}
                 type="button"
-                onClick={() => handlePillSelect(pill.val)}
+                onClick={() => handleSelectType(pill.val)}
                 className={`px-3.5 py-1.5 rounded-full font-bold whitespace-nowrap transition-all duration-200 shrink-0 ${
                   propertyType.toLowerCase() === pill.val.toLowerCase()
                     ? 'bg-gradient-to-r from-gold-600 to-gold-400 text-black shadow-md shadow-gold-500/20'
@@ -402,20 +556,14 @@ export default function BuyAPropertyPage() {
 
                 {propertyType !== 'all' && (
                   <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-gold-100 text-gold-800 text-xs font-semibold capitalize">
-                    <span>Type: {propertyType}</span>
+                    <span>Type: {getSelectedTypeLabel()}</span>
                     <button onClick={() => setPropertyType('all')} className="hover:text-black font-bold">×</button>
                   </span>
                 )}
 
                 {priceRange !== 'all' && (
                   <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-gold-100 text-gold-800 text-xs font-semibold">
-                    <span>Price: {
-                      priceRange === 'below-50l' ? 'Below ₹50 Lakhs' :
-                      priceRange === '50l-1cr' ? '₹50 Lakhs – ₹1 Cr' :
-                      priceRange === 'above-1cr' ? 'Above ₹1 Cr' :
-                      priceRange === '1cr-2cr' ? '₹1 Cr – ₹2 Cr' :
-                      priceRange === 'above-2cr' ? 'Above ₹2 Cr' : priceRange
-                    }</span>
+                    <span>Price: {getSelectedPriceLabel()}</span>
                     <button onClick={() => setPriceRange('all')} className="hover:text-black font-bold">×</button>
                   </span>
                 )}
@@ -450,7 +598,7 @@ export default function BuyAPropertyPage() {
         </div>
 
         {/* ======================================================== */}
-        {/* 4. PROPERTY CARDS GRID (Master Prompt Spec 7 & 8) */}
+        {/* 4. PROPERTY CARDS GRID */}
         {/* ======================================================== */}
         {!showProjectsOnly && (
           <>
@@ -480,7 +628,7 @@ export default function BuyAPropertyPage() {
         )}
 
         {/* ======================================================== */}
-        {/* 5. LANDMARK PROJECTS SECTION (Unified Projects) */}
+        {/* 5. LANDMARK PROJECTS SECTION */}
         {/* ======================================================== */}
         {(showProjectsOnly || (propertyType === 'all' && filteredProjects.length > 0)) && (
           <div className="mt-16 pt-10 border-t border-neutral-200">
@@ -496,7 +644,7 @@ export default function BuyAPropertyPage() {
               
               {!showProjectsOnly && (
                 <button
-                  onClick={() => handlePillSelect('projects')}
+                  onClick={() => handleSelectType('projects')}
                   className="inline-flex items-center space-x-1.5 text-xs sm:text-sm font-bold text-gold-700 hover:text-gold-900 hover:underline"
                 >
                   <span>View All Projects</span>
@@ -568,4 +716,3 @@ export default function BuyAPropertyPage() {
     </div>
   );
 }
-
