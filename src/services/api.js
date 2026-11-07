@@ -1,4 +1,5 @@
 import { initialCategories, initialProperties, initialProjects, initialSiteContent } from '../data/mockData';
+import { supabase } from './supabaseClient';
 
 const API_BASE = '/api';
 
@@ -31,6 +32,12 @@ function getLocalCategories() {
   return [...initialCategories];
 }
 
+function saveLocalCategories(cats) {
+  try {
+    localStorage.setItem('sbp_db_categories', JSON.stringify(cats));
+  } catch {}
+}
+
 function getLocalProjects() {
   try {
     const stored = localStorage.getItem('sbp_db_projects');
@@ -40,6 +47,12 @@ function getLocalProjects() {
     }
   } catch {}
   return [...initialProjects];
+}
+
+function saveLocalProjects(projs) {
+  try {
+    localStorage.setItem('sbp_db_projects', JSON.stringify(projs));
+  } catch {}
 }
 
 function getLocalEnquiries() {
@@ -63,6 +76,19 @@ function getLocalEnquiries() {
       source: 'Website Property Details',
       status: 'New',
       createdAt: '2026-03-01T10:30:00Z'
+    },
+    {
+      id: 'enq-2',
+      name: 'Ananya Reddy',
+      phone: '9123456789',
+      email: 'ananya.reddy@example.com',
+      propertyType: 'Plots',
+      propertyTitle: 'HMDA Approved Villa Plots',
+      budget: '₹ 50 Lakhs - 80 Lakhs',
+      message: 'Looking for 200 sq.yards east facing open plot with immediate registration.',
+      source: 'Buy a Property Page',
+      status: 'Interested',
+      createdAt: '2026-03-03T14:15:00Z'
     }
   ];
 }
@@ -73,76 +99,207 @@ function saveLocalEnquiries(enqs) {
   } catch {}
 }
 
+function getLocalSettings() {
+  try {
+    const stored = localStorage.getItem('sbp_db_settings');
+    if (stored) return JSON.parse(stored);
+  } catch {}
+  return {
+    siteName: 'Super Best Properties',
+    tagline: 'Building Opportunities. Creating Wealth.',
+    phone: '+91 7075539189',
+    whatsappNumber: '917075539189',
+    email: 'contact@superbestproperties.com',
+    address: 'H.No 5-5-35/193, Prashanth Nagar, Vanasthalipuram, Hyderabad, Telangana 500070',
+    googleMapsUrl: 'https://maps.google.com/?q=Vanasthalipuram,Hyderabad',
+    headerAnnouncement: 'RERA & HMDA Approved Layouts in Hyderabad Growth Corridors',
+    facebookUrl: 'https://facebook.com',
+    instagramUrl: 'https://instagram.com',
+    linkedinUrl: 'https://linkedin.com',
+    youtubeUrl: 'https://youtube.com',
+    seoTitle: 'Super Best Properties | Real Estate Advisory & Property Solutions Hyderabad',
+    seoDescription: 'Discover verified plots, flats, independent houses, gated community villas and landmark commercial projects across Hyderabad with Super Best Properties.'
+  };
+}
+
+function saveLocalSettings(settings) {
+  try {
+    localStorage.setItem('sbp_db_settings', JSON.stringify(settings));
+  } catch {}
+}
+
+function getLocalMedia() {
+  try {
+    const stored = localStorage.getItem('sbp_db_media');
+    if (stored) return JSON.parse(stored);
+  } catch {}
+  return [
+    {
+      id: 'media-1',
+      fileName: 'Tellapur Luxury Villa',
+      url: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1000&q=80',
+      publicId: 'seed-1',
+      format: 'jpg',
+      bytes: 245000,
+      associatedSection: 'Properties',
+      uploadedAt: '2026-03-01T10:00:00Z'
+    },
+    {
+      id: 'media-2',
+      fileName: 'Open Plots Sunrise',
+      url: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80',
+      publicId: 'seed-2',
+      format: 'jpg',
+      bytes: 310000,
+      associatedSection: 'Hero Banner',
+      uploadedAt: '2026-03-01T11:00:00Z'
+    }
+  ];
+}
+
+function saveLocalMedia(media) {
+  try {
+    localStorage.setItem('sbp_db_media', JSON.stringify(media));
+  } catch {}
+}
+
+function filterAndSortProps(propsList, params = {}) {
+  let props = [...propsList];
+  const { type, location, minPrice, maxPrice, bedrooms, status, featured, search, sort } = params;
+
+  if (type && type !== 'all' && type !== 'Select Type') {
+    props = props.filter(p => p.categorySlug === type || (p.categoryName && p.categoryName.toLowerCase() === type.toLowerCase()));
+  }
+  if (location && location !== 'all' && location !== 'Select Location') {
+    props = props.filter(p => p.location && p.location.toLowerCase().includes(location.toLowerCase()));
+  }
+  if (bedrooms && bedrooms !== 'all' && bedrooms !== 'Any') {
+    props = props.filter(p => p.bedrooms && p.bedrooms.toLowerCase().includes(bedrooms.toLowerCase()));
+  }
+  if (status && status !== 'all') {
+    props = props.filter(p => p.status && p.status.toLowerCase() === status.toLowerCase());
+  }
+  if (featured === 'true' || featured === true) {
+    props = props.filter(p => p.featured === true);
+  }
+  if (search) {
+    const s = search.toLowerCase();
+    props = props.filter(p =>
+      (p.title && p.title.toLowerCase().includes(s)) ||
+      (p.location && p.location.toLowerCase().includes(s)) ||
+      (p.categoryName && p.categoryName.toLowerCase().includes(s)) ||
+      (p.description && p.description.toLowerCase().includes(s))
+    );
+  }
+  if (minPrice) {
+    props = props.filter(p => p.priceNumber >= Number(minPrice));
+  }
+  if (maxPrice) {
+    props = props.filter(p => p.priceNumber <= Number(maxPrice));
+  }
+
+  if (sort === 'price-low') {
+    props.sort((a, b) => a.priceNumber - b.priceNumber);
+  } else if (sort === 'price-high') {
+    props.sort((a, b) => b.priceNumber - a.priceNumber);
+  } else if (sort === 'area-high') {
+    props.sort((a, b) => (b.areaSqFt || 0) - (a.areaSqFt || 0));
+  } else {
+    props.sort((a, b) => new Date(b.createdDate || b.createdAt || 0) - new Date(a.createdDate || a.createdAt || 0));
+  }
+
+  return props;
+}
+
 export const api = {
-  // Auth
+  // -------------------------------------------------------------
+  // AUTHENTICATION
+  // -------------------------------------------------------------
   async login(username, password) {
-    // Check credentials locally for instant admin login
-    if (username === 'admin' && (password === 'admin123' || password === 'admin')) {
-      const authData = { success: true, token: 'sbp-admin-token-2026', user: { username: 'admin' } };
-      // Also notify backend if reachable
+    // 1. Try Supabase Auth if email format
+    if (username.includes('@')) {
       try {
-        fetch(`${API_BASE}/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
-        }).catch(() => {});
-      } catch {}
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: username,
+          password: password
+        });
+        if (!error && data?.session) {
+          const token = data.session.access_token;
+          localStorage.setItem('sbp_admin_token', token);
+          return { success: true, token, user: data.user };
+        }
+      } catch (err) {
+        console.warn('Supabase Auth error:', err);
+      }
+    }
+
+    // 2. Custom or Default Admin Credential check
+    const customAdminPass = localStorage.getItem('sbp_admin_custom_pass');
+    const isValidPass = customAdminPass ? (password === customAdminPass) : (password === 'admin123' || password === 'admin');
+
+    if ((username === 'admin' || username === 'admin@superbestproperties.com') && isValidPass) {
+      const authData = { 
+        success: true, 
+        token: 'sbp-admin-token-' + Date.now(), 
+        user: { username: 'admin', email: 'admin@superbestproperties.com', role: 'super_admin' } 
+      };
+      localStorage.setItem('sbp_admin_token', authData.token);
       return authData;
     }
-    throw new Error('Invalid username or password');
+
+    throw new Error('Invalid username or password. Check credentials and try again.');
   },
 
-  // Properties
+  async logout() {
+    try {
+      await supabase.auth.signOut();
+    } catch {}
+    localStorage.removeItem('sbp_admin_token');
+    return { success: true };
+  },
+
+  async changeAdminPassword(oldPass, newPass) {
+    const customAdminPass = localStorage.getItem('sbp_admin_custom_pass');
+    const currentPass = customAdminPass || 'admin123';
+    if (oldPass !== currentPass) {
+      throw new Error('Current password does not match.');
+    }
+    if (!newPass || newPass.length < 5) {
+      throw new Error('New password must be at least 5 characters.');
+    }
+    localStorage.setItem('sbp_admin_custom_pass', newPass);
+    return { success: true };
+  },
+
+  // -------------------------------------------------------------
+  // PROPERTIES (SUPABASE + RESILIENT CACHE)
+  // -------------------------------------------------------------
   async getProperties(params = {}) {
-    let props = getLocalProperties();
-    const { type, location, minPrice, maxPrice, bedrooms, status, featured, search, sort } = params;
+    // Try Supabase first
+    try {
+      const { data, error } = await supabase.from('properties').select('*');
+      if (!error && Array.isArray(data) && data.length > 0) {
+        // Map any lowercase/snake_case fields
+        const formatted = data.map(p => ({
+          ...p,
+          categorySlug: p.category_slug || p.categorySlug,
+          categoryName: p.category_name || p.categoryName,
+          priceNumber: p.price_number || p.priceNumber,
+          areaSqFt: p.area_sq_ft || p.areaSqFt,
+          mapCoordinates: p.map_coordinates || p.mapCoordinates,
+          createdDate: p.created_at || p.createdDate
+        }));
+        saveLocalProperties(formatted);
+        return filterAndSortProps(formatted, params);
+      }
+    } catch {}
 
-    if (type && type !== 'all' && type !== 'Select Type') {
-      props = props.filter(p => p.categorySlug === type || p.categoryName.toLowerCase() === type.toLowerCase());
-    }
-    if (location && location !== 'all' && location !== 'Select Location') {
-      props = props.filter(p => p.location.toLowerCase().includes(location.toLowerCase()));
-    }
-    if (bedrooms && bedrooms !== 'all' && bedrooms !== 'Any') {
-      props = props.filter(p => p.bedrooms.toLowerCase().includes(bedrooms.toLowerCase()));
-    }
-    if (status && status !== 'all') {
-      props = props.filter(p => p.status.toLowerCase() === status.toLowerCase());
-    }
-    if (featured === 'true' || featured === true) {
-      props = props.filter(p => p.featured === true);
-    }
-    if (search) {
-      const s = search.toLowerCase();
-      props = props.filter(p =>
-        p.title.toLowerCase().includes(s) ||
-        p.location.toLowerCase().includes(s) ||
-        p.categoryName.toLowerCase().includes(s) ||
-        p.description.toLowerCase().includes(s)
-      );
-    }
-    if (minPrice) {
-      props = props.filter(p => p.priceNumber >= Number(minPrice));
-    }
-    if (maxPrice) {
-      props = props.filter(p => p.priceNumber <= Number(maxPrice));
-    }
-
-    if (sort === 'price-low') {
-      props.sort((a, b) => a.priceNumber - b.priceNumber);
-    } else if (sort === 'price-high') {
-      props.sort((a, b) => b.priceNumber - a.priceNumber);
-    } else if (sort === 'area-high') {
-      props.sort((a, b) => (b.areaSqFt || 0) - (a.areaSqFt || 0));
-    } else {
-      props.sort((a, b) => new Date(b.createdDate || 0) - new Date(a.createdDate || 0));
-    }
-
-    return props;
+    const localProps = getLocalProperties();
+    return filterAndSortProps(localProps, params);
   },
 
   async getProperty(idOrSlug) {
-    const props = getLocalProperties();
+    const props = await this.getProperties();
     const prop = props.find(p => p.id === idOrSlug || p.slug === idOrSlug) || props[0];
     const similar = props
       .filter(p => p.id !== prop.id && (p.categorySlug === prop.categorySlug || p.city === prop.city))
@@ -152,26 +309,46 @@ export const api = {
 
   async createProperty(propertyData, token) {
     const props = getLocalProperties();
+    const newId = `prop-${Date.now()}`;
+    const newSlug = (propertyData.title || 'property').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + `-${Date.now().toString().slice(-4)}`;
+    
     const newProp = {
       ...propertyData,
-      id: `prop-${Date.now()}`,
-      slug: (propertyData.title || 'property').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + `-${Date.now().toString().slice(-4)}`,
+      id: newId,
+      slug: newSlug,
       createdDate: new Date().toISOString()
     };
+
     props.unshift(newProp);
     saveLocalProperties(props);
 
-    // Sync to backend if available
+    // Sync to Supabase
     try {
-      fetch(`${API_BASE}/properties`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(newProp)
-      }).catch(() => {});
-    } catch {}
+      await supabase.from('properties').insert([{
+        id: newProp.id,
+        title: newProp.title,
+        slug: newProp.slug,
+        category_slug: newProp.categorySlug,
+        category_name: newProp.categoryName,
+        price: newProp.price,
+        price_number: newProp.priceNumber || 0,
+        location: newProp.location,
+        city: newProp.city || 'Hyderabad',
+        area: newProp.area,
+        area_sq_ft: newProp.areaSqFt || 0,
+        bedrooms: newProp.bedrooms,
+        bathrooms: newProp.bathrooms,
+        status: newProp.status || 'Available',
+        featured: Boolean(newProp.featured),
+        published: true,
+        images: newProp.images || [],
+        description: newProp.description,
+        amenities: typeof newProp.amenities === 'string' ? newProp.amenities : JSON.stringify(newProp.amenities),
+        map_coordinates: newProp.mapCoordinates
+      }]);
+    } catch (err) {
+      console.warn('Supabase property insert notice:', err.message);
+    }
 
     return newProp;
   },
@@ -180,20 +357,34 @@ export const api = {
     const props = getLocalProperties();
     const idx = props.findIndex(p => p.id === id);
     if (idx !== -1) {
-      props[idx] = { ...props[idx], ...propertyData };
+      props[idx] = { ...props[idx], ...propertyData, updatedDate: new Date().toISOString() };
       saveLocalProperties(props);
 
-      // Sync to backend if available
+      // Sync to Supabase
       try {
-        fetch(`${API_BASE}/properties/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify(propertyData)
-        }).catch(() => {});
-      } catch {}
+        await supabase.from('properties').update({
+          title: propertyData.title,
+          category_slug: propertyData.categorySlug,
+          category_name: propertyData.categoryName,
+          price: propertyData.price,
+          price_number: propertyData.priceNumber || 0,
+          location: propertyData.location,
+          city: propertyData.city || 'Hyderabad',
+          area: propertyData.area,
+          area_sq_ft: propertyData.areaSqFt || 0,
+          bedrooms: propertyData.bedrooms,
+          bathrooms: propertyData.bathrooms,
+          status: propertyData.status,
+          featured: Boolean(propertyData.featured),
+          images: propertyData.images,
+          description: propertyData.description,
+          amenities: typeof propertyData.amenities === 'string' ? propertyData.amenities : JSON.stringify(propertyData.amenities),
+          map_coordinates: propertyData.mapCoordinates,
+          updated_at: new Date().toISOString()
+        }).eq('id', id);
+      } catch (err) {
+        console.warn('Supabase property update notice:', err.message);
+      }
 
       return props[idx];
     }
@@ -205,19 +396,27 @@ export const api = {
     props = props.filter(p => p.id !== id);
     saveLocalProperties(props);
 
-    // Sync to backend if available
+    // Sync to Supabase
     try {
-      fetch(`${API_BASE}/properties/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      }).catch(() => {});
-    } catch {}
+      await supabase.from('properties').delete().eq('id', id);
+    } catch (err) {
+      console.warn('Supabase property delete notice:', err.message);
+    }
 
     return { success: true };
   },
 
-  // Categories
+  // -------------------------------------------------------------
+  // CATEGORIES
+  // -------------------------------------------------------------
   async getCategories() {
+    try {
+      const { data, error } = await supabase.from('property_categories').select('*').order('display_order', { ascending: true });
+      if (!error && Array.isArray(data) && data.length > 0) {
+        saveLocalCategories(data);
+      }
+    } catch {}
+
     const cats = getLocalCategories();
     const props = getLocalProperties();
     return cats.map(c => ({
@@ -226,11 +425,26 @@ export const api = {
     }));
   },
 
-  async getCategory(slug) {
+  async updateCategory(slug, catData, token) {
     const cats = getLocalCategories();
-    const props = getLocalProperties();
+    const idx = cats.findIndex(c => c.slug === slug);
+    if (idx !== -1) {
+      cats[idx] = { ...cats[idx], ...catData };
+      saveLocalCategories(cats);
+
+      try {
+        await supabase.from('property_categories').update(catData).eq('slug', slug);
+      } catch {}
+
+      return cats[idx];
+    }
+    return catData;
+  },
+
+  async getCategory(slug) {
+    const cats = await this.getCategories();
+    const props = await this.getProperties();
     
-    // Normalize slug (e.g. plot vs plots, flat vs flats)
     const normalizedSlug = (slug || '').toLowerCase();
     const category = cats.find(c => 
       c.slug === normalizedSlug || 
@@ -249,126 +463,123 @@ export const api = {
     const matchingProperties = props.filter(p => 
       p.categorySlug === category.slug || 
       p.categorySlug.replace(/s$/, '') === normalizedSlug.replace(/s$/, '') ||
-      p.categoryName.toLowerCase().includes(category.name.toLowerCase())
+      (p.categoryName && p.categoryName.toLowerCase().includes(category.name.toLowerCase()))
     );
 
-    // If no specific property matches, generate realistic curated properties for this category so the page is never blank!
-    const finalProperties = matchingProperties.length > 0 ? matchingProperties : [
-      {
-        id: `prop-gen-1-${slug}`,
-        title: `Premium ${category.name} in Tellapur`,
-        slug: `premium-${slug}-tellapur`,
-        categorySlug: category.slug,
-        categoryName: category.name,
-        price: '₹ 85 Lakhs',
-        priceNumber: 8500000,
-        location: 'Tellapur Growth Corridor, Hyderabad',
-        city: 'Hyderabad',
-        area: '1,500 Sq.Ft',
-        areaSqFt: 1500,
-        bedrooms: '3 BHK',
-        bathrooms: '3 Baths',
-        status: 'Available',
-        featured: true,
-        images: [
-          category.image || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80'
-        ],
-        description: `Exceptional HMDA approved ${category.name} situated in a prime rapidly developing zone of Tellapur, Hyderabad. Features 100% Vastu compliance, 40ft blacktop roads, underground water & drainage lines, clear title with immediate registration.`,
-        amenities: ['100% Vastu Compliant', 'Clear Title', 'Bank Loan Approved', 'Underground Utilities', 'Immediate Registration'],
-        mapCoordinates: '17.4789, 78.2911',
-        createdDate: new Date().toISOString()
-      },
-      {
-        id: `prop-gen-2-${slug}`,
-        title: `Luxury Executive ${category.name}`,
-        slug: `luxury-executive-${slug}-gachibowli`,
-        categorySlug: category.slug,
-        categoryName: category.name,
-        price: '₹ 1.35 Cr',
-        priceNumber: 13500000,
-        location: 'Gachibowli Financial District, Hyderabad',
-        city: 'Hyderabad',
-        area: '2,100 Sq.Ft',
-        areaSqFt: 2100,
-        bedrooms: '3 BHK',
-        bathrooms: '3 Baths',
-        status: 'Available',
-        featured: true,
-        images: [
-          'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1000&q=80'
-        ],
-        description: `Spacious, world-class ${category.name} with contemporary architecture, 24/7 security, club facilities, and rapid highway access to Hyderabad IT hubs.`,
-        amenities: ['24/7 Security', 'Clubhouse & Pool', 'Dedicated Parking', 'Power Backup', 'Clear Legal Titles'],
-        mapCoordinates: '17.4401, 78.3489',
-        createdDate: new Date().toISOString()
-      },
-      {
-        id: `prop-gen-3-${slug}`,
-        title: `Prime Highway ${category.name}`,
-        slug: `prime-highway-${slug}-shamshabad`,
-        categorySlug: category.slug,
-        categoryName: category.name,
-        price: '₹ 55 Lakhs',
-        priceNumber: 5500000,
-        location: 'Shamshabad Airport Corridor, Hyderabad',
-        city: 'Hyderabad',
-        area: '1,800 Sq.Ft',
-        areaSqFt: 1800,
-        bedrooms: 'Plot / Unit',
-        bathrooms: '-',
-        status: 'Available',
-        featured: false,
-        images: [
-          'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1000&q=80'
-        ],
-        description: `High capital-appreciation ${category.name} in the burgeoning Shamshabad airport zone. Clear title documentation, bank loan facility available.`,
-        amenities: ['Airport Corridor', 'Immediate Registration', 'Clear Link Documents', 'High ROI'],
-        mapCoordinates: '17.2501, 78.4312',
-        createdDate: new Date().toISOString()
-      }
-    ];
-
-    return { category, properties: finalProperties };
+    return { category, properties: matchingProperties };
   },
 
-  // Projects
+  // -------------------------------------------------------------
+  // LANDMARK PROJECTS
+  // -------------------------------------------------------------
   async getProjects() {
+    try {
+      const { data, error } = await supabase.from('projects').select('*');
+      if (!error && Array.isArray(data) && data.length > 0) {
+        saveLocalProjects(data);
+      }
+    } catch {}
     return getLocalProjects();
   },
 
-  async getProject(idOrSlug) {
+  async createProject(projectData, token) {
     const projs = getLocalProjects();
-    return projs.find(p => p.id === idOrSlug || p.slug === idOrSlug) || projs[0];
+    const newProj = {
+      ...projectData,
+      id: `proj-${Date.now()}`,
+      slug: (projectData.name || 'project').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
+      createdDate: new Date().toISOString()
+    };
+    projs.unshift(newProj);
+    saveLocalProjects(projs);
+
+    try {
+      await supabase.from('projects').insert([newProj]);
+    } catch {}
+
+    return newProj;
   },
 
-  // Enquiries
+  async updateProject(id, projectData, token) {
+    const projs = getLocalProjects();
+    const idx = projs.findIndex(p => p.id === id);
+    if (idx !== -1) {
+      projs[idx] = { ...projs[idx], ...projectData };
+      saveLocalProjects(projs);
+
+      try {
+        await supabase.from('projects').update(projectData).eq('id', id);
+      } catch {}
+
+      return projs[idx];
+    }
+    return projectData;
+  },
+
+  async deleteProject(id, token) {
+    let projs = getLocalProjects();
+    projs = projs.filter(p => p.id !== id);
+    saveLocalProjects(projs);
+
+    try {
+      await supabase.from('projects').delete().eq('id', id);
+    } catch {}
+
+    return { success: true };
+  },
+
+  // -------------------------------------------------------------
+  // CUSTOMER ENQUIRIES & LEADS
+  // -------------------------------------------------------------
   async submitEnquiry(enquiryData) {
     const enqs = getLocalEnquiries();
+    const newId = `enq-${Date.now()}`;
     const newEnq = {
       ...enquiryData,
-      id: `enq-${Date.now()}`,
+      id: newId,
       status: 'New',
       createdAt: new Date().toISOString()
     };
     enqs.unshift(newEnq);
     saveLocalEnquiries(enqs);
 
-    // Sync to backend if available
+    // Sync to Supabase
     try {
-      fetch(`${API_BASE}/enquiries`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(enquiryData)
-      }).catch(() => {});
-    } catch {}
+      await supabase.from('enquiries').insert([{
+        id: newEnq.id,
+        name: newEnq.name,
+        phone: newEnq.phone,
+        email: newEnq.email || null,
+        property_id: newEnq.propertyId || null,
+        property_title: newEnq.propertyTitle || null,
+        property_type: newEnq.propertyType || null,
+        budget: newEnq.budget || null,
+        message: newEnq.message || '',
+        source: newEnq.source || 'Website Form',
+        status: 'New'
+      }]);
+    } catch (err) {
+      console.warn('Supabase enquiry submit notice:', err.message);
+    }
 
     return { success: true, enquiry: newEnq };
   },
 
   async getEnquiries(token) {
+    try {
+      const { data, error } = await supabase.from('enquiries').select('*').order('created_at', { ascending: false });
+      if (!error && Array.isArray(data) && data.length > 0) {
+        const formatted = data.map(e => ({
+          ...e,
+          createdAt: e.created_at || e.createdAt,
+          propertyTitle: e.property_title || e.propertyTitle,
+          propertyType: e.property_type || e.propertyType
+        }));
+        saveLocalEnquiries(formatted);
+        return formatted;
+      }
+    } catch {}
+
     return getLocalEnquiries();
   },
 
@@ -376,19 +587,15 @@ export const api = {
     const enqs = getLocalEnquiries();
     const idx = enqs.findIndex(e => e.id === id);
     if (idx !== -1) {
-      enqs[idx] = { ...enqs[idx], ...data };
+      enqs[idx] = { ...enqs[idx], ...data, updatedAt: new Date().toISOString() };
       saveLocalEnquiries(enqs);
 
-      // Sync to backend if available
       try {
-        fetch(`${API_BASE}/enquiries/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify(data)
-        }).catch(() => {});
+        await supabase.from('enquiries').update({
+          status: data.status,
+          internal_notes: data.internalNotes || data.internal_notes,
+          updated_at: new Date().toISOString()
+        }).eq('id', id);
       } catch {}
 
       return enqs[idx];
@@ -401,50 +608,161 @@ export const api = {
     enqs = enqs.filter(e => e.id !== id);
     saveLocalEnquiries(enqs);
 
-    // Sync to backend if available
     try {
-      fetch(`${API_BASE}/enquiries/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      }).catch(() => {});
+      await supabase.from('enquiries').delete().eq('id', id);
     } catch {}
 
     return { success: true };
   },
 
-  // Site Content
+  // -------------------------------------------------------------
+  // WEBSITE SETTINGS & SITE CONTENT
+  // -------------------------------------------------------------
+  async getSettings() {
+    try {
+      const { data, error } = await supabase.from('website_settings').select('*').eq('id', 'primary_settings').single();
+      if (!error && data) {
+        const mapped = {
+          siteName: data.site_name || data.siteName,
+          tagline: data.tagline,
+          phone: data.phone,
+          whatsappNumber: data.whatsapp_number || data.whatsappNumber,
+          email: data.email,
+          address: data.address,
+          googleMapsUrl: data.google_maps_url || data.googleMapsUrl,
+          headerAnnouncement: data.header_announcement || data.headerAnnouncement,
+          facebookUrl: data.facebook_url || data.facebookUrl,
+          instagramUrl: data.instagram_url || data.instagramUrl,
+          linkedinUrl: data.linkedin_url || data.linkedinUrl,
+          youtubeUrl: data.youtube_url || data.youtubeUrl,
+          seoTitle: data.seo_title || data.seoTitle,
+          seoDescription: data.seo_description || data.seoDescription
+        };
+        saveLocalSettings(mapped);
+        return mapped;
+      }
+    } catch {}
+
+    return getLocalSettings();
+  },
+
+  async updateSettings(settings, token) {
+    const updated = { ...getLocalSettings(), ...settings };
+    saveLocalSettings(updated);
+
+    try {
+      await supabase.from('website_settings').upsert({
+        id: 'primary_settings',
+        site_name: updated.siteName,
+        tagline: updated.tagline,
+        phone: updated.phone,
+        whatsapp_number: updated.whatsappNumber,
+        email: updated.email,
+        address: updated.address,
+        google_maps_url: updated.googleMapsUrl,
+        header_announcement: updated.headerAnnouncement,
+        facebook_url: updated.facebookUrl,
+        instagram_url: updated.instagramUrl,
+        linkedin_url: updated.linkedinUrl,
+        youtube_url: updated.youtubeUrl,
+        seo_title: updated.seoTitle,
+        seo_description: updated.seoDescription,
+        updated_at: new Date().toISOString()
+      });
+    } catch {}
+
+    return updated;
+  },
+
   async getContent() {
+    try {
+      const stored = localStorage.getItem('sbp_db_content');
+      if (stored) return JSON.parse(stored);
+    } catch {}
     return initialSiteContent;
   },
 
   async updateContent(data, token) {
-    // Sync to backend if available
     try {
-      fetch(`${API_BASE}/content`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(data)
-      }).catch(() => {});
+      localStorage.setItem('sbp_db_content', JSON.stringify(data));
     } catch {}
     return data;
   },
 
-  // Admin stats
+  // -------------------------------------------------------------
+  // MEDIA LIBRARY
+  // -------------------------------------------------------------
+  async getMediaLibrary() {
+    try {
+      const { data, error } = await supabase.from('media_library').select('*').order('created_at', { ascending: false });
+      if (!error && Array.isArray(data) && data.length > 0) {
+        saveLocalMedia(data);
+        return data;
+      }
+    } catch {}
+    return getLocalMedia();
+  },
+
+  async saveMediaAsset(asset) {
+    const media = getLocalMedia();
+    const newAsset = {
+      id: `media-${Date.now()}`,
+      fileName: asset.fileName || 'Uploaded Asset',
+      url: asset.url,
+      publicId: asset.publicId || '',
+      format: asset.format || 'jpg',
+      bytes: asset.bytes || 0,
+      associatedSection: asset.associatedSection || 'General',
+      uploadedAt: new Date().toISOString()
+    };
+    media.unshift(newAsset);
+    saveLocalMedia(media);
+
+    try {
+      await supabase.from('media_library').insert([{
+        id: newAsset.id,
+        file_name: newAsset.fileName,
+        url: newAsset.url,
+        public_id: newAsset.publicId,
+        format: newAsset.format,
+        bytes: newAsset.bytes,
+        associated_section: newAsset.associatedSection
+      }]);
+    } catch {}
+
+    return newAsset;
+  },
+
+  async deleteMediaAsset(id) {
+    let media = getLocalMedia();
+    media = media.filter(m => m.id !== id);
+    saveLocalMedia(media);
+
+    try {
+      await supabase.from('media_library').delete().eq('id', id);
+    } catch {}
+
+    return { success: true };
+  },
+
+  // -------------------------------------------------------------
+  // ADMIN DASHBOARD STATS
+  // -------------------------------------------------------------
   async getAdminStats(token) {
-    const props = getLocalProperties();
-    const projs = getLocalProjects();
-    const enqs = getLocalEnquiries();
+    const props = await this.getProperties();
+    const projs = await this.getProjects();
+    const enqs = await this.getEnquiries(token);
+    
     return {
       totalProperties: props.length,
-      availableProperties: props.filter(p => p.status.toLowerCase() === 'available').length,
-      soldProperties: props.filter(p => p.status.toLowerCase() === 'sold').length,
+      availableProperties: props.filter(p => (p.status || '').toLowerCase() === 'available').length,
+      soldProperties: props.filter(p => (p.status || '').toLowerCase() === 'sold').length,
       featuredProperties: props.filter(p => p.featured === true).length,
       totalProjects: projs.length,
       totalEnquiries: enqs.length,
-      recentEnquiries: enqs.slice(0, 5)
+      newLeads: enqs.filter(e => (e.status || '').toLowerCase() === 'new').length,
+      convertedLeads: enqs.filter(e => (e.status || '').toLowerCase() === 'converted').length,
+      recentEnquiries: enqs.slice(0, 6)
     };
   }
 };
