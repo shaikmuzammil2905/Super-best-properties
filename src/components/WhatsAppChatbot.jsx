@@ -97,18 +97,18 @@ export default function WhatsAppChatbot() {
   return (
     <div className="fixed bottom-6 right-6 z-50">
       
-      {/* Floating Trigger Button */}
+      {/* Floating Trigger Button - Clean WhatsApp icon without "Chat with us" text as requested in image copy 28 */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="group relative flex items-center space-x-3 bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-500 text-white px-5 py-3.5 rounded-full shadow-2xl shadow-green-900/40 hover:scale-105 transition-all duration-300 border-2 border-white/20"
-          aria-label="Chat with real estate advisor on WhatsApp"
+          className="group relative flex items-center justify-center bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-500 text-white w-14 h-14 rounded-full shadow-2xl shadow-green-900/40 hover:scale-110 active:scale-95 transition-all duration-300 border-2 border-white/20"
+          aria-label="WhatsApp Advisor"
+          title="WhatsApp Advisor"
         >
-          <div className="relative">
-            <MessageCircle className="w-6 h-6 fill-current animate-pulse-slow" />
+          <div className="relative flex items-center justify-center">
+            <MessageCircle className="w-7 h-7 fill-current animate-pulse-slow" />
             <span className="absolute -top-1 -right-1 w-3 h-3 bg-gold-400 rounded-full border-2 border-white"></span>
           </div>
-          <span className="font-semibold text-sm tracking-wide hidden sm:inline-block">Chat with us</span>
         </button>
       )}
 

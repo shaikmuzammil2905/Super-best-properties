@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import ServiceModal from '../components/ServiceModal';
+import React from 'react';
 import { 
   Home, 
   Building2, 
@@ -16,9 +15,6 @@ import {
 } from 'lucide-react';
 
 export default function ServicesPage() {
-  const [selectedService, setSelectedService] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
-
   const services = [
     {
       id: 'srv-1',
@@ -113,9 +109,12 @@ export default function ServicesPage() {
     }
   ];
 
-  const handleOpenModal = (srv) => {
-    setSelectedService(srv);
-    setModalOpen(true);
+  const getWhatsAppUrl = (srvTitle) => {
+    return `https://wa.me/917075539189?text=${encodeURIComponent(`Hello Super Best Properties, I need assistance with ${srvTitle}. Please provide full details.`)}`;
+  };
+
+  const handleWhatsAppRedirect = (srvTitle) => {
+    window.open(getWhatsAppUrl(srvTitle), '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -132,18 +131,20 @@ export default function ServicesPage() {
             Our Professional <span className="gold-gradient-text">Advisory Services</span>
           </h1>
           <p className="mt-3 text-sm sm:text-base text-neutral-600">
-            Click any service card to view complete strategic scope, deliverables, and schedule an exclusive advisory session.
+            Click any service to connect directly with our senior property advisors on WhatsApp for verified documentation, market analytics, and personalized site inspections.
           </p>
         </div>
 
-        {/* 7 Services Grid - Matching Reference Image 9 with Grand Popup trigger */}
+        {/* 7 Services Grid - Directly opens WhatsApp (No Popups, as requested in image copy 28) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((srv, idx) => {
             const Icon = srv.icon;
+            const waUrl = getWhatsAppUrl(srv.title);
+
             return (
               <div
                 key={srv.id}
-                onClick={() => handleOpenModal(srv)}
+                onClick={() => handleWhatsAppRedirect(srv.title)}
                 className="bg-white rounded-3xl p-6 sm:p-7 border border-neutral-200/90 hover:border-gold-500/80 shadow-sm hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group cursor-pointer transform hover:-translate-y-1.5 animate-fade-in"
               >
                 <div>
@@ -180,28 +181,18 @@ export default function ServicesPage() {
                   </div>
                 </div>
 
-                {/* Card Action Buttons */}
-                <div className="mt-6 pt-4 border-t border-neutral-100 flex items-center space-x-3">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOpenModal(srv);
-                    }}
-                    className="flex-1 py-2.5 px-4 rounded-xl gold-gradient-btn text-black font-extrabold text-xs tracking-wide text-center flex items-center justify-center space-x-1.5 shadow-md group-hover:shadow-lg"
-                  >
-                    <span>View Full Details & Popup</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-
+                {/* Direct WhatsApp Action Button (Replaces View Full Details & Popup) */}
+                <div className="mt-6 pt-4 border-t border-neutral-100">
                   <a
-                    href={`https://wa.me/917075539189?text=${encodeURIComponent(`Hello Super Best Properties, I need assistance with ${srv.title}.`)}`}
-                    onClick={(e) => e.stopPropagation()}
+                    href={waUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white border border-emerald-200 transition-colors"
-                    title="WhatsApp Consultation"
+                    onClick={(e) => e.stopPropagation()}
+                    className="w-full py-3 px-4 rounded-xl gold-gradient-btn text-black font-extrabold text-xs sm:text-sm tracking-wide text-center flex items-center justify-center space-x-2 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all"
                   >
-                    <MessageCircle className="w-4 h-4" />
+                    <MessageCircle className="w-4 h-4 text-black shrink-0" />
+                    <span>Inquire on WhatsApp</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-black shrink-0" />
                   </a>
                 </div>
 
@@ -230,13 +221,6 @@ export default function ServicesPage() {
         </div>
 
       </div>
-
-      {/* Grand Service Popup Modal */}
-      <ServiceModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        service={selectedService}
-      />
 
     </div>
   );
