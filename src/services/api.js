@@ -3,6 +3,101 @@ import { supabase } from './supabaseClient';
 
 const API_BASE = '/api';
 
+// Initial 7 Live Services from Website
+export const initialServices = [
+  {
+    id: 'srv-1',
+    title: 'Residential Property Advisory',
+    tagline: 'Plots, Apartments, Villas & Independent Houses',
+    description: 'Comprehensive guidance on identifying and securing ideal residential plots, luxury apartments, standalone independent villas, and gated community housing opportunities tailored to family lifestyles and future value appreciation.',
+    deliverables: [
+      'HMDA & DTCP layout verification',
+      'Micro-market price benchmarking',
+      'Architectural & Vastu compliance check',
+      'Customized site visits with personal advisor'
+    ],
+    displayOrder: 1
+  },
+  {
+    id: 'srv-2',
+    title: 'Commercial Property Solutions',
+    tagline: 'High-Street Retail, Corporate Offices & Godowns',
+    description: 'Assistance in identifying and acquiring prime commercial plots, Grade-A IT office spaces, high-footfall retail showrooms, warehousing godowns, and business premises across Hyderabad’s most vibrant economic corridors.',
+    deliverables: [
+      'High rental yield forecasting',
+      'Lease tenure & tenant feasibility',
+      'Location footfall & highway transit analysis',
+      'Commercial zoning & fire clearance checks'
+    ],
+    displayOrder: 2
+  },
+  {
+    id: 'srv-3',
+    title: 'Property Investment Advisory',
+    tagline: 'High-ROI Land, Commercial & Residential Wealth Creation',
+    description: 'Helping investors, HNIs and NRIs evaluate high-potential land, residential, and commercial property opportunities aligned with their risk profiles, capital preservation goals, and aggressive multi-year appreciation objectives.',
+    deliverables: [
+      'Macro & micro-market growth analytics',
+      'Exit strategy planning & liquidity review',
+      'Portfolio diversification roadmaps',
+      'Quarterly capital appreciation reports'
+    ],
+    displayOrder: 3
+  },
+  {
+    id: 'srv-4',
+    title: 'Land & Development Opportunities',
+    tagline: 'Joint Ventures, Plotted Layouts & Farm Parcels',
+    description: 'Connecting interested buyers, builders, and institutional investors with strategic land parcels, joint-development opportunities, agricultural holdings, and property owners with clear, unencumbered titles.',
+    deliverables: [
+      'Direct landowner negotiations',
+      'Joint development ratio structuring',
+      'Title search & boundary survey reports',
+      'Master plan & master road connectivity'
+    ],
+    displayOrder: 4
+  },
+  {
+    id: 'srv-5',
+    title: 'Property Buying & Selling Assistance',
+    tagline: 'End-to-End Discovery, Site Visits & Closing Support',
+    description: 'Professional assistance in property discovery, shortlisting, private site visits, price negotiations, buyer-seller alignment, and smooth, secure transaction coordination from agreement to registration.',
+    deliverables: [
+      'Curated shortlists matching exact budget',
+      'Scheduled chauffeured site inspections',
+      'Fair market valuation & negotiation',
+      'Escrow & documentation assistance'
+    ],
+    displayOrder: 5
+  },
+  {
+    id: 'srv-6',
+    title: 'Legal & Documentation Assistance',
+    tagline: 'Title Scrutiny, Link Documents & RERA Verification',
+    description: 'Helping customers navigate property-related legal documentation, 30-year link document verification, encumbrance certificates (EC), municipal sanctions, and revenue records with clarity and confidence.',
+    deliverables: [
+      '30-year Encumbrance Certificate scrutiny',
+      'Revenue land record & Dharani verification',
+      'HMDA / DTCP / GHMC approval confirmation',
+      'Safe deed drafting with experienced legal counsel'
+    ],
+    displayOrder: 6
+  },
+  {
+    id: 'srv-7',
+    title: 'Bank Loan & Financial Assistance',
+    tagline: 'Competitive Home Loans & Fast Sanctions',
+    description: 'Connecting eligible customers with suitable property financing options through leading nationalized and private banking institutions (SBI, HDFC, ICICI, etc.) with doorstep document pickup and preferential interest rates.',
+    deliverables: [
+      'Pre-approved loan eligibility assessment',
+      'Tie-ups with leading national banks',
+      'Doorstep document collection & fast clearance',
+      'Transparent processing with no hidden charges'
+    ],
+    displayOrder: 7
+  }
+];
+
 // Helper to get local stored properties or fallback to mockData
 function getLocalProperties() {
   try {
@@ -55,42 +150,33 @@ function saveLocalProjects(projs) {
   } catch {}
 }
 
-function getLocalEnquiries() {
+function getLocalServices() {
   try {
-    const stored = localStorage.getItem('sbp_db_enquiries');
+    const stored = localStorage.getItem('sbp_db_services');
     if (stored) {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed) && parsed.length > 0) return parsed;
     }
   } catch {}
-  return [
-    {
-      id: 'enq-1',
-      name: 'Rajesh Kumar Verma',
-      phone: '9848012345',
-      email: 'rajesh.verma@example.com',
-      propertyType: 'Gated Community Villas',
-      propertyTitle: 'The Grand Royal Villa',
-      budget: '₹ 1 Cr - 1.5 Cr',
-      message: 'Interested in site visit for The Grand Royal Villa in Tellapur this weekend. Please call me.',
-      source: 'Website Property Details',
-      status: 'New',
-      createdAt: '2026-03-01T10:30:00Z'
-    },
-    {
-      id: 'enq-2',
-      name: 'Ananya Reddy',
-      phone: '9123456789',
-      email: 'ananya.reddy@example.com',
-      propertyType: 'Plots',
-      propertyTitle: 'HMDA Approved Villa Plots',
-      budget: '₹ 50 Lakhs - 80 Lakhs',
-      message: 'Looking for 200 sq.yards east facing open plot with immediate registration.',
-      source: 'Buy a Property Page',
-      status: 'Interested',
-      createdAt: '2026-03-03T14:15:00Z'
+  return [...initialServices];
+}
+
+function saveLocalServices(services) {
+  try {
+    localStorage.setItem('sbp_db_services', JSON.stringify(services));
+  } catch {}
+}
+
+// Enquiries start at 0 (zero) as requested
+function getLocalEnquiries() {
+  try {
+    const stored = localStorage.getItem('sbp_db_enquiries');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) return parsed;
     }
-  ];
+  } catch {}
+  return []; // ZERO enquiries initially
 }
 
 function saveLocalEnquiries(enqs) {
@@ -216,7 +302,6 @@ export const api = {
   // AUTHENTICATION
   // -------------------------------------------------------------
   async login(username, password) {
-    // 1. Try Supabase Auth if email format
     if (username.includes('@')) {
       try {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -229,11 +314,10 @@ export const api = {
           return { success: true, token, user: data.user };
         }
       } catch (err) {
-        console.warn('Supabase Auth error:', err);
+        console.warn('Supabase Auth notice:', err.message);
       }
     }
 
-    // 2. Custom or Default Admin Credential check
     const customAdminPass = localStorage.getItem('sbp_admin_custom_pass');
     const isValidPass = customAdminPass ? (password === customAdminPass) : (password === 'admin123' || password === 'admin');
 
@@ -247,7 +331,7 @@ export const api = {
       return authData;
     }
 
-    throw new Error('Invalid username or password. Check credentials and try again.');
+    throw new Error('Invalid username or password. Please verify credentials.');
   },
 
   async logout() {
@@ -272,14 +356,12 @@ export const api = {
   },
 
   // -------------------------------------------------------------
-  // PROPERTIES (SUPABASE + RESILIENT CACHE)
+  // PROPERTIES (BUY A PROPERTY PORTFOLIO)
   // -------------------------------------------------------------
   async getProperties(params = {}) {
-    // Try Supabase first
     try {
       const { data, error } = await supabase.from('properties').select('*');
       if (!error && Array.isArray(data) && data.length > 0) {
-        // Map any lowercase/snake_case fields
         const formatted = data.map(p => ({
           ...p,
           categorySlug: p.category_slug || p.categorySlug,
@@ -322,7 +404,6 @@ export const api = {
     props.unshift(newProp);
     saveLocalProperties(props);
 
-    // Sync to Supabase
     try {
       await supabase.from('properties').insert([{
         id: newProp.id,
@@ -360,7 +441,6 @@ export const api = {
       props[idx] = { ...props[idx], ...propertyData, updatedDate: new Date().toISOString() };
       saveLocalProperties(props);
 
-      // Sync to Supabase
       try {
         await supabase.from('properties').update({
           title: propertyData.title,
@@ -396,7 +476,6 @@ export const api = {
     props = props.filter(p => p.id !== id);
     saveLocalProperties(props);
 
-    // Sync to Supabase
     try {
       await supabase.from('properties').delete().eq('id', id);
     } catch (err) {
@@ -407,7 +486,7 @@ export const api = {
   },
 
   // -------------------------------------------------------------
-  // CATEGORIES
+  // CATEGORIES (CRUD SUPPORT)
   // -------------------------------------------------------------
   async getCategories() {
     try {
@@ -425,6 +504,32 @@ export const api = {
     }));
   },
 
+  async createCategory(catData, token) {
+    const cats = getLocalCategories();
+    const slug = (catData.slug || catData.name || 'category').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const newCat = {
+      ...catData,
+      id: `cat-${Date.now()}`,
+      slug: slug,
+      display_order: cats.length + 1,
+      created_at: new Date().toISOString()
+    };
+    cats.push(newCat);
+    saveLocalCategories(cats);
+
+    try {
+      await supabase.from('property_categories').insert([{
+        slug: newCat.slug,
+        name: newCat.name,
+        description: newCat.description || '',
+        icon_name: newCat.icon_name || 'Home',
+        display_order: newCat.display_order
+      }]);
+    } catch {}
+
+    return newCat;
+  },
+
   async updateCategory(slug, catData, token) {
     const cats = getLocalCategories();
     const idx = cats.findIndex(c => c.slug === slug);
@@ -433,12 +538,28 @@ export const api = {
       saveLocalCategories(cats);
 
       try {
-        await supabase.from('property_categories').update(catData).eq('slug', slug);
+        await supabase.from('property_categories').update({
+          name: catData.name,
+          description: catData.description,
+          icon_name: catData.icon_name
+        }).eq('slug', slug);
       } catch {}
 
       return cats[idx];
     }
     return catData;
+  },
+
+  async deleteCategory(slug, token) {
+    let cats = getLocalCategories();
+    cats = cats.filter(c => c.slug !== slug);
+    saveLocalCategories(cats);
+
+    try {
+      await supabase.from('property_categories').delete().eq('slug', slug);
+    } catch {}
+
+    return { success: true };
   },
 
   async getCategory(slug) {
@@ -470,7 +591,7 @@ export const api = {
   },
 
   // -------------------------------------------------------------
-  // LANDMARK PROJECTS
+  // LANDMARK PROJECTS (CRUD SUPPORT)
   // -------------------------------------------------------------
   async getProjects() {
     try {
@@ -484,17 +605,32 @@ export const api = {
 
   async createProject(projectData, token) {
     const projs = getLocalProjects();
+    const newId = `proj-${Date.now()}`;
+    const newSlug = (projectData.name || 'project').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
     const newProj = {
       ...projectData,
-      id: `proj-${Date.now()}`,
-      slug: (projectData.name || 'project').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
+      id: newId,
+      slug: newSlug,
+      startingPrice: projectData.startingPrice || projectData.priceRange || '₹ 50 Lakhs',
       createdDate: new Date().toISOString()
     };
     projs.unshift(newProj);
     saveLocalProjects(projs);
 
     try {
-      await supabase.from('projects').insert([newProj]);
+      await supabase.from('projects').insert([{
+        id: newProj.id,
+        name: newProj.name,
+        slug: newProj.slug,
+        tagline: newProj.tagline || '',
+        location: newProj.location || '',
+        type: newProj.type || '',
+        status: newProj.status || 'Ongoing',
+        price_range: newProj.startingPrice,
+        image: newProj.image || '',
+        description: newProj.description || '',
+        highlights: newProj.highlights || ''
+      }]);
     } catch {}
 
     return newProj;
@@ -504,11 +640,27 @@ export const api = {
     const projs = getLocalProjects();
     const idx = projs.findIndex(p => p.id === id);
     if (idx !== -1) {
-      projs[idx] = { ...projs[idx], ...projectData };
+      projs[idx] = { 
+        ...projs[idx], 
+        ...projectData, 
+        startingPrice: projectData.startingPrice || projectData.priceRange || projs[idx].startingPrice,
+        updatedDate: new Date().toISOString() 
+      };
       saveLocalProjects(projs);
 
       try {
-        await supabase.from('projects').update(projectData).eq('id', id);
+        await supabase.from('projects').update({
+          name: projectData.name,
+          tagline: projectData.tagline,
+          location: projectData.location,
+          type: projectData.type,
+          status: projectData.status,
+          price_range: projectData.startingPrice || projectData.priceRange,
+          image: projectData.image,
+          description: projectData.description,
+          highlights: projectData.highlights,
+          updated_at: new Date().toISOString()
+        }).eq('id', id);
       } catch {}
 
       return projs[idx];
@@ -529,7 +681,99 @@ export const api = {
   },
 
   // -------------------------------------------------------------
-  // CUSTOMER ENQUIRIES & LEADS
+  // SERVICES (7 LIVE SERVICES - CRUD & DIRECT WEBSITE SYNC)
+  // -------------------------------------------------------------
+  async getServices() {
+    try {
+      const { data, error } = await supabase.from('services').select('*').order('display_order', { ascending: true });
+      if (!error && Array.isArray(data) && data.length > 0) {
+        const formatted = data.map(s => ({
+          ...s,
+          deliverables: Array.isArray(s.deliverables) ? s.deliverables : (typeof s.deliverables === 'string' ? JSON.parse(s.deliverables) : [])
+        }));
+        saveLocalServices(formatted);
+        return formatted;
+      }
+    } catch {}
+
+    return getLocalServices();
+  },
+
+  async createService(serviceData, token) {
+    const services = getLocalServices();
+    const newId = `srv-${Date.now()}`;
+    const newSrv = {
+      ...serviceData,
+      id: newId,
+      displayOrder: services.length + 1,
+      deliverables: Array.isArray(serviceData.deliverables) 
+        ? serviceData.deliverables 
+        : (typeof serviceData.deliverables === 'string' 
+            ? serviceData.deliverables.split('\n').filter(Boolean) 
+            : [])
+    };
+    services.push(newSrv);
+    saveLocalServices(services);
+
+    try {
+      await supabase.from('services').insert([{
+        id: newSrv.id,
+        title: newSrv.title,
+        tagline: newSrv.tagline || '',
+        description: newSrv.description || '',
+        deliverables: newSrv.deliverables,
+        display_order: newSrv.displayOrder
+      }]);
+    } catch {}
+
+    return newSrv;
+  },
+
+  async updateService(id, serviceData, token) {
+    const services = getLocalServices();
+    const idx = services.findIndex(s => s.id === id);
+    if (idx !== -1) {
+      const deliverablesList = Array.isArray(serviceData.deliverables)
+        ? serviceData.deliverables
+        : (typeof serviceData.deliverables === 'string'
+            ? serviceData.deliverables.split('\n').filter(Boolean)
+            : services[idx].deliverables);
+
+      services[idx] = { 
+        ...services[idx], 
+        ...serviceData,
+        deliverables: deliverablesList
+      };
+      saveLocalServices(services);
+
+      try {
+        await supabase.from('services').update({
+          title: serviceData.title,
+          tagline: serviceData.tagline,
+          description: serviceData.description,
+          deliverables: deliverablesList
+        }).eq('id', id);
+      } catch {}
+
+      return services[idx];
+    }
+    return serviceData;
+  },
+
+  async deleteService(id, token) {
+    let services = getLocalServices();
+    services = services.filter(s => s.id !== id);
+    saveLocalServices(services);
+
+    try {
+      await supabase.from('services').delete().eq('id', id);
+    } catch {}
+
+    return { success: true };
+  },
+
+  // -------------------------------------------------------------
+  // CUSTOMER ENQUIRIES & LEADS (REAL-TIME SUBMISSIONS)
   // -------------------------------------------------------------
   async submitEnquiry(enquiryData) {
     const enqs = getLocalEnquiries();
@@ -543,7 +787,7 @@ export const api = {
     enqs.unshift(newEnq);
     saveLocalEnquiries(enqs);
 
-    // Sync to Supabase
+    // Save directly to Supabase
     try {
       await supabase.from('enquiries').insert([{
         id: newEnq.id,
@@ -568,7 +812,7 @@ export const api = {
   async getEnquiries(token) {
     try {
       const { data, error } = await supabase.from('enquiries').select('*').order('created_at', { ascending: false });
-      if (!error && Array.isArray(data) && data.length > 0) {
+      if (!error && Array.isArray(data)) {
         const formatted = data.map(e => ({
           ...e,
           createdAt: e.created_at || e.createdAt,
@@ -751,6 +995,8 @@ export const api = {
   async getAdminStats(token) {
     const props = await this.getProperties();
     const projs = await this.getProjects();
+    const cats = await this.getCategories();
+    const srvs = await this.getServices();
     const enqs = await this.getEnquiries(token);
     
     return {
@@ -759,6 +1005,8 @@ export const api = {
       soldProperties: props.filter(p => (p.status || '').toLowerCase() === 'sold').length,
       featuredProperties: props.filter(p => p.featured === true).length,
       totalProjects: projs.length,
+      totalCategories: cats.length,
+      totalServices: srvs.length,
       totalEnquiries: enqs.length,
       newLeads: enqs.filter(e => (e.status || '').toLowerCase() === 'new').length,
       convertedLeads: enqs.filter(e => (e.status || '').toLowerCase() === 'converted').length,

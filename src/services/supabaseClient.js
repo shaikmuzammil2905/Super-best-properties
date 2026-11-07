@@ -29,3 +29,4 @@ export async function checkSupabaseStatus() {
     return { connected: false, tablesReady: false, error: err.message };
   }
 }
+

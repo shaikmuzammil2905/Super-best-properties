@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { api } from '../services/api';
 import { 
   Home, 
   Building2, 
@@ -10,104 +11,36 @@ import {
   ArrowRight, 
   Sparkles, 
   MessageCircle, 
-  Phone,
-  ShieldCheck
+  Phone
 } from 'lucide-react';
 
+const iconMap = {
+  'srv-1': Home,
+  'srv-2': Building2,
+  'srv-3': TrendingUp,
+  'srv-4': Compass,
+  'srv-5': Handshake,
+  'srv-6': FileCheck2,
+  'srv-7': BadgePercent
+};
+
 export default function ServicesPage() {
-  const services = [
-    {
-      id: 'srv-1',
-      icon: Home,
-      title: 'Residential Property Advisory',
-      tagline: 'Plots, Apartments, Villas & Independent Houses',
-      description: 'Comprehensive guidance on identifying and securing ideal residential plots, luxury apartments, standalone independent villas, and gated community housing opportunities tailored to family lifestyles and future value appreciation.',
-      deliverables: [
-        'HMDA & DTCP layout verification',
-        'Micro-market price benchmarking',
-        'Architectural & Vastu compliance check',
-        'Customized site visits with personal advisor'
-      ]
-    },
-    {
-      id: 'srv-2',
-      icon: Building2,
-      title: 'Commercial Property Solutions',
-      tagline: 'High-Street Retail, Corporate Offices & Godowns',
-      description: 'Assistance in identifying and acquiring prime commercial plots, Grade-A IT office spaces, high-footfall retail showrooms, warehousing godowns, and business premises across Hyderabad’s most vibrant economic corridors.',
-      deliverables: [
-        'High rental yield forecasting',
-        'Lease tenure & tenant feasibility',
-        'Location footfall & highway transit analysis',
-        'Commercial zoning & fire clearance checks'
-      ]
-    },
-    {
-      id: 'srv-3',
-      icon: TrendingUp,
-      title: 'Property Investment Advisory',
-      tagline: 'High-ROI Land, Commercial & Residential Wealth Creation',
-      description: 'Helping investors, HNIs and NRIs evaluate high-potential land, residential, and commercial property opportunities aligned with their risk profiles, capital preservation goals, and aggressive multi-year appreciation objectives.',
-      deliverables: [
-        'Macro & micro-market growth analytics',
-        'Exit strategy planning & liquidity review',
-        'Portfolio diversification roadmaps',
-        'Quarterly capital appreciation reports'
-      ]
-    },
-    {
-      id: 'srv-4',
-      icon: Compass,
-      title: 'Land & Development Opportunities',
-      tagline: 'Joint Ventures, Plotted Layouts & Farm Parcels',
-      description: 'Connecting interested buyers, builders, and institutional investors with strategic land parcels, joint-development opportunities, agricultural holdings, and property owners with clear, unencumbered titles.',
-      deliverables: [
-        'Direct landowner negotiations',
-        'Joint development ratio structuring',
-        'Title search & boundary survey reports',
-        'Master plan & master road connectivity'
-      ]
-    },
-    {
-      id: 'srv-5',
-      icon: Handshake,
-      title: 'Property Buying & Selling Assistance',
-      tagline: 'End-to-End Discovery, Site Visits & Closing Support',
-      description: 'Professional assistance in property discovery, shortlisting, private site visits, price negotiations, buyer-seller alignment, and smooth, secure transaction coordination from agreement to registration.',
-      deliverables: [
-        'Curated shortlists matching exact budget',
-        'Scheduled chauffeured site inspections',
-        'Fair market valuation & negotiation',
-        'Escrow & documentation assistance'
-      ]
-    },
-    {
-      id: 'srv-6',
-      icon: FileCheck2,
-      title: 'Legal & Documentation Assistance',
-      tagline: 'Title Scrutiny, Link Documents & RERA Verification',
-      description: 'Helping customers navigate property-related legal documentation, 30-year link document verification, encumbrance certificates (EC), municipal sanctions, and revenue records with clarity and confidence.',
-      deliverables: [
-        '30-year Encumbrance Certificate scrutiny',
-        'Revenue land record & Dharani verification',
-        'HMDA / DTCP / GHMC approval confirmation',
-        'Safe deed drafting with experienced legal counsel'
-      ]
-    },
-    {
-      id: 'srv-7',
-      icon: BadgePercent,
-      title: 'Bank Loan & Financial Assistance',
-      tagline: 'Competitive Home Loans & Fast Sanctions',
-      description: 'Connecting eligible customers with suitable property financing options through leading nationalized and private banking institutions (SBI, HDFC, ICICI, etc.) with doorstep document pickup and preferential interest rates.',
-      deliverables: [
-        'Pre-approved loan eligibility assessment',
-        'Tie-ups with leading national banks',
-        'Doorstep document collection & fast clearance',
-        'Transparent processing with no hidden charges'
-      ]
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadServices() {
+      try {
+        const srvs = await api.getServices();
+        setServices(srvs);
+      } catch (err) {
+        console.error('Failed to load services:', err);
+      } finally {
+        setLoading(false);
+      }
     }
-  ];
+    loadServices();
+  }, []);
 
   const getWhatsAppUrl = (srvTitle) => {
     return `https://wa.me/917075539189?text=${encodeURIComponent(`Hello Super Best Properties, I need assistance with ${srvTitle}. Please provide full details.`)}`;
@@ -135,11 +68,12 @@ export default function ServicesPage() {
           </p>
         </div>
 
-        {/* 7 Services Grid - Directly opens WhatsApp (No Popups, as requested in image copy 28) */}
+        {/* Dynamic Services Grid - Synced directly with Admin Panel & Supabase */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((srv, idx) => {
-            const Icon = srv.icon;
+            const Icon = iconMap[srv.id] || Building2;
             const waUrl = getWhatsAppUrl(srv.title);
+            const deliverables = Array.isArray(srv.deliverables) ? srv.deliverables : [];
 
             return (
               <div
@@ -161,24 +95,28 @@ export default function ServicesPage() {
                     {srv.title}
                   </h3>
 
-                  <p className="text-xs font-semibold text-neutral-500 mt-1">
-                    {srv.tagline}
-                  </p>
+                  {srv.tagline && (
+                    <p className="text-xs font-semibold text-neutral-500 mt-1">
+                      {srv.tagline}
+                    </p>
+                  )}
 
                   <p className="text-sm text-neutral-600 mt-3.5 leading-relaxed line-clamp-3">
                     {srv.description}
                   </p>
 
                   {/* What We Deliver List */}
-                  <div className="mt-5 pt-4 border-t border-neutral-100 space-y-2">
-                    <span className="block text-[11px] font-bold text-neutral-400 uppercase tracking-wider">What We Deliver</span>
-                    {srv.deliverables.map((d, i) => (
-                      <div key={i} className="flex items-start space-x-2 text-xs text-neutral-700">
-                        <span className="text-gold-500 font-bold shrink-0">✓</span>
-                        <span>{d}</span>
-                      </div>
-                    ))}
-                  </div>
+                  {deliverables.length > 0 && (
+                    <div className="mt-5 pt-4 border-t border-neutral-100 space-y-2">
+                      <span className="block text-[11px] font-bold text-neutral-400 uppercase tracking-wider">What We Deliver</span>
+                      {deliverables.map((d, i) => (
+                        <div key={i} className="flex items-start space-x-2 text-xs text-neutral-700">
+                          <span className="text-gold-500 font-bold shrink-0">✓</span>
+                          <span>{d}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Direct Enquire Now Action Button as requested */}

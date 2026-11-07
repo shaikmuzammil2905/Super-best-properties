@@ -8,14 +8,13 @@ import {
   EyeOff, 
   ShieldCheck, 
   ArrowRight, 
-  Sparkles, 
   AlertCircle,
-  Building2,
-  CheckCircle2
+  Building2
 } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
+  // Form starts 100% EMPTY - No pre-fill, user fills in credentials manually
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -23,7 +22,7 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // If already logged in, redirect straight to dashboard
+  // If already authenticated, redirect to dashboard
   useEffect(() => {
     const token = localStorage.getItem('sbp_admin_token');
     if (token) {
@@ -46,15 +45,10 @@ export default function AdminLoginPage() {
     }
   };
 
-  const handleQuickFill = (user, pass) => {
-    setUsername(user);
-    setPassword(pass);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden">
       
-      {/* Background Ambient Glows */}
+      {/* Background Subtle Ambient Glow */}
       <div className="absolute top-1/4 -left-32 w-96 h-96 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -76,20 +70,20 @@ export default function AdminLoginPage() {
             </div>
           </Link>
 
-          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-gold-500/10 border border-gold-400/30 text-gold-400 text-xs font-semibold">
+          <div className="inline-flex items-center space-x-1.5 px-3.5 py-1 rounded-full bg-gold-500/10 border border-gold-400/30 text-gold-400 text-xs font-semibold">
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Secure Enterprise Admin Portal</span>
+            <span>Secure Enterprise Admin Control Center</span>
           </div>
         </div>
 
         {/* Login Box */}
-        <div className="bg-neutral-900/90 border border-neutral-800 rounded-3xl p-7 sm:p-9 shadow-2xl backdrop-blur-xl">
+        <div className="bg-neutral-900/95 border border-neutral-800 rounded-3xl p-7 sm:p-9 shadow-2xl backdrop-blur-xl">
           
           <h2 className="text-2xl font-serif font-bold text-white mb-1">
-            Administrator Sign In
+            Administrator Portal
           </h2>
           <p className="text-xs text-neutral-400 mb-6">
-            Enter your authorized credentials to manage properties, leads, and website content.
+            Enter your credentials to manage properties, projects, categories and enquiries.
           </p>
 
           {error && (
@@ -99,12 +93,12 @@ export default function AdminLoginPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             
-            {/* User / Email */}
+            {/* User / Email - Empty, User must fill manually */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-neutral-300 mb-1.5">
-                Username or Email
+                Admin Username or Email
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-500">
@@ -115,17 +109,18 @@ export default function AdminLoginPage() {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="admin or admin@superbestproperties.com"
+                  placeholder="Enter username or email"
+                  autoComplete="off"
                   className="w-full bg-neutral-950 border border-neutral-800 focus:border-gold-500 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-neutral-600 focus:outline-none transition-colors"
                 />
               </div>
             </div>
 
-            {/* Password */}
+            {/* Password with Eye Button Inside Box */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <label className="block text-xs font-bold uppercase tracking-wider text-neutral-300">
-                  Password
+                  Admin Password
                 </label>
               </div>
               <div className="relative">
@@ -137,15 +132,23 @@ export default function AdminLoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your security password"
-                  className="w-full bg-neutral-950 border border-neutral-800 focus:border-gold-500 rounded-xl pl-10 pr-11 py-3 text-sm text-white placeholder-neutral-600 focus:outline-none transition-colors"
+                  placeholder="Enter password"
+                  autoComplete="new-password"
+                  className="w-full bg-neutral-950 border border-neutral-800 focus:border-gold-500 rounded-xl pl-10 pr-12 py-3 text-sm text-white placeholder-neutral-600 focus:outline-none transition-colors"
                 />
+                {/* Eye toggle button inside password box */}
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-neutral-500 hover:text-neutral-300 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-neutral-400 hover:text-gold-400 transition-colors cursor-pointer"
+                  title={showPassword ? "Hide password" : "Show password"}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4 text-gold-400" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
                 </button>
               </div>
             </div>
@@ -161,14 +164,6 @@ export default function AdminLoginPage() {
                 />
                 <span className="text-xs text-neutral-400">Remember session</span>
               </label>
-
-              <button
-                type="button"
-                onClick={() => alert('For password recovery, please consult your database administrator or reset via your project security settings.')}
-                className="text-xs text-gold-400 hover:text-gold-300 transition-colors"
-              >
-                Forgot password?
-              </button>
             </div>
 
             {/* Submit Button */}
@@ -178,32 +173,16 @@ export default function AdminLoginPage() {
               className="w-full py-3.5 px-6 rounded-xl gold-gradient-btn text-black font-extrabold text-sm tracking-wide flex items-center justify-center space-x-2 shadow-lg shadow-gold-500/20 hover:scale-[1.02] active:scale-98 transition-all disabled:opacity-50 mt-2"
             >
               {loading ? (
-                <span>Verifying Secure Session...</span>
+                <span>Signing in...</span>
               ) : (
                 <>
-                  <span>Access Admin Dashboard</span>
+                  <span>Sign In to Admin Panel</span>
                   <ArrowRight className="w-4 h-4 text-black" />
                 </>
               )}
             </button>
 
           </form>
-
-          {/* Quick Login Helper Box */}
-          <div className="mt-6 pt-5 border-t border-neutral-800 text-center">
-            <p className="text-[11px] text-neutral-500 mb-2 font-medium">
-              Default Administrator Access:
-            </p>
-            <div className="flex justify-center gap-2">
-              <button
-                type="button"
-                onClick={() => handleQuickFill('admin', 'admin123')}
-                className="px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-[11px] font-semibold text-neutral-300 transition-colors border border-neutral-700"
-              >
-                Autofill Credentials (admin / admin123)
-              </button>
-            </div>
-          </div>
 
         </div>
 
