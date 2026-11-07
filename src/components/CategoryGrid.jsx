@@ -48,7 +48,7 @@ export default function CategoryGrid({ title = "What are you looking for?", subt
           {categoriesData.map((cat) => (
             <Link
               key={cat.slug}
-              to={`/properties/${cat.slug}`}
+              to={`/buy-a-property?type=${cat.slug}`}
               className="group relative bg-white border border-neutral-200/90 hover:border-gold-500/80 rounded-2xl p-5 sm:p-6 text-center transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col items-center justify-center aspect-[1/1.05]"
             >
               {/* Subtle gold gradient accent on hover */}

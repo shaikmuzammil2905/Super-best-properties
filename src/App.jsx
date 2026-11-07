@@ -6,6 +6,7 @@ import WhatsAppChatbot from './components/WhatsAppChatbot';
 
 // Pages
 import HomePage from './pages/HomePage';
+import BuyAPropertyPage from './pages/BuyAPropertyPage';
 import CategoriesPage from './pages/CategoriesPage';
 import PropertiesPage from './pages/PropertiesPage';
 import PropertyOrCategoryDispatcher from './pages/PropertyOrCategoryDispatcher';
@@ -38,11 +39,12 @@ export default function App() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/categories" element={<CategoriesPage />} />
-          <Route path="/properties" element={<PropertiesPage />} />
+          <Route path="/buy-a-property" element={<BuyAPropertyPage />} />
+          <Route path="/properties" element={<BuyAPropertyPage />} />
+          <Route path="/categories" element={<BuyAPropertyPage />} />
           <Route path="/properties/:slug" element={<PropertyOrCategoryDispatcher />} />
           <Route path="/property/:slug" element={<PropertyDetailsPage />} />
-          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/projects" element={<BuyAPropertyPage />} />
           <Route path="/projects/:slug" element={<ProjectsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/services" element={<ServicesPage />} />

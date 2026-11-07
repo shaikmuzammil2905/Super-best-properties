@@ -16,7 +16,7 @@ export default function HeroSection({ onSearch }) {
       subtitle: 'Clear Titles | Immediate Registration | High ROI',
       description: 'Strategic open plots in Tellapur, Shamshabad, and Kompally growth corridors with 40-60ft BT roads and 100% clear legal documentation.',
       ctaText: 'Explore Open Plots',
-      ctaLink: '/properties/plots',
+      ctaLink: '/buy-a-property?type=plots',
       desktopImage: '/assets/hero-slide-1-plots.png',
       mobileImage: '/assets/hero-slide-1-plots-mobile.png'
     },
@@ -28,7 +28,7 @@ export default function HeroSection({ onSearch }) {
       subtitle: '2, 3 & 4 BHK | Gachibowli & Madhapur | Gated Amenities',
       description: 'Contemporary apartments equipped with world-class clubhouses, swimming pools, fitness centers, and seamless IT corridor connectivity.',
       ctaText: 'Explore Flats',
-      ctaLink: '/properties/flats',
+      ctaLink: '/buy-a-property?type=flats',
       desktopImage: '/assets/hero-slide-2-flats.png',
       mobileImage: '/assets/hero-slide-2-flats-mobile.png'
     },
@@ -40,7 +40,7 @@ export default function HeroSection({ onSearch }) {
       subtitle: 'Spacious Compounds | 100% Vastu | Private Terraces',
       description: 'Standalone luxury residences and duplex houses with dedicated car porch, private gardens, and peaceful residential layouts across Hyderabad.',
       ctaText: 'Explore Houses',
-      ctaLink: '/properties/independent-house',
+      ctaLink: '/buy-a-property?type=independent-house',
       desktopImage: '/assets/hero-slide-3-houses.png',
       mobileImage: '/assets/hero-slide-3-houses-mobile.png'
     },
@@ -52,7 +52,7 @@ export default function HeroSection({ onSearch }) {
       subtitle: 'Triplex Villas | Private Swimming Pools | 24/7 Security',
       description: 'Ultra-luxurious gated villa communities designed for supreme privacy, opulent architecture, and serene resort-style living.',
       ctaText: 'Explore Luxury Villas',
-      ctaLink: '/properties/gated-community-villas',
+      ctaLink: '/buy-a-property?type=gated-community-villas',
       desktopImage: '/assets/hero-slide-4-villas.png',
       mobileImage: '/assets/hero-slide-4-villas-mobile.png'
     }
@@ -99,13 +99,13 @@ export default function HeroSection({ onSearch }) {
               } transition-transform duration-[6000ms]`}
               style={{ backgroundImage: `url('${slide.desktopImage}')` }}
             >
-              {/* Soft, bright gradient on left for desktop typography legibility without dark black patch */}
-              <div className="absolute inset-y-0 left-0 w-full lg:w-3/5 bg-gradient-to-r from-black/60 via-black/30 to-transparent"></div>
+              {/* Warm Gold Ambient Glow on left - replaces black overlay as requested in image copy 24 */}
+              <div className="absolute inset-y-0 left-0 w-full lg:w-3/5 bg-gradient-to-r from-amber-950/50 via-amber-900/25 to-transparent"></div>
             </div>
           ))}
         </div>
 
-        {/* Mobile Background Images with Automatic Smooth Transitions & Super HD Clarity */}
+        {/* Mobile Background Images with Warm Gold Ambience & Zero Dark Black Overlay */}
         <div className="md:hidden absolute inset-0 overflow-hidden">
           {slides.map((slide, index) => (
             <div
@@ -115,24 +115,24 @@ export default function HeroSection({ onSearch }) {
               }`}
               style={{ backgroundImage: `url('${slide.mobileImage}')` }}
             >
-              {/* Bright, crystal-clear mobile view with light gradient for crisp legibility */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/15 to-black/65"></div>
+              {/* Warm Gold Tinted Mobile Overlay - Bright and Legible without black gloom */}
+              <div className="absolute inset-0 bg-gradient-to-b from-amber-950/55 via-amber-900/20 to-amber-950/60"></div>
             </div>
           ))}
         </div>
 
-        {/* Hero Content Overlay */}
+        {/* Hero Content Overlay - Rich Gold Background Box as requested in image copy 24 */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-10 sm:py-16 md:py-20">
-          <div className="max-w-xl lg:max-w-2xl space-y-4 sm:space-y-6">
+          <div className="max-w-xl lg:max-w-2xl space-y-4 sm:space-y-6 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-neutral-950/80 via-[#221703]/75 to-neutral-950/75 border border-gold-400/50 shadow-[0_15px_45px_rgba(212,160,23,0.22)] backdrop-blur-md">
             
-            {/* Tagline / Subtitle Pill */}
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-black/85 backdrop-blur-md border border-gold-400/80 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow-xl">
-              <Sparkles className="w-3.5 h-3.5 text-gold-400" />
-              <span className="text-gold-300">{current.taglinePill}</span>
+            {/* Tagline / Subtitle Pill with Gold Background */}
+            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-gold-500/30 via-gold-500/40 to-gold-600/30 border border-gold-400 text-gold-200 text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow-lg">
+              <Sparkles className="w-3.5 h-3.5 text-gold-300" />
+              <span className="text-gold-200">{current.taglinePill}</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-black tracking-tight leading-[1.1] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif font-black tracking-tight leading-[1.1] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
               {current.titlePart1} <br />
               <span className="gold-gradient-text drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
                 {current.titlePart2}
@@ -141,9 +141,9 @@ export default function HeroSection({ onSearch }) {
 
             {/* Subtitle / Divider Line */}
             <div className="flex items-center space-x-3 text-gold-300 font-extrabold text-xs sm:text-base md:text-lg drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
-              <div className="h-[2px] w-8 sm:w-16 bg-gold-500 shadow"></div>
+              <div className="h-[2px] w-8 sm:w-16 bg-gold-400 shadow"></div>
               <span>{current.subtitle}</span>
-              <div className="h-[2px] w-8 sm:w-16 bg-gold-500 shadow"></div>
+              <div className="h-[2px] w-8 sm:w-16 bg-gold-400 shadow"></div>
             </div>
 
             {/* Description */}
@@ -165,25 +165,25 @@ export default function HeroSection({ onSearch }) {
                 href="https://wa.me/917075539189?text=Hello%20Super%20Best%20Properties,%20I%20am%20interested%20in%20learning%20more%20about%20your%20available%20properties."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-2 py-3 px-5 sm:px-6 rounded-full bg-black/90 hover:bg-black text-white border border-gold-400 text-xs sm:text-sm font-semibold transition-all shadow-xl hover:scale-105"
+                className="inline-flex items-center space-x-2 py-3 px-5 sm:px-6 rounded-full bg-gradient-to-r from-gold-600/30 via-gold-500/20 to-gold-600/30 hover:from-gold-600/40 hover:to-gold-500/30 text-gold-200 hover:text-white border border-gold-400 text-xs sm:text-sm font-bold transition-all shadow-lg hover:scale-105"
               >
                 <span>WhatsApp Advisor</span>
               </a>
             </div>
 
-            {/* Slide Navigation Controls & Indicators */}
+            {/* Slide Navigation Controls & Indicators with Gold Styling */}
             <div className="pt-2 sm:pt-4 flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <button
                   onClick={prevSlide}
-                  className="w-9 h-9 rounded-full bg-black/80 hover:bg-black border border-gold-500/50 text-gold-300 flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-95"
+                  className="w-9 h-9 rounded-full bg-gold-500/25 hover:bg-gold-500/45 border border-gold-400 text-gold-200 flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-95"
                   aria-label="Previous slide"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={nextSlide}
-                  className="w-9 h-9 rounded-full bg-black/80 hover:bg-black border border-gold-500/50 text-gold-300 flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-95"
+                  className="w-9 h-9 rounded-full bg-gold-500/25 hover:bg-gold-500/45 border border-gold-400 text-gold-200 flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-95"
                   aria-label="Next slide"
                 >
                   <ChevronRight className="w-4 h-4" />
@@ -191,20 +191,20 @@ export default function HeroSection({ onSearch }) {
               </div>
 
               {/* Dots Indicator with Slide Counter */}
-              <div className="flex items-center space-x-2 bg-black/60 px-3 py-1.5 rounded-full border border-neutral-700">
+              <div className="flex items-center space-x-2 bg-gold-950/60 px-3.5 py-1.5 rounded-full border border-gold-500/40">
                 {slides.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentSlide(index)}
                     className={`h-2.5 rounded-full transition-all duration-500 ${
-                      currentSlide === index ? 'w-8 bg-gold-400 shadow-md shadow-gold-500/50' : 'w-2.5 bg-neutral-500 hover:bg-neutral-300'
+                      currentSlide === index ? 'w-8 bg-gold-400 shadow-md shadow-gold-500/60' : 'w-2.5 bg-neutral-600 hover:bg-gold-300'
                     }`}
                     aria-label={`Go to slide ${index + 1}`}
                   />
                 ))}
               </div>
 
-              <span className="text-neutral-300 text-xs font-bold hidden sm:inline-block">
+              <span className="text-gold-300 text-xs font-bold hidden sm:inline-block">
                 0{currentSlide + 1} / 0{slides.length}
               </span>
             </div>

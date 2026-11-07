@@ -44,21 +44,9 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/properties" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
+                <Link to="/buy-a-property" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
                   <span className="text-gold-500">›</span>
-                  <span>Featured Properties</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/categories" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
-                  <span className="text-gold-500">›</span>
-                  <span>All 15 Property Categories</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/projects" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
-                  <span className="text-gold-500">›</span>
-                  <span>Landmark Projects</span>
+                  <span className="font-semibold text-gold-300">Buy a Property</span>
                 </Link>
               </li>
               <li>
@@ -90,39 +78,39 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link to="/properties/plots" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
+                <Link to="/buy-a-property?type=plots" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
                   <span className="text-gold-500">›</span>
                   <span>HMDA & DTCP Plots</span>
                 </Link>
               </li>
               <li>
-                <Link to="/properties/gated-community-villas" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
+                <Link to="/buy-a-property?type=gated-community-villas" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
                   <span className="text-gold-500">›</span>
                   <span>Gated Community Villas</span>
                 </Link>
               </li>
               <li>
-                <Link to="/properties/apartments" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
+                <Link to="/buy-a-property?type=flats" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
                   <span className="text-gold-500">›</span>
-                  <span>Luxury Apartments & Flats</span>
+                  <span>Flats & Apartments</span>
                 </Link>
               </li>
               <li>
-                <Link to="/properties/independent-house" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
+                <Link to="/buy-a-property?type=independent-house" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
                   <span className="text-gold-500">›</span>
                   <span>Independent Houses</span>
                 </Link>
               </li>
               <li>
-                <Link to="/properties/farm-houses" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
+                <Link to="/buy-a-property?type=offices" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
                   <span className="text-gold-500">›</span>
-                  <span>Farm Houses & Agri Lands</span>
+                  <span>Commercial & Offices</span>
                 </Link>
               </li>
               <li>
-                <Link to="/properties/offices" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
+                <Link to="/buy-a-property?type=agriculture-land" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
                   <span className="text-gold-500">›</span>
-                  <span>Commercial & Corporate Offices</span>
+                  <span>Agriculture Land & Farm House</span>
                 </Link>
               </li>
             </ul>

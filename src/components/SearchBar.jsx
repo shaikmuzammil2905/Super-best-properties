@@ -18,7 +18,7 @@ export default function SearchBar({ onSearch, initialValues = {}, className = ""
     if (onSearch) {
       onSearch({ type, location, budget });
     } else {
-      navigate(`/properties?${query.toString()}`);
+      navigate(`/buy-a-property?${query.toString()}`);
     }
   };
 

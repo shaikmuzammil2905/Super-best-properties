@@ -58,7 +58,10 @@ export default function HomePage() {
       {/* 1. Hero Section with Desktop (hero-desktop.png) and Bright Mobile (hero-mobile.png) */}
       <HeroSection />
 
-      {/* 2. Featured Properties Section matching Reference Image 1 & 2 */}
+      {/* 2. Property Category Selection Section based on Reference Image 3 & Image copy 25 ("What are you looking for?") - Kept directly below hero section */}
+      <CategoryGrid />
+
+      {/* 3. Featured Properties Section matching Reference Image 1 & 2 */}
       <section className="py-20 bg-[#FAFAFA] relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -86,19 +89,16 @@ export default function HomePage() {
           {/* Explore all CTA */}
           <div className="mt-12 text-center">
             <Link
-              to="/properties"
+              to="/buy-a-property"
               className="inline-flex items-center space-x-2 px-8 py-3.5 rounded-full gold-gradient-btn text-black font-extrabold text-sm sm:text-base tracking-wide shadow-lg hover:shadow-xl transition-all"
             >
-              <span>View All Properties ({featuredProperties.length ? '16+' : 'All'})</span>
+              <span>Explore All in Buy a Property ({featuredProperties.length ? '16+' : 'All'})</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
         </div>
       </section>
-
-      {/* 3. Property Category Selection Page / Section based on Reference Image 3 ("What are you looking for?") */}
-      <CategoryGrid />
 
       {/* 4. Our Projects & Highlights Section matching Reference Image 1 & 2 */}
       <ProjectsHighlightsSection />
