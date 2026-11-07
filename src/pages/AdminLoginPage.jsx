@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../services/api';
-import { 
-  Lock, 
-  User, 
-  Eye, 
-  EyeOff, 
-  ShieldCheck, 
-  ArrowRight, 
+import {
+  Lock,
+  User,
+  Eye,
+  EyeOff,
+  ShieldCheck,
+  ArrowRight,
   AlertCircle,
   Building2
 } from 'lucide-react';
@@ -47,13 +47,13 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden">
-      
+
       {/* Background Subtle Ambient Glow */}
       <div className="absolute top-1/4 -left-32 w-96 h-96 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="max-w-md w-full relative z-10">
-        
+
         {/* Brand Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-3 group mb-4">
@@ -78,7 +78,7 @@ export default function AdminLoginPage() {
 
         {/* Login Box */}
         <div className="bg-neutral-900/95 border border-neutral-800 rounded-3xl p-7 sm:p-9 shadow-2xl backdrop-blur-xl">
-          
+
           <h2 className="text-2xl font-serif font-bold text-white mb-1">
             Administrator Portal
           </h2>
@@ -94,7 +94,7 @@ export default function AdminLoginPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            
+
             {/* User / Email - Empty, User must fill manually */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-neutral-300 mb-1.5">

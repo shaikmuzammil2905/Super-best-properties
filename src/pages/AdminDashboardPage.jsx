@@ -41,8 +41,9 @@ export default function AdminDashboardPage() {
   const [token, setToken] = useState(localStorage.getItem('sbp_admin_token') || '');
   const [loading, setLoading] = useState(true);
   
-  // Navigation tabs matching image copy 29.png
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'properties' | 'projects' | 'categories' | 'services' | 'enquiries' | 'content'
+  // Navigation tabs matching user requirement
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'buy-a-property' | 'services' | 'enquiries' | 'content'
+  const [buySubTab, setBuySubTab] = useState('all'); // 'all' | 'properties' | 'projects' | 'categories'
   const [toast, setToast] = useState(null);
 
   // Core Data States
@@ -625,9 +626,9 @@ export default function AdminDashboardPage() {
 
       </header>
 
-      {/* TOP PILL NAVIGATION BAR (MATCHING USER SCREENSHOT IMAGE COPY 29) */}
-      <div className="bg-neutral-900/60 border-b border-neutral-800 px-4 sm:px-6 py-3.5 overflow-x-auto scrollbar-none sticky top-16 z-30 backdrop-blur-md">
-        <div className="flex items-center space-x-2.5 min-w-max">
+      {/* TOP PILL NAVIGATION BAR - CENTERED IN THE MIDDLE WITH UNIFIED BUY A PROPERTY */}
+      <div className="bg-neutral-900/70 border-b border-neutral-800 px-4 sm:px-6 py-3.5 overflow-x-auto scrollbar-none sticky top-16 z-30 backdrop-blur-md">
+        <div className="flex items-center justify-center mx-auto space-x-2.5 min-w-max max-w-7xl">
           
           <button
             onClick={() => setActiveTab('overview')}
@@ -641,40 +642,17 @@ export default function AdminDashboardPage() {
             <span>Dashboard Overview</span>
           </button>
 
+          {/* UNIFIED BUY A PROPERTY SECTION (MERGING PROPERTIES + PROJECTS + CATEGORIES) */}
           <button
-            onClick={() => setActiveTab('properties')}
+            onClick={() => { setActiveTab('buy-a-property'); setBuySubTab('all'); }}
             className={`px-4 py-2 rounded-full text-xs font-bold flex items-center space-x-2 transition-all ${
-              activeTab === 'properties'
+              activeTab === 'buy-a-property' || activeTab === 'properties' || activeTab === 'projects' || activeTab === 'categories'
                 ? 'bg-gold-500 text-black shadow-lg shadow-gold-500/20'
                 : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-300 border border-neutral-800'
             }`}
           >
             <Building2 className="w-3.5 h-3.5" />
-            <span>Properties ({properties.length})</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('projects')}
-            className={`px-4 py-2 rounded-full text-xs font-bold flex items-center space-x-2 transition-all ${
-              activeTab === 'projects'
-                ? 'bg-gold-500 text-black shadow-lg shadow-gold-500/20'
-                : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-300 border border-neutral-800'
-            }`}
-          >
-            <Briefcase className="w-3.5 h-3.5" />
-            <span>Projects ({projects.length})</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('categories')}
-            className={`px-4 py-2 rounded-full text-xs font-bold flex items-center space-x-2 transition-all ${
-              activeTab === 'categories'
-                ? 'bg-gold-500 text-black shadow-lg shadow-gold-500/20'
-                : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-300 border border-neutral-800'
-            }`}
-          >
-            <Layers className="w-3.5 h-3.5" />
-            <span>Categories ({categories.length})</span>
+            <span>Buy a Property</span>
           </button>
 
           <button
@@ -757,7 +735,7 @@ export default function AdminDashboardPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
               
               <div 
-                onClick={() => setActiveTab('properties')}
+                onClick={() => { setActiveTab('buy-a-property'); setBuySubTab('properties'); }}
                 className="bg-neutral-900 border border-neutral-800 hover:border-gold-500/50 rounded-2xl p-5 transition-all cursor-pointer group"
               >
                 <div className="flex items-center justify-between text-neutral-400 text-xs font-bold uppercase">
@@ -769,7 +747,7 @@ export default function AdminDashboardPage() {
               </div>
 
               <div 
-                onClick={() => setActiveTab('projects')}
+                onClick={() => { setActiveTab('buy-a-property'); setBuySubTab('projects'); }}
                 className="bg-neutral-900 border border-neutral-800 hover:border-gold-500/50 rounded-2xl p-5 transition-all cursor-pointer group"
               >
                 <div className="flex items-center justify-between text-neutral-400 text-xs font-bold uppercase">
@@ -781,7 +759,7 @@ export default function AdminDashboardPage() {
               </div>
 
               <div 
-                onClick={() => setActiveTab('categories')}
+                onClick={() => { setActiveTab('buy-a-property'); setBuySubTab('categories'); }}
                 className="bg-neutral-900 border border-neutral-800 hover:border-gold-500/50 rounded-2xl p-5 transition-all cursor-pointer group"
               >
                 <div className="flex items-center justify-between text-neutral-400 text-xs font-bold uppercase">
@@ -874,29 +852,115 @@ export default function AdminDashboardPage() {
         )}
 
         {/* ========================================================= */}
-        {/* TAB 2: BUY A PROPERTY / PROPERTIES (16) */}
+        {/* UNIFIED TAB: BUY A PROPERTY (PROPERTIES + PROJECTS + CATEGORIES) */}
         {/* ========================================================= */}
-        {activeTab === 'properties' && (
-          <div className="space-y-6 animate-fade-in">
+        {(activeTab === 'buy-a-property' || activeTab === 'properties' || activeTab === 'projects' || activeTab === 'categories') && (
+          <div className="space-y-8 animate-fade-in">
             
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            {/* MASTER HEADER */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-3 border-b border-neutral-800">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-serif font-black text-white">
-                  Buy a Property Management ({properties.length})
+                <h1 className="text-2xl sm:text-3xl font-serif font-black text-white flex items-center space-x-2.5">
+                  <span className="p-2 rounded-2xl bg-gold-500/10 border border-gold-500/30 text-gold-400">
+                    <Building2 className="w-6 h-6" />
+                  </span>
+                  <span>Buy a Property Master Management</span>
                 </h1>
-                <p className="text-xs sm:text-sm text-neutral-400 mt-1">
-                  Full control over property listings: add new properties, edit prices, upload images, and delete listings.
+                <p className="text-xs sm:text-sm text-neutral-400 mt-1.5">
+                  Unified control center for all live website Listings ({properties.length}), Landmark Projects ({projects.length}), and Property Categories ({categories.length}).
                 </p>
               </div>
 
+              {/* Master Upload / Add Actions */}
+              <div className="flex flex-wrap gap-2.5">
+                <button
+                  onClick={handleOpenAddProperty}
+                  className="py-2.5 px-4 rounded-xl gold-gradient-btn text-black font-extrabold text-xs flex items-center space-x-1.5 shadow-lg hover:brightness-110 transition-all"
+                >
+                  <Plus className="w-4 h-4 text-black" />
+                  <span>Upload Property</span>
+                </button>
+                <button
+                  onClick={handleOpenAddProject}
+                  className="py-2.5 px-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-100 font-extrabold text-xs flex items-center space-x-1.5 border border-neutral-700 shadow-md transition-all"
+                >
+                  <Plus className="w-4 h-4 text-gold-400" />
+                  <span>Add Project</span>
+                </button>
+                <button
+                  onClick={handleOpenAddCategory}
+                  className="py-2.5 px-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-100 font-extrabold text-xs flex items-center space-x-1.5 border border-neutral-700 shadow-md transition-all"
+                >
+                  <Plus className="w-4 h-4 text-gold-400" />
+                  <span>Add Category</span>
+                </button>
+              </div>
+            </div>
+
+            {/* SUB-SECTION SWITCHER / FILTER PILLS */}
+            <div className="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none">
               <button
-                onClick={handleOpenAddProperty}
-                className="py-3 px-5 rounded-xl gold-gradient-btn text-black font-extrabold text-sm flex items-center space-x-2 shadow-lg"
+                onClick={() => setBuySubTab('all')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                  buySubTab === 'all'
+                    ? 'bg-neutral-100 text-black shadow-md'
+                    : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-400 border border-neutral-800'
+                }`}
               >
-                <Plus className="w-4 h-4 text-black" />
-                <span>Upload New Property</span>
+                ✦ All 3 Sections ({properties.length + projects.length + categories.length})
+              </button>
+              <button
+                onClick={() => setBuySubTab('properties')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                  buySubTab === 'properties'
+                    ? 'bg-gold-500 text-black shadow-md'
+                    : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-400 border border-neutral-800'
+                }`}
+              >
+                🏠 Properties ({properties.length})
+              </button>
+              <button
+                onClick={() => setBuySubTab('projects')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                  buySubTab === 'projects'
+                    ? 'bg-gold-500 text-black shadow-md'
+                    : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-400 border border-neutral-800'
+                }`}
+              >
+                🏗 Landmark Projects ({projects.length})
+              </button>
+              <button
+                onClick={() => setBuySubTab('categories')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                  buySubTab === 'categories'
+                    ? 'bg-gold-500 text-black shadow-md'
+                    : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-400 border border-neutral-800'
+                }`}
+              >
+                🗂 15 Categories ({categories.length})
               </button>
             </div>
+
+            {/* SUB-SECTION 1: PROPERTY LISTINGS CATALOG */}
+            {(buySubTab === 'all' || buySubTab === 'properties') && (
+              <div className="space-y-5 pt-2">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 border-t border-neutral-800/80">
+                  <div>
+                    <h2 className="text-xl font-serif font-black text-white flex items-center space-x-2">
+                      <span>🏠 Property Listings Catalog ({properties.length})</span>
+                    </h2>
+                    <p className="text-xs text-neutral-400 mt-0.5">
+                      Edit prices, upload new properties, manage images, and toggle availability status.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleOpenAddProperty}
+                    className="self-start sm:self-auto px-3.5 py-1.5 rounded-xl gold-gradient-btn text-black font-extrabold text-xs flex items-center space-x-1.5 shadow"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-black" />
+                    <span>Upload Property</span>
+                  </button>
+                </div>
 
             {/* Filter & Search Bar */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-2xl bg-neutral-900 border border-neutral-800">
@@ -1011,35 +1075,30 @@ export default function AdminDashboardPage() {
                   </div>
                 );
               })}
-            </div>
-
-          </div>
-        )}
-
-        {/* ========================================================= */}
-        {/* TAB 3: LANDMARK PROJECTS (4) - EDIT, DELETE, UPLOAD NEW */}
-        {/* ========================================================= */}
-        {activeTab === 'projects' && (
-          <div className="space-y-6 animate-fade-in">
-            
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-serif font-black text-white">
-                  Landmark Projects Manager ({projects.length})
-                </h1>
-                <p className="text-xs sm:text-sm text-neutral-400 mt-1">
-                  Manage mega residential and commercial development projects. Edit details, upload new projects, or delete outdated records.
-                </p>
+                </div>
               </div>
+            )}
 
-              <button
-                onClick={handleOpenAddProject}
-                className="py-3 px-5 rounded-xl gold-gradient-btn text-black font-extrabold text-sm flex items-center space-x-2 shadow-lg"
-              >
-                <Plus className="w-4 h-4 text-black" />
-                <span>Upload New Project</span>
-              </button>
-            </div>
+            {/* SUB-SECTION 2: LANDMARK MEGA PROJECTS */}
+            {(buySubTab === 'all' || buySubTab === 'projects') && (
+              <div className="space-y-5 pt-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-6 border-t border-neutral-800">
+                  <div>
+                    <h2 className="text-xl font-serif font-black text-white flex items-center space-x-2">
+                      <span>🏗 Landmark Mega Projects ({projects.length})</span>
+                    </h2>
+                    <p className="text-xs text-neutral-400 mt-0.5">
+                      Manage mega residential & commercial development projects. Edit details, upload new projects, or delete.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleOpenAddProject}
+                    className="self-start sm:self-auto px-3.5 py-1.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-100 font-extrabold text-xs flex items-center space-x-1.5 border border-neutral-700 shadow"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-gold-400" />
+                    <span>Upload Project</span>
+                  </button>
+                </div>
 
             {/* Projects Grid Matching Image Copy 29 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1115,35 +1174,30 @@ export default function AdminDashboardPage() {
 
                 </div>
               ))}
-            </div>
-
-          </div>
-        )}
-
-        {/* ========================================================= */}
-        {/* TAB 4: CATEGORIES (15) - EDIT, DELETE, UPLOAD NEW */}
-        {/* ========================================================= */}
-        {activeTab === 'categories' && (
-          <div className="space-y-6 animate-fade-in">
-            
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-serif font-black text-white">
-                  Property Categories Manager ({categories.length})
-                </h1>
-                <p className="text-xs sm:text-sm text-neutral-400 mt-1">
-                  Manage the 15 categories displayed across the search dropdown, filter pills, and navigation.
-                </p>
+                </div>
               </div>
+            )}
 
-              <button
-                onClick={handleOpenAddCategory}
-                className="py-3 px-5 rounded-xl gold-gradient-btn text-black font-extrabold text-sm flex items-center space-x-2 shadow-lg"
-              >
-                <Plus className="w-4 h-4 text-black" />
-                <span>Add New Category</span>
-              </button>
-            </div>
+            {/* SUB-SECTION 3: PROPERTY CATEGORIES */}
+            {(buySubTab === 'all' || buySubTab === 'categories') && (
+              <div className="space-y-5 pt-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-6 border-t border-neutral-800">
+                  <div>
+                    <h2 className="text-xl font-serif font-black text-white flex items-center space-x-2">
+                      <span>🗂 Property Categories ({categories.length})</span>
+                    </h2>
+                    <p className="text-xs text-neutral-400 mt-0.5">
+                      Manage the 15 categories displayed across search dropdowns, filter pills, and navigation.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleOpenAddCategory}
+                    className="self-start sm:self-auto px-3.5 py-1.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-100 font-extrabold text-xs flex items-center space-x-1.5 border border-neutral-700 shadow"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-gold-400" />
+                    <span>Add Category</span>
+                  </button>
+                </div>
 
             {/* Categories Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -1184,7 +1238,9 @@ export default function AdminDashboardPage() {
                   </div>
                 </div>
               ))}
-            </div>
+                </div>
+              </div>
+            )}
 
           </div>
         )}

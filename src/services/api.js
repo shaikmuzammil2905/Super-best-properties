@@ -167,13 +167,22 @@ function saveLocalServices(services) {
   } catch {}
 }
 
-// Enquiries start at 0 (zero) as requested
+// Enquiries start strictly at 0 (zero) as requested
 function getLocalEnquiries() {
   try {
     const stored = localStorage.getItem('sbp_db_enquiries');
     if (stored) {
       const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed)) return parsed;
+      if (Array.isArray(parsed)) {
+        return parsed.filter(e => 
+          e.id !== 'enq-seed-1' &&
+          !e.id?.includes('seed') &&
+          !e.id?.startsWith('enq-1') &&
+          !e.id?.startsWith('enq-2') &&
+          e.name !== 'Rajesh Kumar Verma' &&
+          !e.email?.includes('example.com')
+        );
+      }
     }
   } catch {}
   return []; // ZERO enquiries initially
@@ -811,9 +820,24 @@ export const api = {
 
   async getEnquiries(token) {
     try {
+      // Purge any seed/mock records in Supabase so enquiries start strictly at 0
+      try {
+        supabase.from('enquiries').delete().eq('id', 'enq-seed-1').then(() => {});
+        supabase.from('enquiries').delete().like('id', '%seed%').then(() => {});
+      } catch {}
+
       const { data, error } = await supabase.from('enquiries').select('*').order('created_at', { ascending: false });
       if (!error && Array.isArray(data)) {
-        const formatted = data.map(e => ({
+        // Exclude mock seed data so count starts strictly at 0
+        const clean = data.filter(e => 
+          e.id !== 'enq-seed-1' &&
+          !e.id?.includes('seed') &&
+          !e.id?.startsWith('enq-1') &&
+          !e.id?.startsWith('enq-2') &&
+          e.name !== 'Rajesh Kumar Verma' &&
+          !e.email?.includes('example.com')
+        );
+        const formatted = clean.map(e => ({
           ...e,
           createdAt: e.created_at || e.createdAt,
           propertyTitle: e.property_title || e.propertyTitle,
