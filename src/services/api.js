@@ -3,12 +3,13 @@ import { supabase } from './supabaseClient';
 
 const API_BASE = '/api';
 
-// Initial 7 Live Services from Website
+// Initial 7 Live Services from Website with Grand Images
 export const initialServices = [
   {
     id: 'srv-1',
     title: 'Residential Property Advisory',
     tagline: 'Plots, Apartments, Villas & Independent Houses',
+    image: '/images/services/service-1-residential.png',
     description: 'Comprehensive guidance on identifying and securing ideal residential plots, luxury apartments, standalone independent villas, and gated community housing opportunities tailored to family lifestyles and future value appreciation.',
     deliverables: [
       'HMDA & DTCP layout verification',
@@ -22,6 +23,7 @@ export const initialServices = [
     id: 'srv-2',
     title: 'Commercial Property Solutions',
     tagline: 'High-Street Retail, Corporate Offices & Godowns',
+    image: '/images/services/service-2-commercial.png',
     description: 'Assistance in identifying and acquiring prime commercial plots, Grade-A IT office spaces, high-footfall retail showrooms, warehousing godowns, and business premises across Hyderabad’s most vibrant economic corridors.',
     deliverables: [
       'High rental yield forecasting',
@@ -35,6 +37,7 @@ export const initialServices = [
     id: 'srv-3',
     title: 'Property Investment Advisory',
     tagline: 'High-ROI Land, Commercial & Residential Wealth Creation',
+    image: '/images/services/service-3-investment.png',
     description: 'Helping investors, HNIs and NRIs evaluate high-potential land, residential, and commercial property opportunities aligned with their risk profiles, capital preservation goals, and aggressive multi-year appreciation objectives.',
     deliverables: [
       'Macro & micro-market growth analytics',
@@ -48,6 +51,7 @@ export const initialServices = [
     id: 'srv-4',
     title: 'Land & Development Opportunities',
     tagline: 'Joint Ventures, Plotted Layouts & Farm Parcels',
+    image: '/images/services/service-4-land.png',
     description: 'Connecting interested buyers, builders, and institutional investors with strategic land parcels, joint-development opportunities, agricultural holdings, and property owners with clear, unencumbered titles.',
     deliverables: [
       'Direct landowner negotiations',
@@ -61,6 +65,7 @@ export const initialServices = [
     id: 'srv-5',
     title: 'Property Buying & Selling Assistance',
     tagline: 'End-to-End Discovery, Site Visits & Closing Support',
+    image: '/images/services/service-5-buying-selling.png',
     description: 'Professional assistance in property discovery, shortlisting, private site visits, price negotiations, buyer-seller alignment, and smooth, secure transaction coordination from agreement to registration.',
     deliverables: [
       'Curated shortlists matching exact budget',
@@ -74,6 +79,7 @@ export const initialServices = [
     id: 'srv-6',
     title: 'Legal & Documentation Assistance',
     tagline: 'Title Scrutiny, Link Documents & RERA Verification',
+    image: '/images/services/service-6-legal.png',
     description: 'Helping customers navigate property-related legal documentation, 30-year link document verification, encumbrance certificates (EC), municipal sanctions, and revenue records with clarity and confidence.',
     deliverables: [
       '30-year Encumbrance Certificate scrutiny',
@@ -87,6 +93,7 @@ export const initialServices = [
     id: 'srv-7',
     title: 'Bank Loan & Financial Assistance',
     tagline: 'Competitive Home Loans & Fast Sanctions',
+    image: '/images/services/service-1-residential.png',
     description: 'Connecting eligible customers with suitable property financing options through leading nationalized and private banking institutions (SBI, HDFC, ICICI, etc.) with doorstep document pickup and preferential interest rates.',
     deliverables: [
       'Pre-approved loan eligibility assessment',
@@ -206,7 +213,12 @@ function getLocalServices() {
     const stored = localStorage.getItem('sbp_db_services');
     if (stored) {
       const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed.map(s => ({
+          ...s,
+          image: s.image || initialServices.find(init => init.id === s.id)?.image || '/images/services/service-1-residential.png'
+        }));
+      }
     }
   } catch {}
   return [...initialServices];
@@ -775,6 +787,7 @@ export const api = {
       if (!error && Array.isArray(data) && data.length > 0) {
         const formatted = data.map(s => ({
           ...s,
+          image: s.image || initialServices.find(init => init.id === s.id)?.image || '/images/services/service-1-residential.png',
           deliverables: Array.isArray(s.deliverables) ? s.deliverables : (typeof s.deliverables === 'string' ? JSON.parse(s.deliverables) : [])
         }));
         saveLocalServices(formatted);
@@ -791,6 +804,7 @@ export const api = {
     const newSrv = {
       ...serviceData,
       id: newId,
+      image: serviceData.image || '/images/services/service-1-residential.png',
       displayOrder: services.length + 1,
       deliverables: Array.isArray(serviceData.deliverables) 
         ? serviceData.deliverables 
@@ -807,6 +821,7 @@ export const api = {
         title: newSrv.title,
         tagline: newSrv.tagline || '',
         description: newSrv.description || '',
+        image: newSrv.image,
         deliverables: newSrv.deliverables,
         display_order: newSrv.displayOrder
       }]);
@@ -828,6 +843,7 @@ export const api = {
       services[idx] = { 
         ...services[idx], 
         ...serviceData,
+        image: serviceData.image || services[idx].image || '/images/services/service-1-residential.png',
         deliverables: deliverablesList
       };
       saveLocalServices(services);
@@ -837,6 +853,7 @@ export const api = {
           title: serviceData.title,
           tagline: serviceData.tagline,
           description: serviceData.description,
+          image: services[idx].image,
           deliverables: deliverablesList
         }).eq('id', id);
       } catch {}

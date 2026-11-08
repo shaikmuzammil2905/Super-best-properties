@@ -62,11 +62,11 @@ export default function HomePage() {
       <CategoryGrid />
 
       {/* 3. Featured Properties Section matching Reference Image 1 & 2 */}
-      <section className="py-20 bg-[#FAFAFA] relative">
+      <section className="py-8 sm:py-10 bg-[#FAFAFA] relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Section Heading with decorative gold lines */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-6">
             <div className="flex items-center justify-center space-x-3">
               <div className="h-[1px] w-12 sm:w-24 bg-gradient-to-r from-transparent to-gold-500"></div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-neutral-900 tracking-tight">
@@ -87,7 +87,7 @@ export default function HomePage() {
           </div>
 
           {/* Explore all CTA */}
-          <div className="mt-12 text-center">
+          <div className="mt-6 text-center">
             <Link
               to="/buy-a-property"
               className="inline-flex items-center space-x-2 px-8 py-3.5 rounded-full gold-gradient-btn text-black font-extrabold text-sm sm:text-base tracking-wide shadow-lg hover:shadow-xl transition-all"
@@ -107,10 +107,10 @@ export default function HomePage() {
       <FounderSection />
 
       {/* 6. Why Choose Super Best Properties (6 Feature Cards from Prompt) */}
-      <section className="py-20 bg-white">
+      <section className="py-8 sm:py-10 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="text-center max-w-3xl mx-auto mb-14">
+          <div className="text-center max-w-3xl mx-auto mb-6">
             <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-600 text-xs font-bold uppercase tracking-wider mb-3">
               <Sparkles className="w-3.5 h-3.5" />
               <span>The Super Best Advantage</span>
@@ -203,7 +203,7 @@ export default function HomePage() {
       </section>
 
       {/* 7. Quick Consultation Callout Banner */}
-      <section className="bg-black py-16 border-t border-gold-500/20 text-white relative">
+      <section className="bg-black py-8 sm:py-10 border-t border-gold-500/20 text-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-white">
             Looking for something specific in Hyderabad?

@@ -72,11 +72,11 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="bg-[#FAFAFA] min-h-screen py-12 sm:py-16">
+    <div className="bg-[#FAFAFA] min-h-screen py-8 sm:py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
+        <div className="text-center max-w-3xl mx-auto mb-6">
           <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-600 text-xs font-bold uppercase tracking-wider mb-3">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Connect with Super Best Properties</span>

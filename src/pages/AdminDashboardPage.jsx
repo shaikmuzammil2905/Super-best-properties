@@ -122,6 +122,7 @@ export default function AdminDashboardPage() {
   const [servForm, setServForm] = useState({
     title: '',
     tagline: '',
+    image: '/images/services/service-1-residential.png',
     description: '',
     deliverables: ''
   });
@@ -439,6 +440,7 @@ export default function AdminDashboardPage() {
     setServForm({
       title: '',
       tagline: '',
+      image: '/images/services/service-1-residential.png',
       description: '',
       deliverables: 'HMDA & DTCP layout verification\nMicro-market price benchmarking\nTitle search & link document audit\nDirect personalized advisory session'
     });
@@ -451,6 +453,7 @@ export default function AdminDashboardPage() {
     setServForm({
       title: srv.title || '',
       tagline: srv.tagline || '',
+      image: srv.image || '/images/services/service-1-residential.png',
       description: srv.description || '',
       deliverables: delivs
     });
@@ -463,6 +466,7 @@ export default function AdminDashboardPage() {
       const payload = {
         title: servForm.title,
         tagline: servForm.tagline,
+        image: servForm.image || '/images/services/service-1-residential.png',
         description: servForm.description,
         deliverables: servForm.deliverables.split('\n').map(s => s.trim()).filter(Boolean)
       };
@@ -726,13 +730,6 @@ export default function AdminDashboardPage() {
                 >
                   <Plus className="w-4 h-4 text-black" />
                   <span>Add Property</span>
-                </button>
-                <button
-                  onClick={handleOpenAddProject}
-                  className="py-2.5 px-4 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white font-extrabold text-xs flex items-center space-x-1.5 border border-neutral-700 shadow-lg"
-                >
-                  <Plus className="w-4 h-4 text-gold-400" />
-                  <span>Add Project</span>
                 </button>
               </div>
             </div>
@@ -1284,6 +1281,20 @@ export default function AdminDashboardPage() {
                   className="p-6 rounded-3xl bg-neutral-900 border border-neutral-800 hover:border-gold-500/40 flex flex-col justify-between space-y-4 shadow-xl transition-all"
                 >
                   <div>
+                    {/* Grand Banner Image Preview */}
+                    <div className="w-full h-36 rounded-2xl overflow-hidden bg-neutral-950 border border-neutral-800 mb-4 relative group">
+                      <img 
+                        src={srv.image || '/images/services/service-1-residential.png'} 
+                        alt={srv.title} 
+                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => { e.currentTarget.src = '/images/services/service-1-residential.png'; }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                      <span className="absolute bottom-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-md bg-black/80 text-gold-400 border border-gold-500/30">
+                        Live Grand Banner
+                      </span>
+                    </div>
+
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-bold text-gold-400 uppercase tracking-wider">
                         Service #{idx + 1}
@@ -2101,6 +2112,57 @@ export default function AdminDashboardPage() {
             </div>
 
             <form onSubmit={handleSaveService} className="mt-6 space-y-4">
+              {/* Grand Banner Image & Live Preview */}
+              <div>
+                <label className="block text-xs font-bold uppercase text-neutral-300 mb-1.5">
+                  Grand Service Banner Picture *
+                </label>
+                <div className="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-2xl bg-neutral-950 border border-neutral-800">
+                  <div className="w-full sm:w-44 h-28 rounded-xl overflow-hidden bg-black/80 border border-neutral-700 shrink-0 relative group">
+                    <img
+                      src={servForm.image || '/images/services/service-1-residential.png'}
+                      alt="Service Banner Preview"
+                      className="w-full h-full object-cover"
+                      onError={(e) => { e.currentTarget.src = '/images/services/service-1-residential.png'; }}
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[10px] text-white font-bold">
+                      Live Preview
+                    </div>
+                  </div>
+                  <div className="flex-1 w-full space-y-2">
+                    <input
+                      type="text"
+                      value={servForm.image}
+                      onChange={(e) => setServForm({ ...servForm, image: e.target.value })}
+                      placeholder="/images/services/service-1-residential.png or image URL"
+                      className="w-full bg-neutral-900 border border-neutral-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold-500 font-mono"
+                    />
+                    <div className="flex items-center gap-2">
+                      <label className="py-2 px-3 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-gold-400 border border-gold-500/30 font-bold text-xs cursor-pointer flex items-center space-x-1.5 transition-all">
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>Upload / Replace Picture</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onload = (evt) => {
+                                setServForm({ ...servForm, image: evt.target.result });
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                        />
+                      </label>
+                      <span className="text-[10px] text-neutral-400">Syncs immediately to /services</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <label className="block text-xs font-bold uppercase text-neutral-300 mb-1">Service Title *</label>
                 <input

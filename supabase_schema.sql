@@ -115,6 +115,7 @@ CREATE TABLE IF NOT EXISTS public.services (
     title TEXT NOT NULL,
     tagline TEXT,
     description TEXT,
+    image TEXT DEFAULT '/images/services/service-1-residential.png',
     deliverables JSONB DEFAULT '[]'::jsonb,
     display_order INT DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL

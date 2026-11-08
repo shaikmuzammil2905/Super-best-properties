@@ -3,7 +3,7 @@ import { Award, Briefcase, GraduationCap, CheckCircle2, Sparkles, TrendingUp } f
 
 export default function FounderSection() {
   return (
-    <section className="py-20 bg-gradient-to-b from-[#050505] via-[#0D0D0D] to-[#050505] text-white relative overflow-hidden">
+    <section className="py-8 sm:py-10 bg-gradient-to-b from-[#050505] via-[#0D0D0D] to-[#050505] text-white relative overflow-hidden">
       {/* Decorative background elements */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gold-600/5 rounded-full blur-3xl pointer-events-none"></div>
@@ -11,7 +11,7 @@ export default function FounderSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-6">
           <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-400 text-xs font-bold tracking-widest uppercase mb-4">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Visionary Leadership & Advisory</span>

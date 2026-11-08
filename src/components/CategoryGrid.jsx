@@ -23,11 +23,11 @@ export const categoriesData = [
 
 export default function CategoryGrid({ title = "What are you looking for?", subtitle = "Explore diverse residential, commercial & investment opportunities curated for you" }) {
   return (
-    <section className="py-16 bg-[#FAFAFA] relative">
+    <section className="py-8 sm:py-10 bg-[#FAFAFA] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Heading matching Reference Image 3 */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-6">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D0D0D] tracking-tight">
             {title}
           </h2>

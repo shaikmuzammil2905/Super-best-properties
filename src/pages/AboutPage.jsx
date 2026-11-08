@@ -38,7 +38,7 @@ export default function AboutPage() {
     <div className="bg-[#FAFAFA] min-h-screen">
       
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-neutral-950 via-neutral-900 to-black text-white py-16 sm:py-24 border-b border-gold-500/20 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-neutral-950 via-neutral-900 to-black text-white py-10 sm:py-14 border-b border-gold-500/20 relative overflow-hidden">
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-3xl">
@@ -59,7 +59,7 @@ export default function AboutPage() {
       </div>
 
       {/* Official Story Section */}
-      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-8 sm:py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           <div className="lg:col-span-7 space-y-6 text-neutral-700 leading-relaxed">
@@ -105,7 +105,7 @@ export default function AboutPage() {
       </section>
 
       {/* Vision & Mission Grid */}
-      <section className="py-16 bg-white border-y border-neutral-200">
+      <section className="py-8 sm:py-10 bg-white border-y border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             
@@ -149,8 +149,8 @@ export default function AboutPage() {
       </section>
 
       {/* Our Mission: 6 Commitments */}
-      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-14">
+      <section className="py-8 sm:py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto mb-6">
           <span className="text-gold-600 font-bold text-xs uppercase tracking-widest">Action Principles</span>
           <h2 className="text-3xl sm:text-4xl font-serif font-bold text-neutral-900 mt-1">
             Our Six Core Commitments
@@ -172,10 +172,10 @@ export default function AboutPage() {
       </section>
 
       {/* Core Values (7 Values) */}
-      <section className="py-20 bg-neutral-950 text-white relative">
+      <section className="py-8 sm:py-10 bg-neutral-950 text-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-6">
             <span className="text-gold-400 font-bold text-xs uppercase tracking-widest">Guiding Tenets</span>
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mt-1">
               Our Seven <span className="gold-gradient-text">Core Values</span>
@@ -204,7 +204,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our Promise Section */}
-      <section className="py-20 max-w-4xl mx-auto px-4 text-center space-y-6">
+      <section className="py-8 sm:py-10 max-w-4xl mx-auto px-4 text-center space-y-6">
         <span className="text-gold-600 font-bold text-xs uppercase tracking-widest">A Sacred Guarantee</span>
         <h2 className="text-3xl sm:text-4xl font-serif font-bold text-neutral-900">
           “Your Trust. Our Commitment. Your Property Goals.”

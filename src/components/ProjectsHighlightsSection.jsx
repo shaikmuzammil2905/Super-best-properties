@@ -27,11 +27,11 @@ export default function ProjectsHighlightsSection() {
   ];
 
   return (
-    <section className="py-20 bg-white border-y border-neutral-200/80 relative overflow-hidden">
+    <section className="py-8 sm:py-10 bg-white border-y border-neutral-200/80 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading matching Reference Image 1 */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-6">
           <div className="flex items-center justify-center space-x-3">
             <div className="h-[1px] w-12 sm:w-24 bg-gradient-to-r from-transparent to-gold-500"></div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-neutral-900 tracking-tight">
@@ -42,7 +42,7 @@ export default function ProjectsHighlightsSection() {
         </div>
 
         {/* 4 Highlights Bar matching Reference Image 1 & 2 */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-8">
           {highlights.map((item, idx) => {
             const Icon = item.icon;
             return (
