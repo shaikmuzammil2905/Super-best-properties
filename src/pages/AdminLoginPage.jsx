@@ -60,7 +60,7 @@ export default function AdminLoginPage() {
             <img 
               src="/assets/logo.png" 
               alt="Super Best Properties Logo" 
-              className="h-16 sm:h-20 w-auto max-w-[280px] sm:max-w-[320px] mx-auto object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-[0_4px_16px_rgba(212,160,23,0.35)]" 
+              className="h-20 sm:h-24 w-auto max-w-[320px] sm:max-w-[360px] mx-auto object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-[0_4px_18px_rgba(212,160,23,0.4)]" 
             />
           </Link>
 

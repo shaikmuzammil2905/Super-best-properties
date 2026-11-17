@@ -27,16 +27,16 @@ export default function Header() {
   const isContact = location.pathname.startsWith('/contact');
 
   return (
-    <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/95 backdrop-blur-md shadow-2xl border-b border-gold-500/20 py-2 sm:py-2.5' : 'bg-black border-b border-gold-500/15 py-2.5 sm:py-3.5'}`}>
+    <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/95 backdrop-blur-md shadow-2xl border-b border-gold-500/20 py-2 sm:py-2.5' : 'bg-black border-b border-gold-500/15 py-2 sm:py-3'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Logo Section - Grand Premium Logo (Zero Patch Work) */}
-          <Link to="/" className="flex items-center space-x-3 group py-1" aria-label="Super Best Properties Home">
+          {/* Logo Section - Grand Premium Logo with Maximum Clarity */}
+          <Link to="/" className="flex items-center group py-0.5" aria-label="Super Best Properties Home">
             <img 
               src="/assets/logo.png" 
               alt="Super Best Properties Logo" 
-              className="h-12 sm:h-14 md:h-16 lg:h-18 w-auto max-w-[220px] sm:max-w-[280px] md:max-w-[340px] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-[0_2px_12px_rgba(212,160,23,0.35)]" 
+              className="h-14 sm:h-16 md:h-20 lg:h-22 w-auto max-w-[250px] sm:max-w-[320px] md:max-w-[380px] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-[0_2px_14px_rgba(212,160,23,0.4)]" 
             />
           </Link>
 

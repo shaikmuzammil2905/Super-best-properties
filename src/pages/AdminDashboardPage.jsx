@@ -594,7 +594,7 @@ export default function AdminDashboardPage() {
             <img 
               src="/assets/logo.png" 
               alt="Super Best Properties Logo" 
-              className="h-10 sm:h-11 w-auto max-w-[200px] object-contain transition-transform duration-300 group-hover:scale-105" 
+              className="h-11 sm:h-12 w-auto max-w-[240px] object-contain transition-transform duration-300 group-hover:scale-105" 
             />
           </Link>
         </div>
