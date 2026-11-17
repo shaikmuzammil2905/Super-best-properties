@@ -28,9 +28,18 @@ export default {
         }
       },
       fontFamily: {
-        serif: ['Outfit', 'sans-serif'],
-        heading: ['Outfit', 'sans-serif'],
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Manrope', 'system-ui', '-apple-system', 'sans-serif'],
+        heading: ['Manrope', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['Manrope', 'system-ui', '-apple-system', 'sans-serif'],
+        manrope: ['Manrope', 'system-ui', '-apple-system', 'sans-serif'],
+      },
+      letterSpacing: {
+        tighter: '-0.025em',
+        tight: '-0.02em',
+        snug: '-0.015em',
+        normal: '-0.011em',
+        wide: '0.01em',
+        wider: '0.02em',
       },
       boxShadow: {
         'gold': '0 4px 20px -2px rgba(212, 160, 23, 0.25)',

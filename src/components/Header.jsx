@@ -31,12 +31,12 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Logo Section - Crisp Transparent PNG Logo */}
-          <Link to="/" className="flex items-center space-x-3 group py-0.5">
+          {/* Logo Section - Grand Premium Logo (Zero Patch Work) */}
+          <Link to="/" className="flex items-center space-x-3 group py-1" aria-label="Super Best Properties Home">
             <img 
               src="/assets/logo.png" 
               alt="Super Best Properties Logo" 
-              className="h-14 sm:h-16 md:h-20 lg:h-20 w-auto object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-[0_2px_10px_rgba(212,160,23,0.3)]" 
+              className="h-12 sm:h-14 md:h-16 lg:h-18 w-auto max-w-[220px] sm:max-w-[280px] md:max-w-[340px] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-[0_2px_12px_rgba(212,160,23,0.35)]" 
             />
           </Link>
 

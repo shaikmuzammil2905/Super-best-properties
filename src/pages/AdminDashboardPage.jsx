@@ -590,18 +590,12 @@ export default function AdminDashboardPage() {
       <header className="h-16 bg-neutral-900/90 border-b border-neutral-800 sticky top-0 z-40 backdrop-blur-md flex items-center justify-between px-4 sm:px-6">
         
         <div className="flex items-center space-x-3">
-          <Link to="/" className="flex items-center space-x-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-black font-extrabold shadow-md">
-              <Building2 className="w-5 h-5 text-black" />
-            </div>
-            <div>
-              <span className="font-serif font-black tracking-wide text-white text-base">
-                SUPER BEST <span className="gold-gradient-text">PROPERTIES</span>
-              </span>
-              <span className="text-[10px] block uppercase font-bold text-neutral-400 -mt-1 tracking-wider">
-                Executive Control Center
-              </span>
-            </div>
+          <Link to="/" className="flex items-center space-x-2.5 group py-1" aria-label="Super Best Properties">
+            <img 
+              src="/assets/logo.png" 
+              alt="Super Best Properties Logo" 
+              className="h-10 sm:h-11 w-auto max-w-[200px] object-contain transition-transform duration-300 group-hover:scale-105" 
+            />
           </Link>
         </div>
 

@@ -13,11 +13,11 @@ export default function Footer() {
           
           {/* Col 1: Brand & Logo */}
           <div className="space-y-4">
-            <Link to="/" className="inline-block">
+            <Link to="/" className="inline-block group">
               <img 
                 src="/assets/logo.png" 
                 alt="Super Best Properties Logo" 
-                className="h-16 w-auto object-contain" 
+                className="h-16 sm:h-20 w-auto max-w-[280px] sm:max-w-[320px] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-[0_2px_12px_rgba(212,160,23,0.3)]" 
               />
             </Link>
             <p className="text-sm text-gray-400 leading-relaxed">

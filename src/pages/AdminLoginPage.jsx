@@ -56,18 +56,12 @@ export default function AdminLoginPage() {
 
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center space-x-3 group mb-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-black font-extrabold text-2xl shadow-lg shadow-gold-500/20 group-hover:scale-105 transition-transform">
-              <Building2 className="w-6 h-6 text-black" />
-            </div>
-            <div className="text-left">
-              <h1 className="text-xl font-serif font-black tracking-wider text-white">
-                SUPER BEST <span className="gold-gradient-text">PROPERTIES</span>
-              </h1>
-              <p className="text-[10px] tracking-widest uppercase font-bold text-neutral-400">
-                Executive Content System
-              </p>
-            </div>
+          <Link to="/" className="inline-block group mb-4" aria-label="Super Best Properties Home">
+            <img 
+              src="/assets/logo.png" 
+              alt="Super Best Properties Logo" 
+              className="h-16 sm:h-20 w-auto max-w-[280px] sm:max-w-[320px] mx-auto object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-[0_4px_16px_rgba(212,160,23,0.35)]" 
+            />
           </Link>
 
           <div className="inline-flex items-center space-x-1.5 px-3.5 py-1 rounded-full bg-gold-500/10 border border-gold-400/30 text-gold-400 text-xs font-semibold">

@@ -98,21 +98,21 @@ export default function PropertyCard({ property }) {
         {/* Card Details */}
         <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
           <div>
-            {/* Title */}
+            {/* Title - Manrope 700 20px */}
             <Link to={`/properties/${property.slug || property.id}`}>
-              <h3 className="text-base sm:text-lg font-bold text-neutral-900 line-clamp-1 group-hover:text-gold-600 transition-colors">
+              <h3 className="text-[18px] sm:text-[20px] font-bold text-neutral-900 line-clamp-1 group-hover:text-gold-600 transition-colors tracking-tight property-title">
                 {property.title}
               </h3>
             </Link>
 
-            {/* Location */}
-            <div className="flex items-center space-x-1.5 text-neutral-600 text-xs sm:text-sm mt-1">
+            {/* Location & Card Description - Manrope 400 14px */}
+            <div className="flex items-center space-x-1.5 text-neutral-600 text-[13px] sm:text-[14px] font-normal mt-1 card-description">
               <MapPin className="w-4 h-4 text-gold-500 shrink-0" />
               <span className="truncate">{property.location}</span>
             </div>
 
             {/* BHK & Square Feet info line */}
-            <div className="flex items-center space-x-3 text-xs sm:text-sm text-neutral-600 mt-2.5 pt-2.5 border-t border-neutral-100 font-medium">
+            <div className="flex items-center space-x-3 text-[13px] sm:text-[14px] text-neutral-600 mt-2.5 pt-2.5 border-t border-neutral-100 font-normal">
               {property.bedrooms && property.bedrooms !== '-' && (
                 <div className="flex items-center space-x-1">
                   <Bed className="w-4 h-4 text-gold-600" />

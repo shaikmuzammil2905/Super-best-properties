@@ -2,19 +2,192 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --font-manrope: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: var(--font-manrope);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
   
   body {
     overflow-x: hidden;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: var(--font-manrope);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.6;
+    letter-spacing: -0.011em;
   }
 
-  h1, h2, h3, h4, h5, h6, .font-serif {
-    font-family: 'Outfit', sans-serif;
+  /* Universal Manrope enforcement across serif / heading / sans utility classes */
+  *, h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, .font-serif, .font-heading, .font-sans {
+    font-family: var(--font-manrope);
+  }
+
+  /* Responsive H1 Hierarchy: Desktop 48px / Tablet 40px / Mobile 32px | Weight 800 */
+  h1, .h1 {
+    font-weight: 800;
+    font-size: 32px;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+  @media (min-width: 640px) {
+    h1, .h1 {
+      font-size: 40px;
+      line-height: 1.18;
+      letter-spacing: -0.025em;
+    }
+  }
+  @media (min-width: 1024px) {
+    h1, .h1 {
+      font-size: 48px;
+      line-height: 1.2;
+      letter-spacing: -0.025em;
+    }
+  }
+
+  /* Responsive H2 Hierarchy: Desktop 36px / Tablet 32px / Mobile 26px | Weight 700 */
+  h2, .h2 {
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+  }
+  @media (min-width: 640px) {
+    h2, .h2 {
+      font-size: 32px;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+  }
+  @media (min-width: 1024px) {
+    h2, .h2 {
+      font-size: 36px;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+  }
+
+  /* Responsive H3 Hierarchy: Desktop 28px / Tablet 25px / Mobile 22px | Weight 700 */
+  h3, .h3 {
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.28;
+    letter-spacing: -0.015em;
+  }
+  @media (min-width: 640px) {
+    h3, .h3 {
+      font-size: 25px;
+      line-height: 1.3;
+      letter-spacing: -0.015em;
+    }
+  }
+  @media (min-width: 1024px) {
+    h3, .h3 {
+      font-size: 28px;
+      line-height: 1.3;
+      letter-spacing: -0.015em;
+    }
+  }
+
+  /* H4 Specification: Manrope, 700 weight, 22px */
+  h4, .h4 {
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+  }
+
+  /* H5 Specification: Manrope, 600 weight, 18px */
+  h5, .h5 {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+
+  /* H6 Specification: Manrope, 600 weight, 16px */
+  h6, .h6 {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+  }
+
+  /* Subheadings: Manrope, 600 weight, 18px */
+  .subheading, [data-typography="subheading"] {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+
+  /* Body Paragraphs: Manrope, 400 weight, 16px */
+  p, .body-p {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.6;
+    letter-spacing: -0.011em;
+  }
+
+  /* Small Descriptions: Manrope, 400 weight, 14px */
+  .small-description, [data-typography="small-desc"] {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+  }
+
+  /* Navigation: Manrope, 600 weight, 14px */
+  nav a, .nav-link {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+  }
+
+  /* Buttons: Manrope, 700 weight, 14px */
+  button, .btn, a.gold-gradient-btn, button.gold-gradient-btn {
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+  }
+
+  /* Property Titles: Manrope, 700 weight, 20px */
+  .property-title, [data-typography="property-title"] {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+
+  /* Card Descriptions: Manrope, 400 weight, 14px */
+  .card-description, [data-typography="card-desc"] {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+  }
+
+  /* Footer Headings: Manrope, 700 weight, 18px */
+  footer h3, footer h4, .footer-heading {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+
+  /* Footer Text: Manrope, 400 weight, 14px */
+  footer p, footer li, footer a, .footer-text {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.55;
+    letter-spacing: -0.005em;
   }
 }
 
