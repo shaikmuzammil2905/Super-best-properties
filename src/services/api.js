@@ -783,7 +783,9 @@ export const api = {
   // -------------------------------------------------------------
   async getServices() {
     try {
-      const { data, error } = await supabase.from('services').select('*').order('display_order', { ascending: true });
+      const fetchPromise = supabase.from('services').select('*').order('display_order', { ascending: true });
+      const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500));
+      const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
       if (!error && Array.isArray(data) && data.length > 0) {
         const formatted = data.map(s => ({
           ...s,
@@ -795,7 +797,8 @@ export const api = {
       }
     } catch {}
 
-    return getLocalServices();
+    const local = getLocalServices();
+    return (Array.isArray(local) && local.length > 0) ? local : initialServices;
   },
 
   async createService(serviceData, token) {

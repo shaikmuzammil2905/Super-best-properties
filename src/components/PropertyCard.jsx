@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Bed, Maximize2, Heart, ArrowRight, MessageCircle } from 'lucide-react';
-import EnquiryModal from './EnquiryModal';
 
 export default function PropertyCard({ property }) {
   const [isFavorite, setIsFavorite] = useState(false);
-  const [enquiryOpen, setEnquiryOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -131,35 +129,23 @@ export default function PropertyCard({ property }) {
             </div>
           </div>
 
-          {/* Action Buttons: View Details & Quick Enquiry Popup */}
-          <div className="pt-2 flex items-center space-x-2">
-            <Link
-              to={`/properties/${property.slug || property.id}`}
-              className="flex-1 flex items-center justify-center space-x-2 py-2.5 px-3 rounded-xl gold-gradient-btn text-black font-extrabold text-xs tracking-wide group-hover:shadow-lg transition-all"
+          {/* Action Button: Single Enquire Now Button Directly Opening WhatsApp (No Popup, No View Details) */}
+          <div className="pt-2">
+            <a
+              href={`https://wa.me/917075539189?text=${encodeURIComponent(`Hello Super Best Properties, I am interested in ${property.title} (${property.location}, ${property.price}). Please share full details and schedule a site visit.`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-2.5 sm:py-3 px-4 rounded-xl gold-gradient-btn text-black font-extrabold text-xs sm:text-sm tracking-wide text-center flex items-center justify-center space-x-2 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all"
             >
-              <span>View Details</span>
-              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-            </Link>
-
-            <button
-              onClick={() => setEnquiryOpen(true)}
-              className="p-2.5 rounded-xl bg-neutral-100 hover:bg-emerald-50 text-neutral-700 hover:text-emerald-600 border border-neutral-200 hover:border-emerald-300 transition-colors"
-              title="Quick Enquiry"
-            >
-              <MessageCircle className="w-4 h-4" />
-            </button>
+              <MessageCircle className="w-4 h-4 fill-current shrink-0" />
+              <span>Enquire Now</span>
+              <ArrowRight className="w-3.5 h-3.5 text-black shrink-0 transition-transform group-hover:translate-x-1" />
+            </a>
           </div>
 
         </div>
 
       </div>
-
-      {/* Quick Enquiry Popup */}
-      <EnquiryModal
-        isOpen={enquiryOpen}
-        onClose={() => setEnquiryOpen(false)}
-        property={property}
-      />
     </>
   );
 }

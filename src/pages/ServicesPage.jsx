@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api } from '../services/api';
+import { api, initialServices } from '../services/api';
 import { 
   Home, 
   Building2, 
@@ -25,21 +25,22 @@ const iconMap = {
 };
 
 export default function ServicesPage() {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [services, setServices] = useState(() => initialServices.slice(0, 6));
 
   useEffect(() => {
+    let isMounted = true;
     async function loadServices() {
       try {
         const srvs = await api.getServices();
-        setServices(srvs);
+        if (isMounted && Array.isArray(srvs) && srvs.length > 0) {
+          setServices(srvs.slice(0, 6));
+        }
       } catch (err) {
         console.error('Failed to load services:', err);
-      } finally {
-        setLoading(false);
       }
     }
     loadServices();
+    return () => { isMounted = false; };
   }, []);
 
   const getWhatsAppUrl = (srvTitle) => {
@@ -49,6 +50,10 @@ export default function ServicesPage() {
   const handleWhatsAppRedirect = (srvTitle) => {
     window.open(getWhatsAppUrl(srvTitle), '_blank', 'noopener,noreferrer');
   };
+
+  const displayServices = (Array.isArray(services) && services.length > 0) 
+    ? services.slice(0, 6) 
+    : initialServices.slice(0, 6);
 
   return (
     <div className="bg-[#FAFAFA] min-h-screen py-8 sm:py-12">
@@ -70,7 +75,7 @@ export default function ServicesPage() {
 
         {/* Dynamic Services Grid - 6 Grand Level Services Synced with Admin Panel */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-          {services.map((srv, idx) => {
+          {displayServices.map((srv, idx) => {
             const waUrl = getWhatsAppUrl(srv.title);
             const deliverables = Array.isArray(srv.deliverables) ? srv.deliverables : [];
             const serviceImg = srv.image || `/images/services/service-${Math.min(idx + 1, 6)}-${['residential','commercial','investment','land','buying-selling','legal'][Math.min(idx, 5)]}.png`;
