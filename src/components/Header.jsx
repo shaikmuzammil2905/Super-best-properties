@@ -23,6 +23,8 @@ export default function Header() {
   const isHome = location.pathname === '/';
   const isBuyProperty = location.pathname.startsWith('/buy-a-property') || location.pathname.startsWith('/properties');
   const isServices = location.pathname.startsWith('/services');
+  const isNri = location.pathname.startsWith('/nri-corner');
+  const isFaq = location.pathname.startsWith('/faqs');
   const isAbout = location.pathname.startsWith('/about');
   const isContact = location.pathname.startsWith('/contact');
 
@@ -40,13 +42,13 @@ export default function Header() {
             />
           </Link>
 
-          {/* Desktop Navigation - Clean Unified Navigation matching Image copy 23 */}
-          <nav className="hidden lg:flex items-center space-x-2 xl:space-x-3">
+          {/* Desktop Navigation - Clean Unified Navigation */}
+          <nav className="hidden lg:flex items-center space-x-1.5 xl:space-x-2.5">
             
             {/* Home Link */}
             <Link 
               to="/" 
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+              className={`px-3 xl:px-4 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
                 isHome 
                   ? 'bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 text-black shadow-md shadow-gold-500/20 font-bold' 
                   : 'text-gray-300 hover:text-gold-400 hover:bg-neutral-900/60'
@@ -55,10 +57,10 @@ export default function Header() {
               Home
             </Link>
 
-            {/* UNIFIED: Buy a Property (Replaces Properties, Projects & Categories) */}
+            {/* UNIFIED: Buy a Property */}
             <Link 
               to="/buy-a-property" 
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+              className={`px-3 xl:px-4 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
                 isBuyProperty 
                   ? 'bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 text-black shadow-md shadow-gold-500/20 font-bold' 
                   : 'text-gray-300 hover:text-gold-400 hover:bg-neutral-900/60'
@@ -70,7 +72,7 @@ export default function Header() {
             {/* Services Link */}
             <Link 
               to="/services" 
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+              className={`px-3 xl:px-4 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
                 isServices 
                   ? 'bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 text-black shadow-md shadow-gold-500/20 font-bold' 
                   : 'text-gray-300 hover:text-gold-400 hover:bg-neutral-900/60'
@@ -79,10 +81,34 @@ export default function Header() {
               Services
             </Link>
 
+            {/* NRI Corner Link */}
+            <Link 
+              to="/nri-corner" 
+              className={`px-3 xl:px-4 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
+                isNri 
+                  ? 'bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 text-black shadow-md shadow-gold-500/20 font-bold' 
+                  : 'text-gray-300 hover:text-gold-400 hover:bg-neutral-900/60'
+              }`}
+            >
+              NRI Corner
+            </Link>
+
+            {/* FAQs Link */}
+            <Link 
+              to="/faqs" 
+              className={`px-3 xl:px-4 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
+                isFaq 
+                  ? 'bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 text-black shadow-md shadow-gold-500/20 font-bold' 
+                  : 'text-gray-300 hover:text-gold-400 hover:bg-neutral-900/60'
+              }`}
+            >
+              FAQs
+            </Link>
+
             {/* About Us Link */}
             <Link 
               to="/about" 
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+              className={`px-3 xl:px-4 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
                 isAbout 
                   ? 'bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 text-black shadow-md shadow-gold-500/20 font-bold' 
                   : 'text-gray-300 hover:text-gold-400 hover:bg-neutral-900/60'
@@ -94,7 +120,7 @@ export default function Header() {
             {/* Contact Us Link */}
             <Link 
               to="/contact" 
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+              className={`px-3 xl:px-4 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
                 isContact 
                   ? 'bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 text-black shadow-md shadow-gold-500/20 font-bold' 
                   : 'text-gray-300 hover:text-gold-400 hover:bg-neutral-900/60'
@@ -170,6 +196,24 @@ export default function Header() {
             }`}
           >
             Our Services
+          </Link>
+
+          <Link
+            to="/nri-corner"
+            className={`block px-4 py-3 rounded-xl font-medium text-base ${
+              isNri ? 'text-gold-400 bg-neutral-900' : 'text-gray-200 hover:text-gold-400 hover:bg-neutral-900'
+            }`}
+          >
+            NRI Corner
+          </Link>
+
+          <Link
+            to="/faqs"
+            className={`block px-4 py-3 rounded-xl font-medium text-base ${
+              isFaq ? 'text-gold-400 bg-neutral-900' : 'text-gray-200 hover:text-gold-400 hover:bg-neutral-900'
+            }`}
+          >
+            FAQs
           </Link>
 
           <Link

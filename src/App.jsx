@@ -15,6 +15,8 @@ import ProjectsPage from './pages/ProjectsPage';
 import AboutPage from './pages/AboutPage';
 import ServicesPage from './pages/ServicesPage';
 import ContactPage from './pages/ContactPage';
+import NRICornerPage from './pages/NRICornerPage';
+import FAQPage from './pages/FAQPage';
 import AdminPage from './pages/AdminPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
@@ -50,6 +52,8 @@ export default function App() {
           <Route path="/projects/:slug" element={<ProjectsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/services" element={<ServicesPage />} />
+          <Route path="/nri-corner" element={<NRICornerPage />} />
+          <Route path="/faqs" element={<FAQPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/admin/login" element={<AdminLoginPage />} />

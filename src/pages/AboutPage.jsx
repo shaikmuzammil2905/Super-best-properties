@@ -32,6 +32,7 @@ export default function AboutPage() {
     { title: 'Knowledge & Insight', subtitle: 'Decisions Backed by Understanding', desc: 'Micro-market analytics, masterplan foresight, and strategic investment guidance.' },
     { title: 'Accountability', subtitle: 'Responsibility in Every Commitment', desc: 'Taking full ownership of our representations and legal verifications.' },
     { title: 'Long-Term Relationships', subtitle: 'Beyond Transactions', desc: 'Enduring partnerships built on trust, respect, and mutual prosperity.' },
+    { title: 'Seamless Execution', subtitle: 'From Site Visit to Registration', desc: 'Delivering a hassle-free property buying experience with dedicated documentation support, transparent milestones, and timely handover.' },
   ];
 
   return (
@@ -178,7 +179,7 @@ export default function AboutPage() {
           <div className="text-center max-w-3xl mx-auto mb-6">
             <span className="text-gold-400 font-bold text-xs uppercase tracking-widest">Guiding Tenets</span>
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mt-1">
-              Our Seven <span className="gold-gradient-text">Core Values</span>
+              Our Eight <span className="gold-gradient-text">Core Values</span>
             </h2>
             <p className="text-gray-400 text-sm sm:text-base mt-2">
               The foundational pillars that distinguish Super Best Properties in the real estate landscape.

@@ -25,7 +25,16 @@ const iconMap = {
 };
 
 export default function ServicesPage() {
-  const [services, setServices] = useState(() => initialServices.slice(0, 6));
+  const [services, setServices] = useState(() => {
+    const local = typeof window !== 'undefined' ? localStorage.getItem('sbp_services') : null;
+    if (local) {
+      try {
+        const parsed = JSON.parse(local);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch {}
+    }
+    return initialServices;
+  });
 
   useEffect(() => {
     let isMounted = true;
@@ -33,7 +42,7 @@ export default function ServicesPage() {
       try {
         const srvs = await api.getServices();
         if (isMounted && Array.isArray(srvs) && srvs.length > 0) {
-          setServices(srvs.slice(0, 6));
+          setServices(srvs);
         }
       } catch (err) {
         console.error('Failed to load services:', err);
@@ -52,8 +61,8 @@ export default function ServicesPage() {
   };
 
   const displayServices = (Array.isArray(services) && services.length > 0) 
-    ? services.slice(0, 6) 
-    : initialServices.slice(0, 6);
+    ? services 
+    : initialServices;
 
   return (
     <div className="bg-[#FAFAFA] min-h-screen py-8 sm:py-12">

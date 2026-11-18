@@ -24,9 +24,10 @@ export default function Footer() {
               Your trusted partner in real estate advisory & property solutions across Hyderabad & Telangana. Delivering value-driven opportunities with integrity and transparency.
             </p>
             <div className="pt-2">
-              <span className="inline-block px-3 py-1 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-400 text-xs font-semibold tracking-wide">
-                BUILDING OPPORTUNITIES. CREATING WEALTH.
-              </span>
+              <div className="inline-flex flex-col items-start px-3.5 py-1.5 rounded-2xl bg-gold-500/10 border border-gold-500/30 text-gold-400 text-xs font-semibold tracking-wide leading-tight space-y-0.5">
+                <span>BUILDING OPPORTUNITIES.</span>
+                <span className="text-gold-300">CREATING WEALTH.</span>
+              </div>
             </div>
           </div>
 
@@ -53,6 +54,18 @@ export default function Footer() {
                 <Link to="/services" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
                   <span className="text-gold-500">›</span>
                   <span>Advisory Services</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/nri-corner" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
+                  <span className="text-gold-500">›</span>
+                  <span className="text-gold-300 font-medium">NRI Corner</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/faqs" className="hover:text-gold-400 transition-colors flex items-center space-x-1.5">
+                  <span className="text-gold-500">›</span>
+                  <span>FAQs</span>
                 </Link>
               </li>
               <li>
