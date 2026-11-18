@@ -87,7 +87,7 @@ export default function ServicesPage() {
                 className="bg-white rounded-3xl p-5 sm:p-6 border border-neutral-200/90 hover:border-gold-500/80 shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group cursor-pointer transform hover:-translate-y-1.5 animate-fade-in"
               >
                 <div>
-                  {/* Grand Level Picture Banner */}
+                  {/* Grand Level Picture Banner - Clean and Unobstructed */}
                   <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden mb-4 bg-neutral-950 border border-neutral-200/80 group-hover:border-gold-500/50 shadow-sm transition-all duration-500">
                     <img 
                       src={serviceImg} 
@@ -97,9 +97,6 @@ export default function ServicesPage() {
                         e.target.src = '/images/services/service-1-residential.png';
                       }}
                     />
-                    <div className="absolute top-2.5 left-2.5 bg-black/85 backdrop-blur-md px-3 py-1 rounded-full border border-gold-400 text-gold-300 text-[10px] font-extrabold uppercase tracking-wider shadow">
-                      Service #{idx + 1}
-                    </div>
                   </div>
 
                   <h3 className="text-lg sm:text-xl font-bold font-serif text-neutral-900 group-hover:text-gold-700 transition-colors">

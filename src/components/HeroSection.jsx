@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Sparkles, MessageCircle } from 'lucide-react';
 import SearchBar from './SearchBar';
 
 export default function HeroSection({ onSearch }) {
@@ -99,59 +99,59 @@ export default function HeroSection({ onSearch }) {
               } transition-transform duration-[6000ms]`}
               style={{ backgroundImage: `url('${slide.desktopImage}')` }}
             >
-              {/* Warm Gold Ambient Glow on left - replaces black shade as requested in image copy 27 */}
-              <div className="absolute inset-y-0 left-0 w-full lg:w-3/5 bg-gradient-to-r from-amber-950/40 via-amber-900/15 to-transparent"></div>
+              {/* High Contrast Gradient Overlay on left - guarantees 100% clear text visibility across all slides */}
+              <div className="absolute inset-y-0 left-0 w-full lg:w-3/5 bg-gradient-to-r from-black/85 via-black/55 to-transparent"></div>
             </div>
           ))}
         </div>
 
-        {/* Mobile Background Images with Warm Gold Ambience & Zero Dark Black Overlay */}
+        {/* Mobile Background Images with Enhanced Text Readability Scrim */}
         <div className="md:hidden absolute inset-0 overflow-hidden">
           {slides.map((slide, index) => (
             <div
               key={`mob-${slide.id}`}
-              className={`absolute inset-0 bg-cover bg-center filter brightness-105 contrast-105 transition-opacity duration-1000 ease-in-out ${
+              className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out ${
                 currentSlide === index ? 'opacity-100' : 'opacity-0'
               }`}
               style={{ backgroundImage: `url('${slide.mobileImage}')` }}
             >
-              {/* Warm Gold Tinted Mobile Overlay - Bright and Legible without black gloom */}
-              <div className="absolute inset-0 bg-gradient-to-b from-amber-950/50 via-amber-900/15 to-amber-950/55"></div>
+              {/* Mobile Deep Gradient Overlay - Clear and Legible */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/55 to-black/85"></div>
             </div>
           ))}
         </div>
 
-        {/* Hero Content Overlay - Clean Typography With Gold Accents Replacing Black Shades */}
+        {/* Hero Content Overlay - Clean Typography with 100% High Readability */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-10 sm:py-16 md:py-20">
           <div className="max-w-xl lg:max-w-2xl space-y-4 sm:space-y-6">
             
-            {/* Tagline / Subtitle Pill with Gold Background */}
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-gold-500/30 via-gold-500/40 to-gold-600/30 border border-gold-400 text-gold-200 text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow-lg">
-              <Sparkles className="w-3.5 h-3.5 text-gold-300" />
-              <span className="text-gold-200">{current.taglinePill}</span>
+            {/* Tagline / Subtitle Pill */}
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-gold-400 text-gold-300 text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow-lg">
+              <Sparkles className="w-3.5 h-3.5 text-gold-400" />
+              <span className="text-gold-300 font-semibold">{current.taglinePill}</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-black tracking-tight leading-[1.1] text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-black tracking-tight leading-[1.1] text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
               {current.titlePart1} <br />
-              <span className="gold-gradient-text drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+              <span className="gold-gradient-text drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
                 {current.titlePart2}
               </span>
             </h1>
 
             {/* Subtitle / Divider Line */}
-            <div className="flex items-center space-x-3 text-gold-300 font-extrabold text-xs sm:text-base md:text-lg drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
+            <div className="flex items-center space-x-3 text-gold-300 font-extrabold text-xs sm:text-base md:text-lg drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
               <div className="h-[2px] w-8 sm:w-16 bg-gold-400 shadow"></div>
-              <span>{current.subtitle}</span>
+              <span className="tracking-wide text-gold-200">{current.subtitle}</span>
               <div className="h-[2px] w-8 sm:w-16 bg-gold-400 shadow"></div>
             </div>
 
             {/* Description */}
-            <p className="text-neutral-100 text-xs sm:text-base md:text-lg font-medium leading-relaxed max-w-lg drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+            <p className="text-white text-xs sm:text-base md:text-lg font-medium leading-relaxed max-w-lg drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
               {current.description}
             </p>
 
-            {/* Action Buttons - Gold Styling Replaces Black */}
+            {/* Action Buttons */}
             <div className="pt-2 flex flex-wrap gap-3 items-center">
               <Link
                 to={current.ctaLink}
@@ -161,12 +161,14 @@ export default function HeroSection({ onSearch }) {
                 <ArrowRight className="w-4 h-4 text-black" />
               </Link>
 
+              {/* WhatsApp Advisor - Vibrant Brand Green Color */}
               <a
                 href="https://wa.me/917075539189?text=Hello%20Super%20Best%20Properties,%20I%20am%20interested%20in%20learning%20more%20about%20your%20available%20properties."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-2 py-3 px-5 sm:px-6 rounded-full bg-gradient-to-r from-gold-600/30 via-gold-500/20 to-gold-600/30 hover:from-gold-600/40 hover:to-gold-500/30 text-gold-200 hover:text-white border border-gold-400 text-xs sm:text-sm font-bold transition-all shadow-lg hover:scale-105"
+                className="inline-flex items-center space-x-2 py-3 px-5 sm:px-6 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white text-xs sm:text-sm font-bold transition-all shadow-xl hover:shadow-[0_0_20px_rgba(37,211,102,0.5)] hover:scale-105"
               >
+                <MessageCircle className="w-4 h-4 fill-white/20 text-white" />
                 <span>WhatsApp Advisor</span>
               </a>
             </div>
