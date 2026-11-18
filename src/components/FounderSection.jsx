@@ -17,7 +17,7 @@ export default function FounderSection() {
             <span>Visionary Leadership & Advisory</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white tracking-tight">
-            Meet Our <span className="gold-gradient-text">Founder & Visionary</span>
+            Meet Our <span className="gold-gradient-text">Founder & CEO</span>
           </h2>
           <div className="flex items-center justify-center space-x-3 mt-4">
             <div className="h-[1px] w-16 bg-gradient-to-r from-transparent to-gold-500"></div>
@@ -41,17 +41,17 @@ export default function FounderSection() {
                 <div className="relative rounded-2xl overflow-hidden border-2 border-gold-400/80 shadow-2xl bg-neutral-950 aspect-[9/14] sm:aspect-[9/13]">
                   
                   {/* Upward shifted grand badge in the top space */}
-                  <div className="absolute top-4 inset-x-3 text-center z-20">
-                    <span className="inline-flex items-center space-x-2 bg-black/90 backdrop-blur-md px-4 py-2 rounded-full border border-gold-400 text-gold-300 text-xs sm:text-sm font-bold tracking-widest uppercase shadow-2xl shadow-black/90">
-                      <Sparkles className="w-3.5 h-3.5 text-gold-400" />
-                      <span>SUPER BEST PROPERTIES FOUNDER</span>
-                      <Sparkles className="w-3.5 h-3.5 text-gold-400" />
+                  <div className="absolute top-4 inset-x-2 sm:inset-x-3 text-center z-20">
+                    <span className="inline-flex items-center space-x-1.5 sm:space-x-2 bg-black/90 backdrop-blur-md px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-gold-400 text-gold-300 text-[11px] sm:text-xs md:text-sm font-bold tracking-wider sm:tracking-widest uppercase shadow-2xl shadow-black/90">
+                      <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gold-400 shrink-0" />
+                      <span>SUPER BEST PROPERTIES FOUNDER & CEO</span>
+                      <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gold-400 shrink-0" />
                     </span>
                   </div>
 
                   <img
                     src="/assets/founder.png"
-                    alt="D. Suresh Baabu - Founder Super Best Properties"
+                    alt="D. Suresh Baabu - Founder & CEO Super Best Properties"
                     className="w-full h-full object-cover object-top filter brightness-[1.02] contrast-[1.03]"
                   />
 
@@ -134,7 +134,7 @@ export default function FounderSection() {
                   rel="noopener noreferrer"
                   className="px-6 py-3 rounded-full gold-gradient-btn text-black font-bold text-sm tracking-wide shadow-lg hover:shadow-gold-500/40 transition-all flex items-center space-x-2"
                 >
-                  <span>Consult with Founder on WhatsApp</span>
+                  <span>Consult with Founder & CEO on WhatsApp</span>
                   <span>→</span>
                 </a>
                 <a

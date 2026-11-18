@@ -11,13 +11,13 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-neutral-800">
           
-          {/* Col 1: Brand & Logo */}
-          <div className="space-y-4">
+          {/* Col 1: Brand & Logo - Cleanly contained, zero overlap with Quick Links */}
+          <div className="space-y-4 max-w-full">
             <Link to="/" className="inline-block group" aria-label="Super Best Properties Home">
               <img 
                 src="/assets/logo.png" 
                 alt="Super Best Properties Logo" 
-                className="h-20 sm:h-24 md:h-28 w-auto max-w-[320px] sm:max-w-[380px] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-[0_2px_14px_rgba(212,160,23,0.35)]" 
+                className="h-10 sm:h-12 w-auto max-w-[190px] sm:max-w-[210px] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-[0_2px_10px_rgba(212,160,23,0.3)]" 
               />
             </Link>
             <p className="text-sm text-gray-400 leading-relaxed">

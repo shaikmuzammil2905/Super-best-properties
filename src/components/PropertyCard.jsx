@@ -96,9 +96,9 @@ export default function PropertyCard({ property }) {
         {/* Card Details */}
         <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
           <div>
-            {/* Title - Manrope 700 20px */}
+            {/* Title - Propertiss Exact Styling (Full Visibility, No Hidden Luxury 3BHK) */}
             <Link to={`/properties/${property.slug || property.id}`}>
-              <h3 className="text-[18px] sm:text-[20px] font-bold text-neutral-900 line-clamp-1 group-hover:text-gold-600 transition-colors tracking-tight property-title">
+              <h3 className="text-[15px] sm:text-[16px] font-bold text-neutral-900 line-clamp-2 min-h-[44px] sm:min-h-[46px] group-hover:text-gold-600 transition-colors tracking-tight leading-snug property-title">
                 {property.title}
               </h3>
             </Link>
