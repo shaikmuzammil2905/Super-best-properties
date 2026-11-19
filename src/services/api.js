@@ -303,10 +303,10 @@ function getLocalSettings() {
     address: 'H.No 5-5-35/193, Prashanth Nagar, Vanasthalipuram, Hyderabad, Telangana 500070',
     googleMapsUrl: 'https://maps.google.com/?q=Vanasthalipuram,Hyderabad',
     headerAnnouncement: 'RERA & HMDA Approved Layouts in Hyderabad Growth Corridors',
-    facebookUrl: 'https://facebook.com',
-    instagramUrl: 'https://instagram.com',
-    linkedinUrl: 'https://linkedin.com',
-    youtubeUrl: 'https://youtube.com',
+    facebookUrl: 'https://www.facebook.com/superbestproperties',
+    instagramUrl: 'https://www.instagram.com/info.superbestproperties/',
+    linkedinUrl: 'https://www.linkedin.com/company/69665852/',
+    youtubeUrl: 'https://www.youtube.com/@superbestproperties',
     seoTitle: 'Super Best Properties | Real Estate Advisory & Property Solutions Hyderabad',
     seoDescription: 'Discover verified plots, flats, independent houses, gated community villas and landmark commercial projects across Hyderabad with Super Best Properties.'
   };

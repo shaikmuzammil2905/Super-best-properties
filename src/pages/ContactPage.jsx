@@ -682,8 +682,14 @@ export default function ContactPage() {
             <h2 className="text-2xl sm:text-4xl font-serif font-extrabold text-neutral-900 mt-1">
               How to Become an Associate with <span className="text-gold-600">Super Best Properties</span>
             </h2>
-            <p className="text-neutral-600 text-sm sm:text-base mt-2">
-              Join Telangana's most ethical real estate advisory network led by Director & Founder D. Suresh Baabu with 25+ years of industry leadership.
+            <div className="mt-4 inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/10 via-amber-500/20 to-amber-500/10 border border-gold-500/40 text-amber-950 shadow-sm">
+              <span className="w-2.5 h-2.5 rounded-full bg-gold-500 shadow-[0_0_8px_rgba(212,160,23,0.8)]"></span>
+              <span className="text-xs sm:text-sm font-extrabold tracking-wide uppercase">
+                Under the Visionary Leadership of <span className="text-gold-700 font-black">Founder & CEO D. Suresh Baabu</span> (25+ Years Real Estate Authority)
+              </span>
+            </div>
+            <p className="text-neutral-600 text-sm sm:text-base mt-3.5 max-w-2xl mx-auto leading-relaxed">
+              Join Telangana's most ethical real estate advisory and marketing network led by <strong className="text-neutral-900 font-extrabold">Founder & CEO D. Suresh Baabu</strong> with 25+ years of trusted industry leadership.
             </p>
           </div>
 

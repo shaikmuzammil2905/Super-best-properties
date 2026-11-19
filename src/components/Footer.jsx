@@ -174,7 +174,7 @@ export default function Footer() {
               <div className="flex items-center space-x-3">
                 {/* Facebook */}
                 <a 
-                  href="https://facebook.com" 
+                  href="https://www.facebook.com/superbestproperties" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1877F2] hover:bg-[#166fe5] flex items-center justify-center text-white transition-all duration-300 transform hover:scale-110 shadow-md hover:shadow-[0_0_14px_rgba(24,119,242,0.6)]"
@@ -188,7 +188,7 @@ export default function Footer() {
 
                 {/* Instagram */}
                 <a 
-                  href="https://instagram.com" 
+                  href="https://www.instagram.com/info.superbestproperties/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] flex items-center justify-center text-white transition-all duration-300 transform hover:scale-110 shadow-md hover:shadow-[0_0_14px_rgba(238,42,123,0.6)]"
@@ -202,7 +202,7 @@ export default function Footer() {
 
                 {/* YouTube */}
                 <a 
-                  href="https://youtube.com" 
+                  href="https://www.youtube.com/@superbestproperties" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#FF0000] hover:bg-[#d60000] flex items-center justify-center text-white transition-all duration-300 transform hover:scale-110 shadow-md hover:shadow-[0_0_14px_rgba(255,0,0,0.6)]"
@@ -216,7 +216,7 @@ export default function Footer() {
 
                 {/* LinkedIn */}
                 <a 
-                  href="https://linkedin.com" 
+                  href="https://www.linkedin.com/company/69665852/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#0A66C2] hover:bg-[#004182] flex items-center justify-center text-white transition-all duration-300 transform hover:scale-110 shadow-md hover:shadow-[0_0_14px_rgba(10,102,194,0.6)]"
