@@ -42,13 +42,13 @@ export default function Header() {
             />
           </Link>
 
-          {/* Desktop Navigation - Clean Unified Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1.5 xl:space-x-2.5">
+          {/* Desktop Navigation - All items strictly in ONE single line */}
+          <nav className="hidden lg:flex items-center space-x-1 xl:space-x-2 shrink-0">
             
             {/* Home Link */}
             <Link 
               to="/" 
-              className={`px-3 xl:px-4 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
+              className={`whitespace-nowrap px-2.5 xl:px-3.5 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
                 isHome 
                   ? 'bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 text-black shadow-md shadow-gold-500/20 font-bold' 
                   : 'text-gray-300 hover:text-gold-400 hover:bg-neutral-900/60'
@@ -60,7 +60,7 @@ export default function Header() {
             {/* UNIFIED: Buy a Property */}
             <Link 
               to="/buy-a-property" 
-              className={`px-3 xl:px-4 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
+              className={`whitespace-nowrap px-2.5 xl:px-3.5 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
                 isBuyProperty 
                   ? 'bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 text-black shadow-md shadow-gold-500/20 font-bold' 
                   : 'text-gray-300 hover:text-gold-400 hover:bg-neutral-900/60'
@@ -72,7 +72,7 @@ export default function Header() {
             {/* Services Link */}
             <Link 
               to="/services" 
-              className={`px-3 xl:px-4 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
+              className={`whitespace-nowrap px-2.5 xl:px-3.5 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
                 isServices 
                   ? 'bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 text-black shadow-md shadow-gold-500/20 font-bold' 
                   : 'text-gray-300 hover:text-gold-400 hover:bg-neutral-900/60'
@@ -84,7 +84,7 @@ export default function Header() {
             {/* NRI Corner Link */}
             <Link 
               to="/nri-corner" 
-              className={`px-3 xl:px-4 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
+              className={`whitespace-nowrap px-2.5 xl:px-3.5 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
                 isNri 
                   ? 'bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 text-black shadow-md shadow-gold-500/20 font-bold' 
                   : 'text-gray-300 hover:text-gold-400 hover:bg-neutral-900/60'
@@ -96,7 +96,7 @@ export default function Header() {
             {/* FAQs Link */}
             <Link 
               to="/faqs" 
-              className={`px-3 xl:px-4 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
+              className={`whitespace-nowrap px-2.5 xl:px-3.5 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
                 isFaq 
                   ? 'bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 text-black shadow-md shadow-gold-500/20 font-bold' 
                   : 'text-gray-300 hover:text-gold-400 hover:bg-neutral-900/60'
@@ -108,7 +108,7 @@ export default function Header() {
             {/* About Us Link */}
             <Link 
               to="/about" 
-              className={`px-3 xl:px-4 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
+              className={`whitespace-nowrap px-2.5 xl:px-3.5 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
                 isAbout 
                   ? 'bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 text-black shadow-md shadow-gold-500/20 font-bold' 
                   : 'text-gray-300 hover:text-gold-400 hover:bg-neutral-900/60'
@@ -120,7 +120,7 @@ export default function Header() {
             {/* Contact Us Link */}
             <Link 
               to="/contact" 
-              className={`px-3 xl:px-4 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
+              className={`whitespace-nowrap px-2.5 xl:px-3.5 py-2 rounded-full text-xs xl:text-sm font-semibold transition-all duration-200 ${
                 isContact 
                   ? 'bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 text-black shadow-md shadow-gold-500/20 font-bold' 
                   : 'text-gray-300 hover:text-gold-400 hover:bg-neutral-900/60'
@@ -130,19 +130,17 @@ export default function Header() {
             </Link>
           </nav>
 
-          {/* Desktop Right Side - WhatsApp / Enquire Button */}
-          <div className="hidden lg:flex items-center space-x-4">
+          {/* Desktop Right Side - WhatsApp Icon Button Only (Matching Image copy 49) */}
+          <div className="hidden lg:flex items-center pl-2">
             <a 
               href="https://wa.me/917075539189?text=Hello%20Super%20Best%20Properties,%20I%20am%20interested%20in%20exploring%20properties." 
               target="_blank" 
               rel="noopener noreferrer"
-              className="group flex items-center space-x-2 bg-black border border-gold-400/80 hover:border-gold-400 px-5 py-2.5 rounded-full text-sm font-semibold text-white hover:text-gold-300 transition-all shadow-md shadow-gold-500/10 hover:shadow-gold-500/30 hover:scale-[1.02]"
+              className="w-10 h-10 rounded-full bg-[#25D366] hover:bg-[#20ba59] flex items-center justify-center text-white transition-all duration-300 shadow-md hover:shadow-[0_0_16px_rgba(37,211,102,0.6)] hover:scale-110"
+              aria-label="Chat on WhatsApp"
+              title="Chat on WhatsApp"
             >
-              <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center text-white">
-                <MessageCircle className="w-3.5 h-3.5 fill-current" />
-              </div>
-              <span>WhatsApp / Enquire</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 text-gold-400" />
+              <MessageCircle className="w-5 h-5 fill-white/20 text-white" />
             </a>
           </div>
 

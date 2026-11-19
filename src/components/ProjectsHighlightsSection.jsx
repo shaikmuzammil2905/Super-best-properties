@@ -77,15 +77,16 @@ export default function ProjectsHighlightsSection() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
               
-              <div className="absolute bottom-6 left-6 right-6 text-white">
+              <div className="absolute bottom-6 left-6 right-6 sm:right-32 md:right-36 text-white z-10 max-w-[90%] sm:max-w-[70%]">
                 <span className="inline-block px-3 py-1 rounded-full bg-gold-500 text-black text-xs font-bold tracking-wider uppercase mb-2">
                   FLAGSHIP DEVELOPMENTS
                 </span>
                 <h4 className="text-xl sm:text-2xl font-serif font-bold text-white">
                   HMDA & DTCP Approved Gated Communities
                 </h4>
-                <p className="text-xs sm:text-sm text-gray-200 mt-1 line-clamp-2">
-                  Strategically crafted in high-growth corridors of Hyderabad with world-class infrastructure and high investment returns.
+                <p className="text-xs sm:text-sm text-gray-200 mt-1.5 leading-relaxed">
+                  Strategically crafted in high-growth corridors of Hyderabad <br className="hidden sm:inline" />
+                  with world-class infrastructure and high investment returns.
                 </p>
               </div>
             </div>

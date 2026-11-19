@@ -11,7 +11,9 @@ import {
   ArrowRight, 
   Sparkles, 
   MessageCircle, 
-  Phone
+  Phone,
+  Globe,
+  Megaphone
 } from 'lucide-react';
 
 const iconMap = {
@@ -21,16 +23,18 @@ const iconMap = {
   'srv-4': Compass,
   'srv-5': Handshake,
   'srv-6': FileCheck2,
-  'srv-7': BadgePercent
+  'srv-7': BadgePercent,
+  'srv-8': Globe,
+  'srv-9': Megaphone
 };
 
 export default function ServicesPage() {
   const [services, setServices] = useState(() => {
-    const local = typeof window !== 'undefined' ? localStorage.getItem('sbp_services') : null;
+    const local = typeof window !== 'undefined' ? (localStorage.getItem('sbp_db_services') || localStorage.getItem('sbp_services')) : null;
     if (local) {
       try {
         const parsed = JSON.parse(local);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length >= initialServices.length) return parsed;
       } catch {}
     }
     return initialServices;

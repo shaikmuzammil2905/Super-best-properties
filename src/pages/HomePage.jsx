@@ -5,6 +5,7 @@ import PropertyCard from '../components/PropertyCard';
 import CategoryGrid from '../components/CategoryGrid';
 import ProjectsHighlightsSection from '../components/ProjectsHighlightsSection';
 import FounderSection from '../components/FounderSection';
+import ClientReviewsSection from '../components/ClientReviewsSection';
 import EnquiryModal from '../components/EnquiryModal';
 import { api } from '../services/api';
 import { initialProperties } from '../data/mockData';
@@ -202,7 +203,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 7. Quick Consultation Callout Banner */}
+      {/* 7. Client Reviews Section - Auto-scrolling from Left to Right */}
+      <ClientReviewsSection />
+
+      {/* 8. Quick Consultation Callout Banner */}
       <section className="bg-black py-8 sm:py-10 border-t border-gold-500/20 text-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-white">

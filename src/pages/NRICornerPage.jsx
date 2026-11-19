@@ -153,7 +153,7 @@ export default function NRICornerPage() {
 
           {/* Sub-headline */}
           <p className="text-sm sm:text-base md:text-lg text-gray-300 leading-relaxed font-normal max-w-3xl mx-auto mb-8">
-            Backed by over 25 years of industry expertise and led by Director D. Suresh Baabu, Super Best Properties simplifies land and property investments in Hyderabad for Global Indians—with 100% HMDA, DTCP, and TG RERA-approved assets, zero litigation risk, and end-to-end digital execution.
+            Backed by over 25 years of industry expertise and led by Founder & CEO D. Suresh Baabu, Super Best Properties simplifies land and property investments in Hyderabad for Global Indians—with 100% HMDA, DTCP, and TG RERA-approved assets, zero litigation risk, and end-to-end digital execution.
           </p>
 
           {/* CTAs */}
@@ -408,7 +408,7 @@ export default function NRICornerPage() {
           </h2>
 
           <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-3xl mx-auto mt-4 leading-relaxed">
-            Speak directly with <strong className="text-gold-300">D. Suresh Baabu</strong> (Director, ICONIC INFRA GROUP & Founder, Super Best Properties) for an unbiased, data-backed portfolio consultation.
+            Speak directly with <strong className="text-gold-300">D. Suresh Baabu</strong> (Founder & CEO, Super Best Properties) for an unbiased, data-backed portfolio consultation.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">

@@ -93,7 +93,7 @@ export const initialServices = [
     id: 'srv-7',
     title: 'Bank Loan & Financial Assistance',
     tagline: 'Competitive Home Loans & Fast Sanctions',
-    image: '/images/services/service-1-residential.png',
+    image: '/images/services/service-7-loan.png',
     description: 'Connecting eligible customers with suitable property financing options through leading nationalized and private banking institutions (SBI, HDFC, ICICI, etc.) with doorstep document pickup and preferential interest rates.',
     deliverables: [
       'Pre-approved loan eligibility assessment',
@@ -102,6 +102,32 @@ export const initialServices = [
       'Transparent processing with no hidden charges'
     ],
     displayOrder: 7
+  },
+  {
+    id: 'srv-8',
+    title: 'NRI Property Management & Advisory',
+    tagline: 'Seamless Remote Investments & Asset Protection',
+    image: '/images/services/service-8-nri.png',
+    description: "Offering end-to-end property acquisition, periodic site monitoring, and portfolio management for Non-Resident Indians investing in Hyderabad's high-growth corridors, backed by transparent digital reporting and verified legal safeguards.",
+    deliverables: [
+      'Virtual site visits & geo-tagged video updates',
+      'End-to-end POA, registration & compliance handling',
+      'Periodic plot maintenance, fencing & resale support'
+    ],
+    displayOrder: 8
+  },
+  {
+    id: 'srv-9',
+    title: 'Project / Venture Marketing & Channel Partnering',
+    tagline: 'Strategic Venture Branding & High-Velocity Sales',
+    image: '/images/services/service-9-marketing.png',
+    description: 'Partnering with land developers and builders to execute comprehensive go-to-market strategies, digital lead generation, and structured channel partner network distribution for HMDA, DTCP, and RERA-approved projects.',
+    deliverables: [
+      'Complete venture branding & digital ad campaigns',
+      'Dedicated sales associate & channel partner mobilization',
+      'On-site weekend mega-drives & closing assistance'
+    ],
+    displayOrder: 9
   }
 ];
 
@@ -214,10 +240,16 @@ function getLocalServices() {
     if (stored) {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed.map(s => ({
-          ...s,
-          image: s.image || initialServices.find(init => init.id === s.id)?.image || '/images/services/service-1-residential.png'
-        }));
+        const existingIds = new Set(parsed.map(p => p.id));
+        const missingInitial = initialServices.filter(init => !existingIds.has(init.id));
+        const updated = [
+          ...parsed.map(s => ({
+            ...s,
+            image: s.image || initialServices.find(init => init.id === s.id)?.image || '/images/services/service-1-residential.png'
+          })),
+          ...missingInitial
+        ];
+        return updated;
       }
     }
   } catch {}
