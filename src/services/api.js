@@ -299,7 +299,7 @@ function getLocalSettings() {
     tagline: 'Building Opportunities. Creating Wealth.',
     phone: '+91 7075539189',
     whatsappNumber: '917075539189',
-    email: 'contact@superbestproperties.com',
+    email: 'info.superbestproperties@gmail.com',
     address: 'H.No 5-5-35/193, Prashanth Nagar, Vanasthalipuram, Hyderabad, Telangana 500070',
     googleMapsUrl: 'https://maps.google.com/?q=Vanasthalipuram,Hyderabad',
     headerAnnouncement: 'RERA & HMDA Approved Layouts in Hyderabad Growth Corridors',

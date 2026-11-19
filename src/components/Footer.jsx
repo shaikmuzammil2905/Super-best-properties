@@ -158,6 +158,15 @@ export default function Footer() {
                   WhatsApp Consultation
                 </a>
               </div>
+              <div className="flex items-center space-x-3">
+                <Mail className="w-5 h-5 text-gold-400 shrink-0" />
+                <a 
+                  href="mailto:info.superbestproperties@gmail.com" 
+                  className="hover:text-gold-400 font-medium break-all text-xs sm:text-sm"
+                >
+                  info.superbestproperties@gmail.com
+                </a>
+              </div>
             </div>
 
             <div className="pt-3">
