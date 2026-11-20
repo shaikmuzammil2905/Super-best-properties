@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-24 bg-gold-500/5 blur-3xl pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-neutral-800">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.1fr_0.9fr_0.95fr_1.15fr] gap-8 xl:gap-10 pb-12 border-b border-neutral-800">
           
           {/* Col 1: Brand & Logo - Cleanly contained, zero overlap with Quick Links */}
           <div className="space-y-4 max-w-full">
@@ -158,11 +158,12 @@ export default function Footer() {
                   WhatsApp Consultation
                 </a>
               </div>
-              <div className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-gold-400 shrink-0" />
+              <div className="flex items-center space-x-2.5">
+                <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-gold-400 shrink-0" />
                 <a 
                   href="mailto:info.superbestproperties@gmail.com" 
-                  className="hover:text-gold-400 font-medium break-all text-xs sm:text-sm"
+                  className="hover:text-gold-400 font-medium whitespace-nowrap text-xs sm:text-[13px] lg:text-[12.5px] xl:text-sm tracking-tight transition-colors"
+                  title="info.superbestproperties@gmail.com"
                 >
                   info.superbestproperties@gmail.com
                 </a>

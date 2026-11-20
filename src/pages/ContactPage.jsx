@@ -236,7 +236,7 @@ export default function ContactPage() {
                     <span className="block text-xs font-bold text-gold-400 uppercase">Official Email</span>
                     <a
                       href="mailto:info.superbestproperties@gmail.com"
-                      className="mt-0.5 block font-semibold text-xs sm:text-sm text-white hover:text-gold-400 transition-colors break-all"
+                      className="mt-0.5 block font-semibold text-xs sm:text-sm text-white hover:text-gold-400 transition-colors whitespace-nowrap tracking-tight"
                     >
                       info.superbestproperties@gmail.com
                     </a>
